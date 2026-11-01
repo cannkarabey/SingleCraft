@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "title": "SignalCraft",
+    "description": "Teknoloji içerik üreticileri için günlük sinyal radarı."
+  },
+  "nav": {
+    "discover": "Discover",
+    "radar": "Radar",
+    "studio": "Studio",
+    "search": "Ara",
+    "cta": "Ücretsiz başla",
+    "language": "Dil"
+  },
+  "hero": {
+    "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
+    "subtitle": "Yükselen AI ve geliştirici konularını keşfet, nişine göre fırsatları gör, dakikalar içinde yayınlanabilir içerik üret.",
+    "primaryCta": "Ücretsiz başla",
+    "secondaryCta": "Canlı Discover'ı gör"
+  },
+  "discover": {
+    "title": "Bugün · AI ve geliştirici sinyalleri",
+    "empty": "Henüz story yok. Pipeline ilk çalıştığında burada görünecek."
+  },
+  "radar": {
+    "title": "Radar",
+    "empty": "Radar'ını görmek için bir niş kur."
+  },
+  "studio": {
+    "title": "Studio",
+    "empty": "Henüz brief yok. Discover'dan bir story seçip üret."
+  }
+}

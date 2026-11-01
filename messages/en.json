@@ -1,0 +1,32 @@
+{
+  "meta": {
+    "title": "SignalCraft",
+    "description": "The daily signal radar for tech content creators."
+  },
+  "nav": {
+    "discover": "Discover",
+    "radar": "Radar",
+    "studio": "Studio",
+    "search": "Search",
+    "cta": "Start free",
+    "language": "Language"
+  },
+  "hero": {
+    "title": "The daily signal radar for tech content creators.",
+    "subtitle": "Discover rising AI and developer topics, see opportunities for your niche, and produce publish-ready content in minutes.",
+    "primaryCta": "Start free",
+    "secondaryCta": "See live Discover"
+  },
+  "discover": {
+    "title": "Today · AI & developer signals",
+    "empty": "No stories yet. They will appear here after the pipeline's first run."
+  },
+  "radar": {
+    "title": "Radar",
+    "empty": "Set up a niche to see your Radar."
+  },
+  "studio": {
+    "title": "Studio",
+    "empty": "No briefs yet. Pick a story in Discover and generate one."
+  }
+}
