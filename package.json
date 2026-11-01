@@ -11,13 +11,19 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "inngest": "npx --yes inngest-cli@latest dev -u http://localhost:3000/api/inngest",
+    "db:start": "supabase start",
+    "db:reset": "supabase db reset",
+    "db:test": "supabase test db",
+    "db:types": "supabase gen types typescript --local > lib/supabase/types.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
     "@supabase/supabase-js": "^2.118.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.1",
+    "inngest": "^4.26.2",
     "lucide-react": "^1.66.0",
     "next": "16.4.3",
     "next-intl": "^4.14.9",
@@ -39,6 +45,7 @@
     "eslint-config-next": "16.4.3",
     "prettier": "^3.9.10",
     "prettier-plugin-tailwindcss": "^0.8.1",
+    "supabase": "^2.122.0",
     "tailwindcss": "^4",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.1.1",
