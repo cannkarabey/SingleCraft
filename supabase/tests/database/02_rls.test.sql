@@ -1,5 +1,5 @@
 begin;
-select plan(19);
+select plan(22);
 
 -- Fixtures (as postgres, bypassing RLS)
 insert into auth.users (id, email) values
@@ -61,6 +61,16 @@ select throws_ok($$insert into public.briefs (user_id, story_id, platform, forma
 select throws_ok($$insert into public.niches (user_id, name)
   values ('00000000-0000-0000-0000-00000000000a', 'mine')$$,
   '42501', null, 'niches are created only server-side (plan limits)');
+
+select lives_ok($$insert into public.user_signals (user_id, story_id, action)
+  values ('00000000-0000-0000-0000-00000000000a', '20000000-0000-0000-0000-000000000001', 'save')$$,
+  'A can save a published story');
+select throws_ok($$insert into public.user_signals (user_id, story_id, action)
+  values ('00000000-0000-0000-0000-00000000000a', '20000000-0000-0000-0000-000000000001', 'published')$$,
+  '42501', null, 'server-only signal actions are rejected');
+select throws_ok($$insert into public.user_signals (user_id, story_id, action)
+  values ('00000000-0000-0000-0000-00000000000a', '20000000-0000-0000-0000-000000000002', 'save')$$,
+  '42501', null, 'signals on unpublished stories are rejected');
 
 select * from finish();
 rollback;
