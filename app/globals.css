@@ -1,26 +1,104 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
 
+@custom-variant dark (&:is(.dark *));
+
+/* Signal Terminal tokens (IMPLEMENTATION_PLAN §8.1), prefixed --sc-* because Tailwind owns the
+   --color-* namespace (it would redefine --color-accent/--color-border). Dark-first; no light mode in MVP. */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --sc-canvas: #0a0b0d;
+  --sc-surface-1: #111318;
+  --sc-surface-2: #171a21;
+  --sc-border: rgba(255, 255, 255, 0.08);
+  --sc-text-primary: #f5f7fa;
+  --sc-text-secondary: #9aa3b2;
+  --sc-accent: #00e5a0;
+  --sc-warning: #ffb224;
+  --sc-danger: #ff5c5c;
+
+  /* shadcn variables mapped onto the tokens. shadcn's "accent" is a hover surface;
+     the brand accent is exposed as "primary" and "signal". */
+  --background: var(--sc-canvas);
+  --foreground: var(--sc-text-primary);
+  --card: var(--sc-surface-1);
+  --card-foreground: var(--sc-text-primary);
+  --popover: var(--sc-surface-1);
+  --popover-foreground: var(--sc-text-primary);
+  --primary: var(--sc-accent);
+  --primary-foreground: var(--sc-canvas);
+  --secondary: var(--sc-surface-2);
+  --secondary-foreground: var(--sc-text-primary);
+  --muted: var(--sc-surface-2);
+  --muted-foreground: var(--sc-text-secondary);
+  --accent: var(--sc-surface-2);
+  --accent-foreground: var(--sc-text-primary);
+  --destructive: var(--sc-danger);
+  --border: var(--sc-border);
+  --input: rgba(255, 255, 255, 0.12);
+  --ring: var(--sc-accent);
+  --radius: 0.5rem;
+  color-scheme: dark;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-canvas: var(--sc-canvas);
+  --color-surface-1: var(--sc-surface-1);
+  --color-surface-2: var(--sc-surface-2);
+  --color-signal: var(--sc-accent);
+  --color-warning: var(--sc-warning);
+  --color-danger: var(--sc-danger);
+
   --font-sans: var(--font-geist-sans);
   --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
+
+  --radius-sm: calc(var(--radius) * 0.6);
+  --radius-md: calc(var(--radius) * 0.8);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) * 1.4);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html {
+    @apply font-sans;
+  }
+  body {
+    @apply bg-background text-foreground;
+    font-size: 15px;
+    line-height: 1.55;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
