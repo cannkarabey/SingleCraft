@@ -15,8 +15,13 @@ describe("parsePublicEnv", () => {
   });
 
   test("names the missing variable", () => {
-    const { NEXT_PUBLIC_SUPABASE_ANON_KEY: _omit, ...rest } = publicEnv;
-    expect(() => parsePublicEnv(rest)).toThrow(/NEXT_PUBLIC_SUPABASE_ANON_KEY/);
+    const withoutKey = {
+      ...publicEnv,
+      NEXT_PUBLIC_SUPABASE_ANON_KEY: undefined,
+    };
+    expect(() => parsePublicEnv(withoutKey)).toThrow(
+      /NEXT_PUBLIC_SUPABASE_ANON_KEY/,
+    );
   });
 
   test("rejects a non-URL supabase url", () => {

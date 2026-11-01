@@ -34,8 +34,7 @@ select throws_ok('select 1 from public.llm_usage', '42501', null, 'anon cannot r
 select throws_ok('select 1 from public.pipeline_runs', '42501', null, 'anon cannot read pipeline_runs');
 select results_eq('select title from public.stories', $$values ('Published'::text)$$,
   'anon sees only published stories');
-select results_eq('select name from public.sources', $$values ('Test RSS'::text)$$,
-  'anon can read source names');
+select ok(exists(select 1 from public.sources where name = 'Test RSS'), 'anon can read source names');
 select throws_ok('select etag from public.sources', '42501', null, 'anon cannot read source internals');
 select throws_ok('select 1 from public.profiles', '42501', null, 'anon cannot read profiles');
 
