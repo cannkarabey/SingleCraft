@@ -1,0 +1,11 @@
+node_modules
+.next
+supabase/.temp
+lib/supabase/types.ts
+graphify-out
+.superpowers
+playwright-report
+test-results
+*.pdf
+*.md
+.claude
