@@ -84,7 +84,10 @@ export async function requestAngle({
     });
   } catch (sendError) {
     // Nothing was queued, so the unit must not stay spent.
-    await admin.rpc("release_usage", { p_user: userId, p_kind: "personal_angle" });
+    await admin.rpc("release_usage", {
+      p_user: userId,
+      p_kind: "personal_angle",
+    });
     throw sendError;
   }
   return { status: "queued" };

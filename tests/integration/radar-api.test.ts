@@ -57,7 +57,9 @@ const rows = (r: Awaited<ReturnType<typeof getRadar>>) => [
 describe("getRadar", () => {
   test("free plan: first 3 rows open, the rest locked without content", async () => {
     const u = await userWithNiche("free");
-    const radar = await getRadar(u.client, {
+    const radar = await getRadar({
+      admin: db,
+      userId: u.id,
       nicheId: u.nicheId,
       plan: "free",
     });
@@ -74,7 +76,9 @@ describe("getRadar", () => {
 
   test("creator plan sees everything", async () => {
     const u = await userWithNiche("creator");
-    const radar = await getRadar(u.client, {
+    const radar = await getRadar({
+      admin: db,
+      userId: u.id,
       nicheId: u.nicheId,
       plan: "creator",
     });
@@ -86,7 +90,7 @@ describe("getRadar", () => {
     const a = await userWithNiche("free");
     const b = await userWithNiche("free");
     await expect(
-      getRadar(b.client, { nicheId: a.nicheId, plan: "free" }),
+      getRadar({ admin: db, userId: b.id, nicheId: a.nicheId, plan: "free" }),
     ).rejects.toThrow();
   });
 });
@@ -105,12 +109,120 @@ describe("recordSignal", () => {
       action: "save",
     });
     const all = rows(
-      await getRadar(u.client, { nicheId: u.nicheId, plan: "creator" }),
+      await getRadar({
+        admin: db,
+        userId: u.id,
+        nicheId: u.nicheId,
+        plan: "creator",
+      }),
     );
     const ids = all.map((r) => (r.locked ? null : r.story_id));
     expect(ids).not.toContain(storyIds[0]);
     expect(
       all.find((r) => !r.locked && r.story_id === storyIds[1]),
     ).toMatchObject({ saved: true });
+  });
+});
+
+describe("review fixes", () => {
+  test("free rows are a daily allowance: hiding opened rows does not open new ones (I2)", async () => {
+    const u = await userWithNiche("free");
+    const first = rows(
+      await getRadar({
+        admin: db,
+        userId: u.id,
+        nicheId: u.nicheId,
+        plan: "free",
+      }),
+    );
+    const opened = first.filter((r) => !r.locked);
+    expect(opened).toHaveLength(3);
+    for (const r of opened) {
+      if (!r.locked)
+        await recordSignal(u.client, {
+          userId: u.id,
+          storyId: r.story_id,
+          action: "hide",
+        });
+    }
+    const after = rows(
+      await getRadar({
+        admin: db,
+        userId: u.id,
+        nicheId: u.nicheId,
+        plan: "free",
+      }),
+    );
+    expect(after.filter((r) => !r.locked)).toHaveLength(0);
+    expect(after.length).toBeGreaterThan(0);
+  });
+
+  test("already revealed rows stay open on reload", async () => {
+    const u = await userWithNiche("free");
+    const ids = (r: Awaited<ReturnType<typeof getRadar>>) =>
+      rows(r).flatMap((x) => (x.locked ? [] : [x.story_id]));
+    const a = ids(
+      await getRadar({
+        admin: db,
+        userId: u.id,
+        nicheId: u.nicheId,
+        plan: "free",
+      }),
+    );
+    const b = ids(
+      await getRadar({
+        admin: db,
+        userId: u.id,
+        nicheId: u.nicheId,
+        plan: "free",
+      }),
+    );
+    expect(b.sort()).toEqual(a.sort());
+  });
+
+  test("saving twice keeps one signal (I9)", async () => {
+    const u = await userWithNiche("creator");
+    await recordSignal(u.client, {
+      userId: u.id,
+      storyId: storyIds[2],
+      action: "save",
+    });
+    await recordSignal(u.client, {
+      userId: u.id,
+      storyId: storyIds[2],
+      action: "save",
+    });
+    const { count } = await db
+      .from("user_signals")
+      .select("*", { count: "exact", head: true })
+      .eq("user_id", u.id)
+      .eq("story_id", storyIds[2]);
+    expect(count).toBe(1);
+  });
+
+  test("saved stories appear in a Saved section even without niche fit (I6)", async () => {
+    const u = await userWithNiche("creator");
+    const { data: offNiche } = await db
+      .from("stories")
+      .insert({
+        status: "published",
+        title: "Unrelated gardening news",
+        first_seen_at: new Date().toISOString(),
+      })
+      .select("id")
+      .single();
+    storyIds.push(offNiche!.id);
+    await recordSignal(u.client, {
+      userId: u.id,
+      storyId: offNiche!.id,
+      action: "save",
+    });
+    const radar = await getRadar({
+      admin: db,
+      userId: u.id,
+      nicheId: u.nicheId,
+      plan: "creator",
+    });
+    expect(radar.saved.map((s) => s.id)).toContain(offNiche!.id);
   });
 });

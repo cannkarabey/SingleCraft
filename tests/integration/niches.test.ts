@@ -115,3 +115,23 @@ describe("updateNiche / listNiches", () => {
     expect(await listNiches(other.client)).toEqual([]);
   });
 });
+
+test("updating without voice samples keeps them (review I8)", async () => {
+  const u = await user();
+  const created = await createNiche({
+    admin: db,
+    userId: u.id,
+    input: { ...input, voice_samples: ["my voice"] },
+  });
+  if (!created.ok) throw new Error("create failed");
+  const withoutSamples: NicheInput = { ...input };
+  delete withoutSamples.voice_samples;
+  const updated = await updateNiche(u.client, created.niche.id, {
+    ...withoutSamples,
+    name: "Renamed",
+  });
+  expect(updated).toMatchObject({
+    name: "Renamed",
+    voice_samples: ["my voice"],
+  });
+});

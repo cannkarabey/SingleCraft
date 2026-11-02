@@ -18,6 +18,8 @@ export default defineConfig({
     command: `npm run dev -- --port ${PORT}`,
     url: `http://localhost:${PORT}`,
     reuseExistingServer: !process.env.CI,
+    // Auth emails link back to this origin (lib/auth/paths.ts authCallbackUrl).
+    env: { NEXT_PUBLIC_APP_URL: `http://localhost:${PORT}` },
     timeout: 120_000,
   },
 });

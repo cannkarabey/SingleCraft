@@ -106,6 +106,10 @@
       "gaps": {
         "title": "İçerik boşlukları",
         "hint": "Konuşuluyor ama iyi anlatılmamış."
+      },
+      "saved": {
+        "title": "Kaydedilenler",
+        "empty": "Discover veya Radar'dan kaydettiğin story'ler burada görünür."
       }
     },
     "angle": {

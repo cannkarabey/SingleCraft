@@ -1,5 +1,5 @@
 begin;
-select plan(17);
+select plan(18);
 
 create function pg_temp.axis(k int) returns extensions.vector language sql as $$
   select (array_fill(0::real, array[k - 1]) || array[1::real] || array_fill(0::real, array[768 - k]))::extensions.vector
@@ -42,10 +42,8 @@ insert into public.user_signals (user_id, story_id, action) values
   ('f0000000-0000-0000-0000-00000000000a', 'f3000000-0000-0000-0000-000000000004', 'hide'),
   ('f0000000-0000-0000-0000-00000000000a', 'f3000000-0000-0000-0000-000000000001', 'save');
 
--- User A
-select set_config('request.jwt.claims', '{"sub":"f0000000-0000-0000-0000-00000000000a","role":"authenticated"}', true);
-set local role authenticated;
-create temp table a as select * from public.radar_feed('f1000000-0000-0000-0000-00000000000a');
+-- User A (called by the server with the verified user id)
+create temp table a as select * from public.radar_feed('f1000000-0000-0000-0000-00000000000a', 'f0000000-0000-0000-0000-00000000000a');
 
 select is((select niche_fit from a where story_id = 'f3000000-0000-0000-0000-000000000001'), 20::real, 'two keywords → fit 20');
 select is((select final_score from a where story_id = 'f3000000-0000-0000-0000-000000000001'), 70.5::real, 'final_score formula');
@@ -60,20 +58,18 @@ select is((select bucket from a where story_id = 'f3000000-0000-0000-0000-000000
 select ok(not exists(select 1 from a where story_id in ('f3000000-0000-0000-0000-000000000007', 'f3000000-0000-0000-0000-000000000008')),
   'old and unpublished stories not shown');
 select is((select bucket from a where story_id = 'f3000000-0000-0000-0000-000000000009'), 'early', 'early signal bucket');
-select throws_ok($$select * from public.radar_feed('f1000000-0000-0000-0000-00000000000b')$$, '42501', null,
+select throws_ok($$select * from public.radar_feed('f1000000-0000-0000-0000-00000000000b', 'f0000000-0000-0000-0000-00000000000a')$$, '42501', null,
   'cannot read another user''s niche');
 
 -- User B
-reset role;
-select set_config('request.jwt.claims', '{"sub":"f0000000-0000-0000-0000-00000000000b","role":"authenticated"}', true);
-set local role authenticated;
-create temp table b as select * from public.radar_feed('f1000000-0000-0000-0000-00000000000b');
+create temp table b as select * from public.radar_feed('f1000000-0000-0000-0000-00000000000b', 'f0000000-0000-0000-0000-00000000000b');
 select is((select niche_fit from b where story_id = 'f3000000-0000-0000-0000-000000000002'), 20::real, 'web niche sees React story');
 select ok(not exists(select 1 from b where story_id = 'f3000000-0000-0000-0000-000000000001'), 'web niche does not see agents story');
 
-reset role;
-select ok(not has_function_privilege('anon', 'public.radar_feed(uuid)', 'execute'), 'anon cannot call radar_feed');
-select ok(has_function_privilege('authenticated', 'public.radar_feed(uuid)', 'execute'), 'authenticated can call radar_feed');
+select ok(not has_function_privilege('anon', 'public.radar_feed(uuid, uuid)', 'execute'), 'anon cannot call radar_feed');
+-- Review C1: the Free lock lives in the app, so clients must not reach the unfiltered feed.
+select ok(not has_function_privilege('authenticated', 'public.radar_feed(uuid, uuid)', 'execute'), 'authenticated cannot call radar_feed');
+select ok(has_function_privilege('service_role', 'public.radar_feed(uuid, uuid)', 'execute'), 'service role calls radar_feed');
 
 select * from finish();
 rollback;

@@ -49,8 +49,12 @@ test.describe("app shell", () => {
   for (const path of ["/radar", "/studio"]) {
     test(`${path} asks signed-out visitors to sign in`, async ({ page }) => {
       await page.goto(path);
-      await expect(page).toHaveURL(new RegExp(`/login\\?next=${encodeURIComponent(path)}`));
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Giriş yap");
+      await expect(page).toHaveURL(
+        new RegExp(`/login\\?next=${encodeURIComponent(path)}`),
+      );
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        "Giriş yap",
+      );
     });
   }
 

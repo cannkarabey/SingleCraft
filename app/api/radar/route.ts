@@ -4,6 +4,7 @@ import { currentUser } from "@/lib/auth/session";
 import { invalid, notFound, unauthorized } from "@/lib/http";
 import { getRadar } from "@/lib/radar/feed";
 import { listNiches } from "@/lib/radar/niches";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 const Query = z.object({ niche: z.uuid().optional() });
@@ -26,7 +27,9 @@ export async function GET(request: Request) {
     (query.data.niche ? undefined : niches[0]);
   if (!niche) return notFound();
 
-  const radar = await getRadar(db, {
+  const radar = await getRadar({
+    admin: createAdminClient(),
+    userId: user.id,
     nicheId: niche.id,
     plan: profile?.plan ?? null,
   });

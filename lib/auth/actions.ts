@@ -1,24 +1,9 @@
 "use server";
 
-import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { safeNextPath } from "@/lib/auth/paths";
+import { authCallbackUrl, safeNextPath } from "@/lib/auth/paths";
 import { createClient } from "@/lib/supabase/server";
-
-/** Origin of the current request; Supabase only accepts allow-listed redirect URLs. */
-async function requestOrigin(): Promise<string> {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "localhost:3000";
-  const proto =
-    h.get("x-forwarded-proto") ??
-    (host.startsWith("localhost") ? "http" : "https");
-  return `${proto}://${host}`;
-}
-
-function callbackUrl(origin: string, next: string) {
-  return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
-}
 
 const Email = z.email().max(254);
 
@@ -31,7 +16,7 @@ export async function sendMagicLink(formData: FormData) {
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: email.data,
-    options: { emailRedirectTo: callbackUrl(await requestOrigin(), next) },
+    options: { emailRedirectTo: authCallbackUrl(next) },
   });
   redirect(`${back}&${error ? "error=send" : "sent=1"}`);
 }
@@ -47,7 +32,7 @@ export async function signInWithProvider(formData: FormData) {
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider.data,
-    options: { redirectTo: callbackUrl(await requestOrigin(), next) },
+    options: { redirectTo: authCallbackUrl(next) },
   });
   if (error || !data.url)
     redirect(`/login?next=${encodeURIComponent(next)}&error=provider`);

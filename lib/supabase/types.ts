@@ -157,6 +157,32 @@ isOneToOne: false
                   Relationships: [
                     
                   ]
+                },"radar_reveals": {
+                  Row: {
+                    "created_at": string,"day": string,"story_id": string,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"day": string,"story_id": string,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"day"?: string,"story_id"?: string,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "radar_reveals_story_id_fkey"
+      columns: ["story_id"]
+isOneToOne: false
+      referencedRelation: "stories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "radar_reveals_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"raw_items": {
                   Row: {
                     "author": string | null,"canonical_url": string,"content_hash": string,"content_text": string | null,"description": string | null,"duplicate_of": number | null,"embedding": string | null,"external_id": string,"fetched_at": string,"filter_status": string,"id": number,"language": string | null,"published_at": string | null,"raw_metadata": NonNullable<Json>,"reject_reason": string | null,"simhash": number | null,"source_id": string,"title": string,"url": string
@@ -456,7 +482,7 @@ isOneToOne: false
 { Args: { "p_before": string }; Returns: number
                            },
 "radar_feed":
-{ Args: { "p_niche": string }; Returns: {
+{ Args: { "p_niche": string,"p_user": string }; Returns: {
               "bucket": string,"category": Database["public"]['Enums']["story_category"],"engagement_score": number,"final_score": number,"first_seen_at": string,"global_score": number,"is_early_signal": boolean,"niche_fit": number,"saved": boolean,"slug": string,"source_count": number,"story_id": string,"summary": string,"title": string,"trust_score": number,"velocity_score": number,"why_it_matters": string
             }[]
                            },
@@ -467,6 +493,12 @@ isOneToOne: false
 { Args: { "p_since": string,"p_window_start": string }; Returns: {
               "baseline": number,"latest": number,"metric": string,"raw_item_id": number,"source_type": Database["public"]['Enums']["source_type"],"story_id": string
             }[]
+                           },
+"url_host":
+{ Args: { "p_url": string }; Returns: string
+                           },
+"word_pattern":
+{ Args: { "p_term": string }; Returns: string
                            }
           }
           Enums: {

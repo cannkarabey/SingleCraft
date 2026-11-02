@@ -114,4 +114,78 @@ test.describe("radar", () => {
       await seed.cleanup();
     }
   });
+
+  test("angle uses the niche on screen and a failed poll ends with an error (review I4, I5)", async ({
+    page,
+  }) => {
+    const seed = await seedRadarStories([
+      { topic: "agents", title: "Angleme", velocity: 100, engagement: 90 },
+    ]);
+    try {
+      const email = await signIn(page, "/discover");
+      await nicheFor(email, { name: "Agents", keywords: [seed.tag, "agents"] });
+      await page.goto("/radar");
+      const nicheId = new URL(
+        (await page
+          .getByRole("link", { name: "Niş ayarları" })
+          .getAttribute("href"))!,
+        "http://x",
+      ).searchParams.get("niche");
+
+      const urls: string[] = [];
+      await page.route("**/api/radar/*/angle**", async (route) => {
+        urls.push(route.request().url());
+        if (route.request().method() === "POST") {
+          await route.fulfill({
+            status: 202,
+            contentType: "application/json",
+            body: '{"angle":null}',
+          });
+        } else {
+          await route.abort();
+        }
+      });
+      await page
+        .getByRole("article")
+        .filter({ hasText: seed.stories[0].title })
+        .getByRole("button", { name: "Senin açın" })
+        .click();
+      await expect(
+        page
+          .getByRole("article")
+          .filter({ hasText: seed.stories[0].title })
+          .getByRole("alert"),
+      ).toHaveText("Şu an açı yazılamadı.", { timeout: 10_000 });
+      expect(urls.length).toBeGreaterThan(1);
+      expect(
+        urls.every((u) => new URL(u).searchParams.get("niche") === nicheId),
+      ).toBe(true);
+    } finally {
+      await seed.cleanup();
+    }
+  });
+
+  test("stories saved from Discover show in Radar's Saved section (review I6)", async ({
+    page,
+  }) => {
+    const seed = await seedRadarStories([
+      { topic: "gardening", title: "Offniche", velocity: 10, engagement: 10 },
+    ]);
+    try {
+      const email = await signIn(page, "/discover");
+      await nicheFor(email, { name: "Agents", keywords: ["agents", "llm"] });
+      await page.goto(`/discover/${seed.stories[0].id}`);
+      await page.getByRole("button", { name: "Radar'a ekle" }).click();
+      await expect(
+        page.getByRole("button", { name: "Radar'a eklendi" }),
+      ).toBeVisible();
+      await page.goto("/radar");
+      const saved = page.getByRole("region", { name: "Kaydedilenler" });
+      await expect(
+        saved.getByRole("link", { name: seed.stories[0].title }),
+      ).toBeVisible();
+    } finally {
+      await seed.cleanup();
+    }
+  });
 });

@@ -5,6 +5,7 @@ import { RadarRow } from "@/components/radar/RadarRow";
 import { currentUser } from "@/lib/auth/session";
 import { getRadar, type RadarRow as Row } from "@/lib/radar/feed";
 import { listNiches } from "@/lib/radar/niches";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
@@ -22,7 +23,12 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
   const niche = niches.find((n) => n.id === wanted) ?? niches[0];
   const [t, radar] = await Promise.all([
     getTranslations("radar"),
-    getRadar(db, { nicheId: niche.id, plan: profile?.plan ?? null }),
+    getRadar({
+      admin: createAdminClient(),
+      userId: user.id,
+      nicheId: niche.id,
+      plan: profile?.plan ?? null,
+    }),
   ]);
 
   // Sparkline data for visible rows (trend_scores is public for published stories).
@@ -98,6 +104,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
           ) : (
             rows.map((row, i) => (
               <RadarRow
+                nicheId={niche.id}
                 key={row.locked ? `locked-${key}-${i}` : row.story_id}
                 row={row}
                 trend={row.locked ? [] : (trends.get(row.story_id) ?? [])}
@@ -106,6 +113,34 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
           )}
         </section>
       ))}
+      <section aria-labelledby="radar-saved" className="space-y-3">
+        <h2 id="radar-saved" className="text-lg font-semibold">
+          {t("sections.saved.title")}
+        </h2>
+        {radar.saved.length === 0 ? (
+          <p className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
+            {t("sections.saved.empty")}
+          </p>
+        ) : (
+          <ul className="divide-y rounded-lg border">
+            {radar.saved.map((story) => (
+              <li key={story.id} className="p-3">
+                <Link
+                  href={`/discover/${story.slug ?? story.id}`}
+                  className="font-medium hover:underline"
+                >
+                  {story.title}
+                </Link>
+                {story.summary && (
+                  <p className="text-muted-foreground mt-1 text-sm">
+                    {story.summary}
+                  </p>
+                )}
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </main>
   );
 }

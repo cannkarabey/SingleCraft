@@ -7,7 +7,15 @@ import { AngleButton } from "./AngleButton";
 import { RadarActions } from "./RadarActions";
 
 /** One Radar line (plan §8.2): title, score, trend, sources, why, angle, brief, save/hide. */
-export async function RadarRow({ row, trend }: { row: Row; trend: number[] }) {
+export async function RadarRow({
+  row,
+  trend,
+  nicheId,
+}: {
+  row: Row;
+  trend: number[];
+  nicheId: string;
+}) {
   const t = await getTranslations("radar");
   if (row.locked) {
     return (
@@ -55,7 +63,7 @@ export async function RadarRow({ row, trend }: { row: Row; trend: number[] }) {
           {row.why_it_matters}
         </p>
       )}
-      <AngleButton storyId={row.story_id} />
+      <AngleButton storyId={row.story_id} nicheId={nicheId} />
       <div className="flex flex-wrap items-center justify-between gap-2">
         <Button asChild size="sm">
           <Link href={`/studio/new?story=${row.story_id}`}>{t("brief")}</Link>

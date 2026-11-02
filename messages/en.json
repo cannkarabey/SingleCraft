@@ -106,6 +106,10 @@
       "gaps": {
         "title": "Content gaps",
         "hint": "People are talking about it, few have explained it well."
+      },
+      "saved": {
+        "title": "Saved",
+        "empty": "Stories you save from Discover or Radar appear here."
       }
     },
     "angle": {

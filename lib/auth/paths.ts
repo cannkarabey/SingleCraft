@@ -24,3 +24,14 @@ export function safeNextPath(
   if (/[\u0000-\u001f\u007f\\]/.test(raw)) return fallback;
   return raw;
 }
+
+/**
+ * Magic-link / OAuth landing URL on the configured app origin. Never derived from request
+ * headers: a spoofed X-Forwarded-Host could send the login code to another host.
+ */
+export function authCallbackUrl(next: string): string {
+  const origin = (
+    process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000"
+  ).replace(/\/+$/, "");
+  return `${origin}/auth/callback?next=${encodeURIComponent(next)}`;
+}

@@ -33,6 +33,26 @@ export const NicheInput = z.object({
 });
 export type NicheInput = z.input<typeof NicheInput>;
 
+/**
+ * PUT body: only the fields sent are changed (no defaults), so settings forms that do not
+ * show e.g. voice samples cannot wipe them.
+ */
+export const NicheUpdate = z.object({
+  name: z.string().trim().min(1).max(60).optional(),
+  keywords: z.array(term).max(20).optional(),
+  excluded_keywords: z.array(term).max(20).optional(),
+  platforms: z.array(z.enum(PLATFORMS)).max(PLATFORMS.length).optional(),
+  tone: z.enum(TONES).optional(),
+  language: z.enum(["tr", "en"]).optional(),
+  tracked_channels: z
+    .array(z.string().trim().min(1).max(100))
+    .max(20)
+    .optional(),
+  voice_samples: z.array(z.string().trim().min(1).max(2000)).max(3).optional(),
+  alert_threshold: z.number().int().min(0).max(100).optional(),
+});
+export type NicheUpdate = z.input<typeof NicheUpdate>;
+
 /** Lower-cased, trimmed, de-duplicated terms (matching in radar_feed is case-insensitive). */
 function terms(values: string[]): string[] {
   return [
@@ -100,10 +120,19 @@ export async function createNiche({
 }
 
 /** Updates through the user's own client: RLS limits it to their niches. null = not theirs. */
-export async function updateNiche(userDb: Db, id: string, input: NicheInput) {
+export async function updateNiche(userDb: Db, id: string, input: NicheUpdate) {
+  const n = NicheUpdate.parse(input);
+  const patch = {
+    ...n,
+    ...(n.keywords && { keywords: terms(n.keywords) }),
+    ...(n.excluded_keywords && {
+      excluded_keywords: terms(n.excluded_keywords),
+    }),
+    ...(n.platforms && { platforms: [...new Set(n.platforms)] }),
+  };
   const { data, error } = await userDb
     .from("niches")
-    .update(normalize(input))
+    .update(patch)
     .eq("id", id)
     .select("*");
   if (error) throw new Error(error.message);
