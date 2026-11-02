@@ -4,6 +4,7 @@ import { functions } from "@/inngest/functions";
 test("registers the pipeline functions", () => {
   expect(functions.map((fn) => fn.id()).sort()).toEqual([
     "archive-stories",
+    "billing-reconcile",
     "build-stories",
     "check-alerts",
     "cluster-items",
