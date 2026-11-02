@@ -19,7 +19,59 @@
   },
   "discover": {
     "title": "Today · AI & developer signals",
-    "empty": "No stories yet. They will appear here after the pipeline's first run."
+    "empty": "No stories yet. They will appear here after the pipeline's first run.",
+    "noResults": "No stories match these filters.",
+    "searchLabel": "Search stories",
+    "searchPlaceholder": "Search stories… (⌘K)",
+    "categoriesLabel": "Categories",
+    "rangeLabel": "Time range",
+    "ranges": {
+      "today": "Today",
+      "24h": "Last 24 hours",
+      "week": "This week"
+    },
+    "categories": {
+      "all": "All",
+      "ai_models": "AI Models",
+      "ai_tools": "AI Tools",
+      "developer_tools": "Developer Tools",
+      "open_source": "Open Source",
+      "startups": "Startups",
+      "security": "Security",
+      "web_frontend": "Web & Frontend",
+      "mobile": "Mobile",
+      "data_infra": "Data & Infrastructure",
+      "other": "Other"
+    },
+    "panels": {
+      "trending": "Trending now",
+      "newTools": "New AI tools",
+      "github": "Rising on GitHub",
+      "empty": "Nothing yet"
+    },
+    "loadMore": "Load more",
+    "loading": "Loading…",
+    "meta": {
+      "sources": "{count, plural, one {# source} other {# sources}}",
+      "velocity": "velocity {value}"
+    },
+    "whyItMatters": "Why it matters?",
+    "actions": {
+      "addToRadar": "Add to Radar",
+      "generate": "Generate in Studio"
+    },
+    "signIn": {
+      "title": "Sign in to continue",
+      "body": "Save stories to your Radar and turn them into content briefs with a free account.",
+      "cta": "Sign in",
+      "close": "Close"
+    },
+    "signal": {
+      "high": "High signal",
+      "early": "Early signal",
+      "normal": "Signal",
+      "low": "Low trust"
+    }
   },
   "radar": {
     "title": "Radar",
@@ -28,5 +80,120 @@
   "studio": {
     "title": "Studio",
     "empty": "No briefs yet. Pick a story in Discover and generate one."
+  },
+  "story": {
+    "back": "Back to Discover",
+    "whyItMatters": "Why it matters",
+    "entities": "Mentioned",
+    "angles": "Content angles",
+    "sources": "Sources",
+    "scores": "Score breakdown",
+    "trend": "Score trend",
+    "score": {
+      "global": "Overall",
+      "velocity": "Velocity",
+      "engagement": "Engagement",
+      "diversity": "Source diversity",
+      "freshness": "Freshness",
+      "trust": "Trust"
+    },
+    "notFound": "This story could not be found.",
+    "firstSeen": "First seen {time}"
+  },
+  "landing": {
+    "preview": {
+      "title": "Live from Discover",
+      "cta": "Open Discover",
+      "empty": "Fresh stories will appear here soon."
+    },
+    "modules": {
+      "title": "One flow, three modules",
+      "discover": {
+        "title": "Discover",
+        "body": "What is happening in tech right now? Clustered stories from 30+ sources, ranked by signal."
+      },
+      "radar": {
+        "title": "Radar",
+        "body": "Which of these are content opportunities for your niche? High signal, early signal and content gaps."
+      },
+      "studio": {
+        "title": "Studio",
+        "body": "How do I turn it into content? Hooks, threads, posts and scripts you can edit."
+      }
+    },
+    "problem": {
+      "title": "Finding ideas, verifying trends and adapting for every platform each take separate time.",
+      "body": "SignalCraft brings news tracking, trend checks and drafting into one morning routine."
+    },
+    "pipeline": {
+      "title": "How it works",
+      "steps": {
+        "fetch": "Fetch 30+ sources",
+        "dedupe": "Remove duplicates",
+        "cluster": "Cluster into stories",
+        "score": "Score the signal",
+        "brief": "Write the brief"
+      }
+    },
+    "example": {
+      "title": "Example output",
+      "note": "Illustrative example of a Studio brief.",
+      "tabs": {
+        "x": "X thread",
+        "linkedin": "LinkedIn",
+        "shorts": "Shorts hook"
+      },
+      "x": "1/ A new open-source agent SDK just shipped tool use and tracing out of the box.\n2/ Why it matters: you no longer glue three libraries together to debug an agent.\n3/ Here is what changed and what it means for your stack 👇",
+      "linkedin": "Agent tooling just got simpler. The new SDK ships tracing and tool use by default — the two things teams usually build themselves. If you run agents in production, this is worth a look this week.",
+      "shorts": "\"You've been debugging AI agents the hard way. This new SDK fixes that in one line.\""
+    },
+    "pricing": {
+      "title": "Pricing",
+      "perMonth": "/month",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "features": {
+          "a": "3 Radar signals a day",
+          "b": "Full Discover",
+          "c": "1 niche",
+          "d": "Limited Studio briefs"
+        }
+      },
+      "creator": {
+        "name": "Creator",
+        "price": "$19",
+        "features": {
+          "a": "Unlimited briefs",
+          "b": "3 niches",
+          "c": "Daily digest",
+          "d": "Saved idea pool"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "soon": "Coming soon"
+      },
+      "cta": "Start free"
+    },
+    "faq": {
+      "title": "FAQ",
+      "accuracy": {
+        "q": "How accurate are the stories?",
+        "a": "Every story is built only from its linked sources, which are always shown. Check them before you publish."
+      },
+      "copyright": {
+        "q": "Do you republish articles?",
+        "a": "No. We show our own short summary and link to the original sources."
+      },
+      "ai": {
+        "q": "How is AI used?",
+        "a": "AI summarizes clustered sources and drafts content you edit. Drafts include an AI-use disclosure."
+      },
+      "freshness": {
+        "q": "How fresh is the data?",
+        "a": "Sources are checked every 15–60 minutes and scores update every 30 minutes."
+      }
+    }
   }
 }

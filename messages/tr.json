@@ -19,7 +19,59 @@
   },
   "discover": {
     "title": "Bugün · AI ve geliştirici sinyalleri",
-    "empty": "Henüz story yok. Pipeline ilk çalıştığında burada görünecek."
+    "empty": "Henüz story yok. Pipeline ilk çalıştığında burada görünecek.",
+    "noResults": "Bu filtrelere uyan story yok.",
+    "searchLabel": "Story ara",
+    "searchPlaceholder": "Story ara… (⌘K)",
+    "categoriesLabel": "Kategoriler",
+    "rangeLabel": "Zaman aralığı",
+    "ranges": {
+      "today": "Bugün",
+      "24h": "Son 24 saat",
+      "week": "Bu hafta"
+    },
+    "categories": {
+      "all": "Tümü",
+      "ai_models": "AI Modelleri",
+      "ai_tools": "AI Araçları",
+      "developer_tools": "Geliştirici Araçları",
+      "open_source": "Açık Kaynak",
+      "startups": "Girişimler",
+      "security": "Güvenlik",
+      "web_frontend": "Web & Frontend",
+      "mobile": "Mobil",
+      "data_infra": "Veri & Altyapı",
+      "other": "Diğer"
+    },
+    "panels": {
+      "trending": "Şu an yükselenler",
+      "newTools": "Yeni AI araçları",
+      "github": "GitHub'da yükselenler",
+      "empty": "Henüz yok"
+    },
+    "loadMore": "Daha fazla",
+    "loading": "Yükleniyor…",
+    "meta": {
+      "sources": "{count} kaynak",
+      "velocity": "hız {value}"
+    },
+    "whyItMatters": "Neden önemli?",
+    "actions": {
+      "addToRadar": "Radar'a ekle",
+      "generate": "Studio'da üret"
+    },
+    "signIn": {
+      "title": "Devam etmek için giriş yap",
+      "body": "Ücretsiz hesapla story'leri Radar'ına kaydet ve içerik brief'ine dönüştür.",
+      "cta": "Giriş yap",
+      "close": "Kapat"
+    },
+    "signal": {
+      "high": "Yüksek sinyal",
+      "early": "Erken sinyal",
+      "normal": "Sinyal",
+      "low": "Düşük güven"
+    }
   },
   "radar": {
     "title": "Radar",
@@ -28,5 +80,120 @@
   "studio": {
     "title": "Studio",
     "empty": "Henüz brief yok. Discover'dan bir story seçip üret."
+  },
+  "story": {
+    "back": "Discover'a dön",
+    "whyItMatters": "Neden önemli",
+    "entities": "Geçenler",
+    "angles": "İçerik açıları",
+    "sources": "Kaynaklar",
+    "scores": "Skor dökümü",
+    "trend": "Skor trendi",
+    "score": {
+      "global": "Genel",
+      "velocity": "Hız",
+      "engagement": "Etkileşim",
+      "diversity": "Kaynak çeşitliliği",
+      "freshness": "Tazelik",
+      "trust": "Güven"
+    },
+    "notFound": "Bu story bulunamadı.",
+    "firstSeen": "İlk görülme {time}"
+  },
+  "landing": {
+    "preview": {
+      "title": "Discover'dan canlı",
+      "cta": "Discover'ı aç",
+      "empty": "Taze story'ler yakında burada."
+    },
+    "modules": {
+      "title": "Tek akış, üç modül",
+      "discover": {
+        "title": "Discover",
+        "body": "Teknoloji dünyasında şu an ne oluyor? 30+ kaynaktan kümelenmiş, sinyale göre sıralanmış story'ler."
+      },
+      "radar": {
+        "title": "Radar",
+        "body": "Nişin için hangisi içerik fırsatı? Yüksek sinyal, erken sinyal ve içerik boşlukları."
+      },
+      "studio": {
+        "title": "Studio",
+        "body": "Bunu nasıl içerik yaparım? Düzenlenebilir hook, thread, post ve script."
+      }
+    },
+    "problem": {
+      "title": "Fikir bulmak, trendi doğrulamak ve her platforma uyarlamak ayrı ayrı zaman alıyor.",
+      "body": "SignalCraft haber takibini, trend kontrolünü ve taslak yazımını tek bir sabah rutininde toplar."
+    },
+    "pipeline": {
+      "title": "Nasıl çalışır",
+      "steps": {
+        "fetch": "30+ kaynağı çek",
+        "dedupe": "Tekrarları ayıkla",
+        "cluster": "Story'lere kümele",
+        "score": "Sinyali skorla",
+        "brief": "Brief'i yaz"
+      }
+    },
+    "example": {
+      "title": "Örnek çıktı",
+      "note": "Bir Studio brief'inin temsili örneği.",
+      "tabs": {
+        "x": "X thread",
+        "linkedin": "LinkedIn",
+        "shorts": "Shorts hook"
+      },
+      "x": "1/ Yeni bir açık kaynak agent SDK'sı tool use ve tracing'i kutudan çıktığı gibi getiriyor.\n2/ Neden önemli: bir agent'ı debug etmek için artık üç kütüphaneyi birbirine bağlamıyorsun.\n3/ Neler değişti ve stack'in için ne anlama geliyor 👇",
+      "linkedin": "Agent araçları sadeleşti. Yeni SDK, ekiplerin genelde kendisi yazdığı iki şeyi — tracing ve tool use — varsayılan olarak getiriyor. Production'da agent çalıştırıyorsan bu hafta göz atmaya değer.",
+      "shorts": "\"AI agent'larını zor yoldan debug ediyordun. Bu yeni SDK bunu tek satırda çözüyor.\""
+    },
+    "pricing": {
+      "title": "Fiyatlandırma",
+      "perMonth": "/ay",
+      "free": {
+        "name": "Free",
+        "price": "$0",
+        "features": {
+          "a": "Günde 3 Radar sinyali",
+          "b": "Tam Discover",
+          "c": "1 niş",
+          "d": "Sınırlı Studio brief'i"
+        }
+      },
+      "creator": {
+        "name": "Creator",
+        "price": "$19",
+        "features": {
+          "a": "Sınırsız brief",
+          "b": "3 niş",
+          "c": "Günlük özet",
+          "d": "Kayıtlı fikir havuzu"
+        }
+      },
+      "pro": {
+        "name": "Pro",
+        "soon": "Yakında"
+      },
+      "cta": "Ücretsiz başla"
+    },
+    "faq": {
+      "title": "SSS",
+      "accuracy": {
+        "q": "Story'ler ne kadar doğru?",
+        "a": "Her story yalnızca bağlı kaynaklarından oluşturulur ve kaynaklar her zaman gösterilir. Yayınlamadan önce kontrol et."
+      },
+      "copyright": {
+        "q": "Makaleleri yeniden yayınlıyor musunuz?",
+        "a": "Hayır. Kendi kısa özetimizi gösterip orijinal kaynaklara link veririz."
+      },
+      "ai": {
+        "q": "AI nasıl kullanılıyor?",
+        "a": "AI, kümelenmiş kaynakları özetler ve senin düzenleyeceğin taslakları yazar. Taslaklarda AI kullanım beyanı bulunur."
+      },
+      "freshness": {
+        "q": "Veri ne kadar güncel?",
+        "a": "Kaynaklar 15–60 dakikada bir kontrol edilir, skorlar 30 dakikada bir güncellenir."
+      }
+    }
   }
 }
