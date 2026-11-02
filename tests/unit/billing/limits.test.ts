@@ -8,6 +8,7 @@ describe("plan limits (plan §1 #7, PDF §15)", () => {
       radarRows: 3,
       briefsPerDay: 2,
       anglesPerDay: 5,
+      digest: false,
     });
   });
 
@@ -17,6 +18,7 @@ describe("plan limits (plan §1 #7, PDF §15)", () => {
       radarRows: null,
       briefsPerDay: null,
       anglesPerDay: 50,
+      digest: true,
     });
   });
 
