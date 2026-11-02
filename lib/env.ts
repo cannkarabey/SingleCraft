@@ -42,6 +42,7 @@ const serverSchema = publicSchema.extend({
   LEMONSQUEEZY_CREATOR_VARIANT_ID: optionalString,
   LEMONSQUEEZY_PRO_VARIANT_ID: optionalString,
   SENTRY_DSN: optionalString,
+  NEXT_PUBLIC_SENTRY_DSN: optionalString,
 });
 
 export type PublicEnv = z.infer<typeof publicSchema>;
