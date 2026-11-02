@@ -142,13 +142,11 @@ export async function seed(): Promise<Seed> {
     );
     if (metric) {
       must(
-        await db
-          .from("item_metrics")
-          .insert({
-            raw_item_id: item.id,
-            metric: metric[0],
-            value: metric[1],
-          }),
+        await db.from("item_metrics").insert({
+          raw_item_id: item.id,
+          metric: metric[0],
+          value: metric[1],
+        }),
         "item_metrics",
       );
     }

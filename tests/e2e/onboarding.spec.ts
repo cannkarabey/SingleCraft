@@ -11,7 +11,9 @@ test.describe("onboarding", () => {
     const keywords = page.getByLabel("Anahtar kelimeler");
     await keywords.fill("agents");
     await keywords.press("Enter");
-    await expect(page.getByRole("button", { name: "Kaldır: agents" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Kaldır: agents" }),
+    ).toBeVisible();
     await page.getByRole("button", { name: "İleri" }).click();
 
     await page.getByLabel("X", { exact: true }).check();
@@ -29,7 +31,9 @@ test.describe("onboarding", () => {
 
     await page.goto("/radar/settings");
     await expect(page.getByLabel("Niş adı")).toHaveValue("AI agents");
-    await expect(page.getByRole("button", { name: "Kaldır: crypto" })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: "Kaldır: crypto" }),
+    ).toBeVisible();
     await page.getByLabel("Niş adı").fill("AI agents & LLMs");
     await page.getByRole("button", { name: "Kaydet" }).click();
     await expect(page.getByRole("status")).toHaveText("Kaydedildi.");

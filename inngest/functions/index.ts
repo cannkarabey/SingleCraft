@@ -1,5 +1,6 @@
 import { fetchSources } from "./fetch-sources";
 import { processItemsFn } from "./process-items";
+import { nicheEmbed, radarAngle } from "./radar";
 import { refreshMetrics } from "./refresh-metrics";
 import {
   archiveStoriesFn,
@@ -16,4 +17,6 @@ export const functions = [
   scoreStoriesFn,
   buildStoriesFn,
   archiveStoriesFn,
+  nicheEmbed,
+  radarAngle,
 ];

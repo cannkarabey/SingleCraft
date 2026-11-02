@@ -3,11 +3,21 @@ import { limitsFor, PLAN_LIMITS } from "@/lib/billing/limits";
 
 describe("plan limits (plan §1 #7, PDF §15)", () => {
   test("free", () => {
-    expect(PLAN_LIMITS.free).toEqual({ niches: 1, radarRows: 3, briefsPerDay: 2, anglesPerDay: 5 });
+    expect(PLAN_LIMITS.free).toEqual({
+      niches: 1,
+      radarRows: 3,
+      briefsPerDay: 2,
+      anglesPerDay: 5,
+    });
   });
 
   test("creator", () => {
-    expect(PLAN_LIMITS.creator).toEqual({ niches: 3, radarRows: null, briefsPerDay: null, anglesPerDay: 50 });
+    expect(PLAN_LIMITS.creator).toEqual({
+      niches: 3,
+      radarRows: null,
+      briefsPerDay: null,
+      anglesPerDay: 50,
+    });
   });
 
   test("pro allows more niches", () => {

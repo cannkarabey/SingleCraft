@@ -7,7 +7,9 @@ test("registers the pipeline functions", () => {
     "build-stories",
     "cluster-items",
     "fetch-sources",
+    "niche-embed",
     "process-items",
+    "radar-angle",
     "refresh-metrics",
     "score-stories",
   ]);

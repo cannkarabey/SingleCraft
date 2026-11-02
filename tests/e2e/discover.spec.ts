@@ -53,7 +53,9 @@ test.describe("discover (signed out)", () => {
     // The shortcut listener attaches on hydration; retry until it is live.
     await expect(async () => {
       await page.keyboard.press("ControlOrMeta+k");
-      await expect(page.getByRole("searchbox", { name: "Story ara" })).toBeFocused({ timeout: 500 });
+      await expect(
+        page.getByRole("searchbox", { name: "Story ara" }),
+      ).toBeFocused({ timeout: 500 });
     }).toPass();
   });
 

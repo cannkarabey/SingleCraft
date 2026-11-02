@@ -31,11 +31,20 @@ describe("safeNextPath (no open redirects)", () => {
 });
 
 describe("isProtectedPath", () => {
-  test.each(["/radar", "/radar/settings", "/onboarding", "/studio", "/studio/new", "/settings/account"])(
-    "%s needs a session",
-    (path) => expect(isProtectedPath(path)).toBe(true),
-  );
-  test.each(["/", "/discover", "/discover/x", "/login", "/auth/callback", "/radarx"])("%s is public", (path) =>
-    expect(isProtectedPath(path)).toBe(false),
-  );
+  test.each([
+    "/radar",
+    "/radar/settings",
+    "/onboarding",
+    "/studio",
+    "/studio/new",
+    "/settings/account",
+  ])("%s needs a session", (path) => expect(isProtectedPath(path)).toBe(true));
+  test.each([
+    "/",
+    "/discover",
+    "/discover/x",
+    "/login",
+    "/auth/callback",
+    "/radarx",
+  ])("%s is public", (path) => expect(isProtectedPath(path)).toBe(false));
 });
