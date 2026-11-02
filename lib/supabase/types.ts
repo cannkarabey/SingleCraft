@@ -317,14 +317,14 @@ isOneToOne: false
                   ]
                 },"subscriptions": {
                   Row: {
-                    "current_period_end": string | null,"id": string,"plan": string,"provider": string,"provider_customer_id": string | null,"provider_subscription_id": string | null,"status": string,"user_id": string
+                    "created_at": string,"current_period_end": string | null,"ends_at": string | null,"id": string,"plan": string,"provider": string,"provider_customer_id": string | null,"provider_subscription_id": string | null,"provider_updated_at": string | null,"renews_at": string | null,"status": string,"user_id": string,"variant_id": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "current_period_end"?: string | null,"id"?: string,"plan": string,"provider": string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"status": string,"user_id": string
+                    "created_at"?: string,"current_period_end"?: string | null,"ends_at"?: string | null,"id"?: string,"plan": string,"provider": string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"provider_updated_at"?: string | null,"renews_at"?: string | null,"status": string,"user_id": string,"variant_id"?: string | null
                   }
                   Update: {
-                    "current_period_end"?: string | null,"id"?: string,"plan"?: string,"provider"?: string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"status"?: string,"user_id"?: string
+                    "created_at"?: string,"current_period_end"?: string | null,"ends_at"?: string | null,"id"?: string,"plan"?: string,"provider"?: string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"provider_updated_at"?: string | null,"renews_at"?: string | null,"status"?: string,"user_id"?: string,"variant_id"?: string | null
                   }
                   Relationships: [
                     {
@@ -442,6 +442,9 @@ isOneToOne: false
             "apply_story_scores":
 { Args: { "p_scores": Json }; Returns: number
                            },
+"apply_subscription":
+{ Args: { "p_customer_id": string,"p_ends_at": string,"p_now": string,"p_plan": string,"p_renews_at": string,"p_status": string,"p_subscription_id": string,"p_updated_at": string,"p_user": string,"p_variant_id": string }; Returns: string
+                           },
 "archive_stale_stories":
 { Args: { "p_cutoff": string }; Returns: number
                            },
@@ -491,6 +494,12 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
+"entitled_plan":
+{ Args: { "p_now": string,"p_user": string }; Returns: string
+                           },
+"expire_subscriptions":
+{ Args: { "p_now": string }; Returns: number
+                           },
 "find_duplicate":
 { Args: { "p_item_id": number,"p_max_distance": number,"p_since": string }; Returns: {
               "duplicate_of": number,"kind": string
