@@ -4,6 +4,8 @@ const PORT = 3100;
 
 export default defineConfig({
   testDir: "tests/e2e",
+  globalSetup: "./tests/e2e/support/global-setup.ts",
+  globalTeardown: "./tests/e2e/support/global-teardown.ts",
   fullyParallel: true,
   retries: process.env.CI ? 2 : 0,
   use: {
