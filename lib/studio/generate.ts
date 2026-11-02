@@ -1,6 +1,7 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { generateText, Output, type LanguageModel } from "ai";
 import type { z } from "zod";
+import { capture } from "@/lib/analytics/server";
 import { limitsFor } from "@/lib/billing/limits";
 import { recordUsage } from "@/lib/llm/budget";
 import type { Database, Json } from "@/lib/supabase/types";
@@ -310,7 +311,7 @@ export async function finalizeBrief(
   },
 ) {
   const output = result.output as unknown as NonNullable<Json>;
-  check(
+  const brief = check(
     await db
       .from("briefs")
       .update({
@@ -324,9 +325,16 @@ export async function finalizeBrief(
         tokens_out: result.tokensOut,
         error: null,
       })
-      .eq("id", briefId),
+      .eq("id", briefId)
+      .select("user_id")
+      .single(),
   );
   check(await db.from("brief_versions").insert({ brief_id: briefId, output }));
+  await capture({
+    event: "brief_generated",
+    distinctId: brief.user_id,
+    properties: { brief_id: briefId, model: result.model },
+  });
 }
 
 export async function failBrief(

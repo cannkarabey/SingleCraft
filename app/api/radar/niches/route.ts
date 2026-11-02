@@ -1,4 +1,5 @@
 import { NextResponse } from "next/server";
+import { capture } from "@/lib/analytics/server";
 import { currentUser } from "@/lib/auth/session";
 import { invalid, jsonBody, unauthorized } from "@/lib/http";
 import { emitNicheChanged } from "@/lib/radar/events";
@@ -24,5 +25,10 @@ export async function POST(request: Request) {
   });
   if (!result.ok) return NextResponse.json({ error: "limit" }, { status: 403 });
   await emitNicheChanged(result.niche.id);
+  await capture({
+    event: "niche_created",
+    distinctId: user.id,
+    properties: { niche_id: result.niche.id },
+  });
   return NextResponse.json({ niche: result.niche }, { status: 201 });
 }

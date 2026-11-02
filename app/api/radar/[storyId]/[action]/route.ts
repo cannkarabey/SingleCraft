@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
+import { capture } from "@/lib/analytics/server";
 import { currentUser } from "@/lib/auth/session";
 import { notFound, unauthorized } from "@/lib/http";
 import { recordSignal } from "@/lib/radar/feed";
@@ -27,6 +28,13 @@ export async function POST(
   } catch {
     // RLS rejects unpublished/unknown stories.
     return notFound();
+  }
+  if (parsed.data.action === "save") {
+    await capture({
+      event: "story_saved",
+      distinctId: user.id,
+      properties: { story_id: parsed.data.storyId },
+    });
   }
   return NextResponse.json({ ok: true }, { status: 201 });
 }
