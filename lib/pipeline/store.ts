@@ -14,7 +14,7 @@ type Result<T> = { data: T; error: { message: string } | null };
 const PAGE_SIZE = 1000;
 
 /** Runs a range query page by page until a short page; `page` must apply a stable order. */
-async function allPages<T>(
+export async function allPages<T>(
   page: (from: number, to: number) => PromiseLike<Result<T[] | null>>,
 ) {
   const rows: T[] = [];
