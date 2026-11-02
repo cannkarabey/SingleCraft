@@ -101,6 +101,26 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"feedback": {
+                  Row: {
+                    "created_at": string,"id": number,"message": string,"page": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"id"?: number,"message": string,"page"?: string | null,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"id"?: number,"message"?: string,"page"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "feedback_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"item_metrics": {
                   Row: {
                     "captured_at": string,"metric": string,"raw_item_id": number,"value": number

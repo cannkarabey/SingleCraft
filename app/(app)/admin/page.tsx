@@ -154,6 +154,24 @@ export default async function AdminPage() {
         )}
       </Section>
 
+      <Section id="feedback" title={t("feedback")}>
+        {o.feedback.length === 0 ? (
+          <p className="text-muted-foreground text-sm">{t("noFeedback")}</p>
+        ) : (
+          <ul className="divide-y text-sm">
+            {o.feedback.map((f) => (
+              <li key={f.id} className="space-y-1 py-2">
+                <p className="whitespace-pre-wrap">{f.message}</p>
+                <p className="text-muted-foreground font-mono text-xs">
+                  {f.page ?? "—"} · {ago(f.created_at)} ·{" "}
+                  {f.user_id.slice(0, 8)}
+                </p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </Section>
+
       <Section id="rejected" title={t("rejected")}>
         {o.rejectReasons.length === 0 ? (
           <p className="text-muted-foreground text-sm">{t("noRejected")}</p>

@@ -470,6 +470,19 @@
     "noRejected": "Reddedilen içerik yok.",
     "jobs": "Manuel çalıştır",
     "queued": "{job} kuyruğa alındı",
-    "jobError": "{job} başlatılamadı"
+    "jobError": "{job} başlatılamadı",
+    "feedback": "Geri bildirim",
+    "noFeedback": "Henüz geri bildirim yok."
+  },
+  "feedback": {
+    "open": "Geri bildirim",
+    "title": "Geri bildirim gönder",
+    "label": "Mesajın",
+    "placeholder": "Ne işe yaradı, ne eksik?",
+    "send": "Gönder",
+    "close": "Kapat",
+    "sent": "Teşekkürler, aldık.",
+    "limit": "Bugünlük sınır doldu.",
+    "error": "Gönderilemedi."
   }
 }

@@ -470,6 +470,19 @@
     "noRejected": "Nothing rejected.",
     "jobs": "Run manually",
     "queued": "{job} queued",
-    "jobError": "{job} could not be started"
+    "jobError": "{job} could not be started",
+    "feedback": "Feedback",
+    "noFeedback": "No feedback yet."
+  },
+  "feedback": {
+    "open": "Feedback",
+    "title": "Send feedback",
+    "label": "Your message",
+    "placeholder": "What worked, what's missing?",
+    "send": "Send",
+    "close": "Close",
+    "sent": "Thanks, we got it.",
+    "limit": "Daily limit reached.",
+    "error": "Could not send."
   }
 }
