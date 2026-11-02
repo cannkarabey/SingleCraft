@@ -24,7 +24,9 @@ export default async function RadarSettingsPage({
         initial={{
           name: niche.name,
           keywords: niche.keywords,
-          platforms: niche.platforms as ("x" | "linkedin" | "youtube" | "newsletter")[],
+          platforms: niche.platforms as (
+            "x" | "linkedin" | "youtube" | "newsletter"
+          )[],
           language: niche.language as "tr" | "en",
           tone: niche.tone as "analytical",
           excluded_keywords: niche.excluded_keywords,
