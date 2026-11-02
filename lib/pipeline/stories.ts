@@ -24,6 +24,7 @@ import {
 } from "./score";
 import { allPages, type Db } from "./store";
 import type { SourceType } from "./types";
+import type { Json } from "@/lib/supabase/types";
 
 const HOUR_MS = 60 * 60 * 1000;
 /** Cosine similarity for joining a cluster, and how far back clusters stay open (plan §5.3). */
@@ -111,9 +112,39 @@ export async function clusterItems(deps: {
 /** Velocity looks at growth over this trailing window (plan §5.5). */
 const VELOCITY_WINDOW_MS = 6 * HOUR_MS;
 const SCORE_WINDOW_MS = 72 * HOUR_MS;
+const SCORE_WRITE_BATCH = 500;
+
+/**
+ * Sources that joined a story inside the velocity window, excluding the seed (its earliest
+ * item) and the seed's own source: a brand-new single-item story has no new sources.
+ */
+export function newSourceCount(
+  items: { raw_item_id: number; source_id: string; fetched_at: string }[],
+  windowStart: Date,
+): number {
+  if (items.length === 0) return 0;
+  const seed = items.reduce((a, b) =>
+    a.fetched_at < b.fetched_at ||
+    (a.fetched_at === b.fetched_at && a.raw_item_id < b.raw_item_id)
+      ? a
+      : b,
+  );
+  const joined = new Set(
+    items
+      .filter(
+        (i) =>
+          i.raw_item_id !== seed.raw_item_id &&
+          i.source_id !== seed.source_id &&
+          new Date(i.fetched_at) >= windowStart,
+      )
+      .map((i) => i.source_id),
+  );
+  return joined.size;
+}
 
 type StorySource = {
   source_id: string;
+  raw_item_id: number;
   raw_items: { fetched_at: string } | null;
   sources: { type: SourceType; trust_weight: number } | null;
 };
@@ -133,7 +164,7 @@ export async function scoreStories(deps: {
     deps.db
       .from("stories")
       .select(
-        "id, first_seen_at, source_count, story_sources(source_id, raw_items(fetched_at), sources(type, trust_weight))",
+        "id, status, first_seen_at, source_count, story_sources(source_id, raw_item_id, raw_items(fetched_at), sources(type, trust_weight))",
       )
       .in("status", ["pending", "published"])
       .gte("first_seen_at", since)
@@ -172,14 +203,26 @@ export async function scoreStories(deps: {
           trust: Number(s.sources.trust_weight),
         });
     }
-    const newSources = sources.filter(
-      (s) => s.raw_items && new Date(s.raw_items.fetched_at) >= windowStart,
-    ).length;
+    const newSources = newSourceCount(
+      sources.flatMap((s) =>
+        s.raw_items
+          ? [
+              {
+                raw_item_id: s.raw_item_id,
+                source_id: s.source_id,
+                fetched_at: s.raw_items.fetched_at,
+              },
+            ]
+          : [],
+      ),
+      windowStart,
+    );
     const ageHours =
       (deps.now.getTime() - new Date(story.first_seen_at).getTime()) / HOUR_MS;
 
     return {
       id: story.id,
+      published: story.status === "published",
       sourceCount: story.source_count,
       ageHours,
       velocityRaw: velocityRaw(
@@ -216,53 +259,65 @@ export async function scoreStories(deps: {
     calculated_at: string;
   }[] = [];
 
-  for (const [i, c] of computed.entries()) {
-    const scores = {
-      velocity_score: velocity[i],
-      engagement_score: c.engagement,
-      source_diversity_score: c.diversity,
-      freshness_score: c.freshness,
-      trust_score: c.trust,
-      global_score: globalScore({ ...c, velocity: velocity[i] }),
-      is_early_signal: isEarlySignal({
-        velocityPercentile: velocity[i],
-        sourceCount: c.sourceCount,
-        engagement: c.engagement,
-        ageHours: c.ageHours,
+  const rows = computed.map((c, i) => ({
+    id: c.id,
+    velocity_score: velocity[i],
+    engagement_score: c.engagement,
+    source_diversity_score: c.diversity,
+    freshness_score: c.freshness,
+    trust_score: c.trust,
+    global_score: globalScore({ ...c, velocity: velocity[i] }),
+    is_early_signal: isEarlySignal({
+      velocityPercentile: velocity[i],
+      sourceCount: c.sourceCount,
+      engagement: c.engagement,
+      ageHours: c.ageHours,
+    }),
+  }));
+  for (let i = 0; i < rows.length; i += SCORE_WRITE_BATCH) {
+    check(
+      await deps.db.rpc("apply_story_scores", {
+        p_scores: rows.slice(i, i + SCORE_WRITE_BATCH) as unknown as Json,
       }),
-    };
-    check(await deps.db.from("stories").update(scores).eq("id", c.id));
+    );
+  }
+
+  // Sparkline history only for stories readers can see; pending ones would only grow the table.
+  for (const [i, row] of rows.entries()) {
+    if (!computed[i].published) continue;
     snapshots.push(
       {
-        story_id: c.id,
+        story_id: row.id,
         metric: "global",
-        value: scores.global_score,
+        value: row.global_score,
         calculated_at: calculatedAt,
       },
       {
-        story_id: c.id,
+        story_id: row.id,
         metric: "velocity",
-        value: scores.velocity_score,
+        value: row.velocity_score,
         calculated_at: calculatedAt,
       },
       {
-        story_id: c.id,
+        story_id: row.id,
         metric: "engagement",
-        value: scores.engagement_score,
+        value: row.engagement_score,
         calculated_at: calculatedAt,
       },
     );
   }
-
-  for (let i = 0; i < snapshots.length; i += 500) {
+  for (let i = 0; i < snapshots.length; i += SCORE_WRITE_BATCH) {
     check(
-      await deps.db.from("trend_scores").insert(snapshots.slice(i, i + 500)),
+      await deps.db
+        .from("trend_scores")
+        .insert(snapshots.slice(i, i + SCORE_WRITE_BATCH)),
     );
   }
   return { scored: computed.length };
 }
 
 const MAX_SOURCES_PER_PROMPT = 6;
+const MAX_CANDIDATE_SOURCES = 50;
 const EXCERPT_CHARS = 800;
 /** A published story is rebuilt once this many new sources have joined (plan §5.7). */
 const REBUILD_AFTER_NEW_SOURCES = 3;
@@ -276,6 +331,8 @@ export type BuildDeps = {
   topN: number;
   dailyLimit: number;
   budgetUsd: number;
+  /** Minutes between scheduled build runs; used to pace the daily cap. */
+  intervalMinutes?: number;
 };
 
 export type BuildResult = { built: number; skipped: number; failed: number };
@@ -295,7 +352,9 @@ async function buildCandidates(deps: BuildDeps) {
   const pending = check(
     await deps.db
       .from("stories")
-      .select("id, slug, source_count, built_source_count, global_score")
+      .select(
+        "id, slug, status, source_count, built_source_count, build_failures, global_score",
+      )
       .eq("status", "pending")
       .order("global_score", { ascending: false })
       .limit(deps.topN),
@@ -304,7 +363,9 @@ async function buildCandidates(deps: BuildDeps) {
   const published = await allPages((from, to) =>
     deps.db
       .from("stories")
-      .select("id, slug, source_count, built_source_count, global_score")
+      .select(
+        "id, slug, status, source_count, built_source_count, build_failures, global_score",
+      )
       .eq("status", "published")
       .gte("first_seen_at", since)
       .order("id")
@@ -324,16 +385,25 @@ async function storySources(
   db: Db,
   storyId: string,
 ): Promise<StorySourceInput[]> {
-  const rows = check(
+  const all = check(
     await db
       .from("story_sources")
       .select(
-        "raw_item_id, raw_items(title, description, content_text, url, published_at), sources(name, type)",
+        "raw_item_id, source_id, raw_items(title, description, content_text, url, published_at), sources(name, type)",
       )
       .eq("story_id", storyId)
-      .order("raw_item_id")
-      .limit(MAX_SOURCES_PER_PROMPT),
+      .order("raw_item_id", { ascending: false })
+      .limit(MAX_CANDIDATE_SOURCES),
   );
+  // Newest first, one item per source before repeats, so rebuilds see the new sources.
+  const seen = new Set<string>();
+  const firstPerSource = all.filter(
+    (r) => !seen.has(r.source_id) && seen.add(r.source_id),
+  );
+  const rows = [
+    ...firstPerSource,
+    ...all.filter((r) => !firstPerSource.includes(r)),
+  ].slice(0, MAX_SOURCES_PER_PROMPT);
   const ids = rows.map((r) => r.raw_item_id);
   const metrics = ids.length
     ? check(
@@ -400,67 +470,133 @@ async function generateStory(
   throw lastError;
 }
 
+/** Stories whose build failed this often stop being retried (spec §6.1: retry once, then failed). */
+const MAX_BUILD_FAILURES = 2;
+const DEFAULT_RUN_INTERVAL_MINUTES = 30;
+const DAY_MS = 24 * HOUR_MS;
+
 /**
- * LLM story builder (plan §5.7): the top-N pending stories by global_score, plus published
- * stories that gained ≥3 sources since their last build. Stops at the daily call limit or
- * when the budget is spent; a failing story stays pending and the run continues.
+ * Story builds allowed in this run: the calls left today spread evenly over the runs left
+ * before 00:00 UTC, so the cap is not spent by the first runs after midnight.
+ */
+export function pacedBuildLimit(p: {
+  remaining: number;
+  now: Date;
+  intervalMinutes: number;
+  topN: number;
+}): number {
+  if (p.remaining <= 0) return 0;
+  const msLeft = DAY_MS - (p.now.getTime() % DAY_MS);
+  const runsLeft = Math.max(
+    1,
+    Math.ceil(msLeft / (p.intervalMinutes * 60_000)),
+  );
+  return Math.min(p.topN, p.remaining, Math.ceil(p.remaining / runsLeft));
+}
+
+export type BuildCandidate = Awaited<
+  ReturnType<typeof buildCandidates>
+>[number];
+
+/** Candidates for this run, already cut to the paced limit; the rest count as skipped. */
+export async function selectBuildCandidates(
+  deps: BuildDeps,
+): Promise<{ candidates: BuildCandidate[]; skipped: number }> {
+  const all = await buildCandidates(deps);
+  const used = await todayCallCount(deps.db, STORY_JOB);
+  const limit = pacedBuildLimit({
+    remaining: deps.dailyLimit - used,
+    now: deps.now,
+    intervalMinutes: deps.intervalMinutes ?? DEFAULT_RUN_INTERVAL_MINUTES,
+    topN: deps.topN,
+  });
+  return {
+    candidates: all.slice(0, limit),
+    skipped: Math.max(0, all.length - limit),
+  };
+}
+
+export type BuildOutcome = "built" | "failed" | "skipped" | "stopped";
+
+/** Builds one story; "stopped" means the daily cap or budget is reached. */
+export async function buildStory(
+  story: BuildCandidate,
+  deps: BuildDeps,
+): Promise<BuildOutcome> {
+  if ((await todayCallCount(deps.db, STORY_JOB)) >= deps.dailyLimit)
+    return "stopped";
+  try {
+    await assertBudget(deps.db, deps.budgetUsd);
+  } catch (error) {
+    if (error instanceof BudgetExceededError) return "stopped";
+    throw error;
+  }
+
+  const sources = await storySources(deps.db, story.id);
+  if (sources.length === 0) return "skipped";
+
+  let output: StoryOutput;
+  try {
+    output = await generateStory(deps, storyPrompt(sources));
+  } catch {
+    const failures = story.build_failures + 1;
+    const patch =
+      story.status === "published"
+        ? // Keep the published brief; wait for more sources before trying again.
+          { build_failures: failures, built_source_count: story.source_count }
+        : {
+            build_failures: failures,
+            ...(failures >= MAX_BUILD_FAILURES
+              ? { status: "suppressed" as const }
+              : {}),
+          };
+    check(await deps.db.from("stories").update(patch).eq("id", story.id));
+    return "failed";
+  }
+
+  check(
+    await deps.db
+      .from("stories")
+      .update({
+        title: output.title,
+        summary: output.summary,
+        why_it_matters: output.why_it_matters,
+        category: output.category,
+        entities: output.entities,
+        sentiment: output.sentiment,
+        creator_relevance: output.content_creator_relevance,
+        suggested_angles: output.suggested_angles,
+        status: "published",
+        // Keep an existing slug so published URLs never change.
+        slug:
+          story.slug ??
+          `${slugify(output.title) || "story"}-${story.id.slice(0, 8)}`,
+        last_built_at: deps.now.toISOString(),
+        built_source_count: story.source_count,
+        build_failures: 0,
+      })
+      .eq("id", story.id)
+      // Never resurrect a story archived or suppressed meanwhile.
+      .in("status", ["pending", "published"]),
+  );
+  return "built";
+}
+
+/**
+ * LLM story builder (plan §5.7): the top pending stories by global_score plus published
+ * stories that gained ≥3 sources, paced across the UTC day and stopped by the daily call
+ * cap or budget. Inngest runs each story as its own step; this loop serves scripts/tests.
  */
 export async function buildStories(deps: BuildDeps): Promise<BuildResult> {
-  const result: BuildResult = { built: 0, skipped: 0, failed: 0 };
-  const candidates = await buildCandidates(deps);
-
+  const { candidates, skipped } = await selectBuildCandidates(deps);
+  const result: BuildResult = { built: 0, skipped, failed: 0 };
   for (const [index, story] of candidates.entries()) {
-    const overLimit =
-      (await todayCallCount(deps.db, STORY_JOB)) >= deps.dailyLimit;
-    const overBudget = await assertBudget(deps.db, deps.budgetUsd).then(
-      () => false,
-      (error) => {
-        if (error instanceof BudgetExceededError) return true;
-        throw error;
-      },
-    );
-    if (overLimit || overBudget) {
+    const outcome = await buildStory(story, deps);
+    if (outcome === "stopped") {
       result.skipped += candidates.length - index;
       break;
     }
-
-    const sources = await storySources(deps.db, story.id);
-    if (sources.length === 0) {
-      result.skipped++;
-      continue;
-    }
-
-    let output: StoryOutput;
-    try {
-      output = await generateStory(deps, storyPrompt(sources));
-    } catch {
-      result.failed++;
-      continue;
-    }
-
-    check(
-      await deps.db
-        .from("stories")
-        .update({
-          title: output.title,
-          summary: output.summary,
-          why_it_matters: output.why_it_matters,
-          category: output.category,
-          entities: output.entities,
-          sentiment: output.sentiment,
-          creator_relevance: output.content_creator_relevance,
-          suggested_angles: output.suggested_angles,
-          status: "published",
-          // Keep an existing slug so published URLs never change.
-          slug:
-            story.slug ??
-            `${slugify(output.title) || "story"}-${story.id.slice(0, 8)}`,
-          last_built_at: deps.now.toISOString(),
-          built_source_count: story.source_count,
-        })
-        .eq("id", story.id),
-    );
-    result.built++;
+    result[outcome]++;
   }
   return result;
 }

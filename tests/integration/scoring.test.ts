@@ -49,10 +49,13 @@ describe("scoreStories", () => {
     ]);
     expect(error).toBeNull();
 
-    const hotStory = await makeStory([
-      { id: hot, source: hn },
-      { id: hotBlog, source: blog },
-    ]);
+    const hotStory = await makeStory(
+      [
+        { id: hot, source: hn },
+        { id: hotBlog, source: blog },
+      ],
+      "published",
+    );
     const coldStory = await makeStory([{ id: cold, source: hn }]);
     const oldItem = await makeItem(hn, "Archived story");
     const archived = await makeStory([{ id: oldItem, source: hn }], "archived");
@@ -87,5 +90,12 @@ describe("scoreStories", () => {
       "global",
       "velocity",
     ]);
+
+    // Only published stories get trend snapshots (review I6: table growth).
+    const { count: pendingSnapshots } = await db
+      .from("trend_scores")
+      .select("*", { count: "exact", head: true })
+      .eq("story_id", coldStory);
+    expect(pendingSnapshots).toBe(0);
   });
 });

@@ -1,14 +1,17 @@
 import { inngest } from "@/inngest/client";
 import { embedDeps, pipelineDeps, storyBuildDeps } from "@/inngest/deps";
 import {
-  buildStories,
+  buildStory,
   clusterItems,
   scoreStories,
+  selectBuildCandidates,
 } from "@/lib/pipeline/stories";
 import { recordPipelineRun } from "@/lib/pipeline/store";
 
 const DAY_MS = 24 * 60 * 60 * 1000;
 const ARCHIVE_AFTER_MS = 7 * DAY_MS;
+/** trend_scores history kept for sparklines (review I6: unbounded growth). */
+const TREND_RETENTION_MS = 14 * DAY_MS;
 /** Must match clusterItems' per-run cap: a full batch means more backlog may be waiting. */
 const CLUSTER_BATCH = 500;
 
@@ -73,7 +76,8 @@ export const scoreStoriesFn = inngest.createFunction(
   },
 );
 
-// LLM story builder (plan §5.7): top-N, daily call cap and budget enforced inside.
+// LLM story builder (plan §5.7): one step per story (plan §2), so a retry never repeats
+// calls for stories already built; pacing, cap and budget are enforced inside.
 export const buildStoriesFn = inngest.createFunction(
   {
     id: "build-stories",
@@ -83,7 +87,20 @@ export const buildStoriesFn = inngest.createFunction(
   },
   async ({ step }) => {
     const startedAt = await step.run("start", () => new Date().toISOString());
-    const stats = await step.run("build", () => buildStories(storyBuildDeps()));
+    const { candidates, skipped } = await step.run("candidates", () =>
+      selectBuildCandidates(storyBuildDeps()),
+    );
+    const stats = { built: 0, failed: 0, skipped };
+    for (const [index, story] of candidates.entries()) {
+      const outcome = await step.run(`build-${story.id}`, () =>
+        buildStory(story, storyBuildDeps()),
+      );
+      if (outcome === "stopped") {
+        stats.skipped += candidates.length - index;
+        break;
+      }
+      stats[outcome === "skipped" ? "skipped" : outcome]++;
+    }
     await step.run("record-run", () =>
       recordPipelineRun(pipelineDeps().db, {
         fn: "build-stories",
@@ -107,13 +124,21 @@ export const archiveStoriesFn = inngest.createFunction(
       if (error) throw new Error(error.message);
       return data;
     });
+    const pruned = await step.run("prune-trend-scores", async () => {
+      const { db, now } = pipelineDeps();
+      const { data, error } = await db.rpc("prune_trend_scores", {
+        p_before: new Date(now.getTime() - TREND_RETENTION_MS).toISOString(),
+      });
+      if (error) throw new Error(error.message);
+      return data;
+    });
     await step.run("record-run", () =>
       recordPipelineRun(pipelineDeps().db, {
         fn: "archive-stories",
         startedAt,
-        stats: { archived },
+        stats: { archived, pruned },
       }),
     );
-    return { archived };
+    return { archived, pruned };
   },
 );

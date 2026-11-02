@@ -199,14 +199,14 @@ isOneToOne: false
                   ]
                 },"stories": {
                   Row: {
-                    "built_source_count": number,"category": Database["public"]['Enums']["story_category"] | null,"creator_relevance": number | null,"engagement_score": number,"entities": NonNullable<Json>,"first_seen_at": string,"freshness_score": number,"global_score": number,"id": string,"is_early_signal": boolean,"last_built_at": string | null,"last_updated_at": string,"search": unknown,"sentiment": string | null,"slug": string | null,"source_count": number,"source_diversity_score": number,"status": Database["public"]['Enums']["story_status"],"suggested_angles": NonNullable<Json>,"summary": string | null,"title": string | null,"trust_score": number,"velocity_score": number,"why_it_matters": string | null
+                    "build_failures": number,"built_source_count": number,"category": Database["public"]['Enums']["story_category"] | null,"creator_relevance": number | null,"engagement_score": number,"entities": NonNullable<Json>,"first_seen_at": string,"freshness_score": number,"global_score": number,"id": string,"is_early_signal": boolean,"last_built_at": string | null,"last_updated_at": string,"search": unknown,"sentiment": string | null,"slug": string | null,"source_count": number,"source_diversity_score": number,"status": Database["public"]['Enums']["story_status"],"suggested_angles": NonNullable<Json>,"summary": string | null,"title": string | null,"trust_score": number,"velocity_score": number,"why_it_matters": string | null
                   }
                   ComputedFields: never
                   Insert: {
-                    "built_source_count"?: number,"category"?: Database["public"]['Enums']["story_category"] | null,"creator_relevance"?: number | null,"engagement_score"?: number,"entities"?: NonNullable<Json>,"first_seen_at"?: string,"freshness_score"?: number,"global_score"?: number,"id"?: string,"is_early_signal"?: boolean,"last_built_at"?: string | null,"last_updated_at"?: string,"search"?: never,"sentiment"?: string | null,"slug"?: string | null,"source_count"?: number,"source_diversity_score"?: number,"status"?: Database["public"]['Enums']["story_status"],"suggested_angles"?: NonNullable<Json>,"summary"?: string | null,"title"?: string | null,"trust_score"?: number,"velocity_score"?: number,"why_it_matters"?: string | null
+                    "build_failures"?: number,"built_source_count"?: number,"category"?: Database["public"]['Enums']["story_category"] | null,"creator_relevance"?: number | null,"engagement_score"?: number,"entities"?: NonNullable<Json>,"first_seen_at"?: string,"freshness_score"?: number,"global_score"?: number,"id"?: string,"is_early_signal"?: boolean,"last_built_at"?: string | null,"last_updated_at"?: string,"search"?: never,"sentiment"?: string | null,"slug"?: string | null,"source_count"?: number,"source_diversity_score"?: number,"status"?: Database["public"]['Enums']["story_status"],"suggested_angles"?: NonNullable<Json>,"summary"?: string | null,"title"?: string | null,"trust_score"?: number,"velocity_score"?: number,"why_it_matters"?: string | null
                   }
                   Update: {
-                    "built_source_count"?: number,"category"?: Database["public"]['Enums']["story_category"] | null,"creator_relevance"?: number | null,"engagement_score"?: number,"entities"?: NonNullable<Json>,"first_seen_at"?: string,"freshness_score"?: number,"global_score"?: number,"id"?: string,"is_early_signal"?: boolean,"last_built_at"?: string | null,"last_updated_at"?: string,"search"?: never,"sentiment"?: string | null,"slug"?: string | null,"source_count"?: number,"source_diversity_score"?: number,"status"?: Database["public"]['Enums']["story_status"],"suggested_angles"?: NonNullable<Json>,"summary"?: string | null,"title"?: string | null,"trust_score"?: number,"velocity_score"?: number,"why_it_matters"?: string | null
+                    "build_failures"?: number,"built_source_count"?: number,"category"?: Database["public"]['Enums']["story_category"] | null,"creator_relevance"?: number | null,"engagement_score"?: number,"entities"?: NonNullable<Json>,"first_seen_at"?: string,"freshness_score"?: number,"global_score"?: number,"id"?: string,"is_early_signal"?: boolean,"last_built_at"?: string | null,"last_updated_at"?: string,"search"?: never,"sentiment"?: string | null,"slug"?: string | null,"source_count"?: number,"source_diversity_score"?: number,"status"?: Database["public"]['Enums']["story_status"],"suggested_angles"?: NonNullable<Json>,"summary"?: string | null,"title"?: string | null,"trust_score"?: number,"velocity_score"?: number,"why_it_matters"?: string | null
                   }
                   Relationships: [
                     
@@ -387,7 +387,10 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "archive_stale_stories":
+            "apply_story_scores":
+{ Args: { "p_scores": Json }; Returns: number
+                           },
+"archive_stale_stories":
 { Args: { "p_cutoff": string }; Returns: number
                            },
 "attach_duplicates":
@@ -438,6 +441,9 @@ isOneToOne: false
 { Args: { "p_embedding": string,"p_since": string,"p_threshold": number }; Returns: {
               "similarity": number,"story_id": string
             }[]
+                           },
+"prune_trend_scores":
+{ Args: { "p_before": string }; Returns: number
                            },
 "release_usage":
 { Args: { "p_kind": string,"p_user": string }; Returns: undefined

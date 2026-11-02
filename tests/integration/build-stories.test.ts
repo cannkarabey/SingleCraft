@@ -123,9 +123,10 @@ describe("buildStories", () => {
     expect(data!.slug).toMatch(/^openai-ships-agent-sdk-2-0-[0-9a-f]{8}$/);
     expect(data!.last_built_at).not.toBeNull();
 
-    // At most 6 sources, 800 chars of content each.
-    expect(prompts[0]).toContain("Source 5 reports");
-    expect(prompts[0]).not.toContain("Source 6 reports");
+    // At most 6 sources, newest first (review I3), 800 chars of content each.
+    expect(prompts[0]).toContain("Source 7 reports");
+    expect(prompts[0]).toContain("Source 2 reports");
+    expect(prompts[0]).not.toContain("Source 1 reports");
     expect(prompts[0]).not.toContain("x".repeat(801));
 
     const { count } = await db
@@ -215,5 +216,19 @@ describe("buildStories", () => {
     const status = Object.fromEntries(data!.map((r) => [r.id, r.status]));
     expect(status[bad]).toBe("pending");
     expect(status[good]).toBe("published");
+  });
+
+  test("a story that keeps failing is suppressed after two runs (review I2)", async () => {
+    const s = await makeSource(created);
+    const stuck = await makeStory([s], { global_score: 30_000 });
+    const deps = async () => baseDeps(mockModel("not json"), { topN: 1 });
+
+    await buildStories(await deps());
+    const { data: first } = await db.from("stories").select("status, build_failures").eq("id", stuck).single();
+    expect(first).toEqual({ status: "pending", build_failures: 1 });
+
+    await buildStories(await deps());
+    const { data: second } = await db.from("stories").select("status, build_failures").eq("id", stuck).single();
+    expect(second).toEqual({ status: "suppressed", build_failures: 2 });
   });
 });
