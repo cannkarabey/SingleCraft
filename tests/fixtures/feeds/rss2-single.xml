@@ -1,0 +1,4 @@
+<?xml version="1.0"?>
+<rss version="2.0"><channel><title>One</title>
+  <item><title>Only item</title><link>https://one.example.com/only</link><guid>only-1</guid></item>
+</channel></rss>

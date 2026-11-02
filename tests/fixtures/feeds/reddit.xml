@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xmlns:media="http://search.yahoo.com/mrss/">
+  <title>LocalLLaMA</title>
+  <entry>
+    <author><name>/u/someone</name><uri>https://www.reddit.com/user/someone</uri></author>
+    <category term="LocalLLaMA" label="r/LocalLLaMA"/>
+    <content type="html">&lt;div class="md"&gt;&lt;p&gt;New 8B model beats last year's 70B.&lt;/p&gt;&lt;/div&gt;</content>
+    <id>t3_1abcde</id>
+    <link href="https://www.reddit.com/r/LocalLLaMA/comments/1abcde/new_8b_model/"/>
+    <updated>2026-11-02T09:00:00+00:00</updated>
+    <published>2026-11-02T08:55:00+00:00</published>
+    <title>New 8B model beats last year's 70B</title>
+  </entry>
+</feed>

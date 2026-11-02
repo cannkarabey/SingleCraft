@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Example Changelog</title>
+  <entry>
+    <id>https://changelog.example.com/posts/42</id>
+    <title type="html">Faster builds &lt;em&gt;everywhere&lt;/em&gt;</title>
+    <link rel="alternate" type="text/html" href="https://changelog.example.com/posts/42"/>
+    <link rel="replies" href="https://changelog.example.com/posts/42#comments"/>
+    <published>2026-11-01T12:00:00Z</published>
+    <updated>2026-11-01T13:00:00Z</updated>
+    <author><name>Grace Hopper</name></author>
+    <summary>Builds are now twice as fast.</summary>
+    <content type="html">&lt;p&gt;Builds are now &lt;strong&gt;twice&lt;/strong&gt; as fast.&lt;/p&gt;</content>
+  </entry>
+</feed>

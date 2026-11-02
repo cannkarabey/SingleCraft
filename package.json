@@ -23,6 +23,7 @@
     "@supabase/supabase-js": "^2.118.0",
     "class-variance-authority": "^0.7.1",
     "cn": "^0.5.1",
+    "fast-xml-parser": "^5.11.2",
     "franc-min": "^6.2.0",
     "inngest": "^4.26.2",
     "lucide-react": "^1.66.0",

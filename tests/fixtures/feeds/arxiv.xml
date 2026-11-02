@@ -1,0 +1,17 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<rss xmlns:arxiv="http://arxiv.org/schemas/atom" xmlns:dc="http://purl.org/dc/elements/1.1/" version="2.0">
+  <channel>
+    <title>cs.AI updates on arXiv.org</title>
+    <item>
+      <title>Scaling Laws for Tool-Using Agents</title>
+      <link>https://arxiv.org/abs/2611.01234</link>
+      <description>arXiv:2611.01234v1 Announce Type: new 
+Abstract: We study how agent performance scales with tool count.</description>
+      <guid isPermaLink="false">oai:arXiv.org:2611.01234v1</guid>
+      <category>cs.AI</category>
+      <pubDate>Mon, 02 Nov 2026 00:00:00 -0500</pubDate>
+      <arxiv:announce_type>new</arxiv:announce_type>
+      <dc:creator>Alice Smith, Bob Jones</dc:creator>
+    </item>
+  </channel>
+</rss>
