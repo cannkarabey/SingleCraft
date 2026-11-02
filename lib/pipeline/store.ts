@@ -1,10 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import type {
-  Database,
-  Json,
-  TablesInsert,
-  TablesUpdate,
-} from "@/lib/supabase/types";
+import type { Database, Json, TablesUpdate } from "@/lib/supabase/types";
 import type { NormalizedItem } from "./normalize";
 import type { Source } from "./types";
 
