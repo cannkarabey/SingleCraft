@@ -34,9 +34,11 @@ const serverSchema = publicSchema.extend({
   PRODUCTHUNT_TOKEN: optionalString,
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: optionalString,
-  BILLING_PROVIDER: z.enum(["paddle", "lemonsqueezy", "stripe"]).optional(),
-  BILLING_API_KEY: optionalString,
-  BILLING_WEBHOOK_SECRET: optionalString,
+  LEMONSQUEEZY_API_KEY: optionalString,
+  LEMONSQUEEZY_STORE_ID: optionalString,
+  LEMONSQUEEZY_WEBHOOK_SECRET: optionalString,
+  LEMONSQUEEZY_CREATOR_VARIANT_ID: optionalString,
+  LEMONSQUEEZY_PRO_VARIANT_ID: optionalString,
   SENTRY_DSN: optionalString,
 });
 
