@@ -122,7 +122,93 @@
   },
   "studio": {
     "title": "Studio",
-    "empty": "No briefs yet. Pick a story in Discover and generate one."
+    "empty": "No briefs yet. Pick a story in Discover and generate one.",
+    "newTitle": "New brief",
+    "generate": "Generate brief",
+    "generating": "Generating…",
+    "filters": {
+      "all": "All",
+      "published": "Published",
+      "draft": "Drafts",
+      "label": "Filter"
+    },
+    "status": {
+      "queued": "Preparing your brief…",
+      "generating": "Preparing your brief…",
+      "ready": "Ready",
+      "failed": "Generation failed"
+    },
+    "errors": {
+      "limit": "You reached today's brief limit.",
+      "notFound": "This story is not available.",
+      "generic": "Something went wrong. Please try again."
+    },
+    "controls": {
+      "title": "Settings",
+      "platform": "Platform",
+      "format": "Format",
+      "tone": "Tone",
+      "audience": "Target audience",
+      "length": "Length",
+      "userTake": "Your own take",
+      "regenerate": "Regenerate",
+      "platforms": {
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "youtube_shorts": "YouTube Shorts",
+        "reels": "Reels",
+        "newsletter": "Newsletter",
+        "blog": "Blog"
+      },
+      "formats": {
+        "thread": "Thread",
+        "post": "Single post",
+        "video_hook": "Video hook",
+        "video_script": "Video script",
+        "newsletter_section": "Newsletter section",
+        "blog_draft": "Blog draft"
+      },
+      "lengths": {
+        "short": "Short",
+        "medium": "Medium",
+        "long": "Long"
+      }
+    },
+    "editor": {
+      "hooks": "Hook options",
+      "titles": "Title options",
+      "tweet": "Tweet {n}",
+      "linkedin": "LinkedIn post",
+      "shortsHooks": "Shorts hooks",
+      "shortsScript": "Shorts script",
+      "newsletter": "Newsletter section",
+      "blog": "Blog draft",
+      "sources": "Sources",
+      "disclosure": "AI disclosure",
+      "save": "Save",
+      "saved": "Saved",
+      "saving": "Saving…",
+      "copy": "Copy",
+      "copied": "Copied",
+      "versions": "Versions",
+      "restore": "Restore",
+      "tabs": {
+        "x": "X thread",
+        "linkedin": "LinkedIn",
+        "shorts": "Shorts",
+        "newsletter": "Newsletter",
+        "blog": "Blog"
+      }
+    },
+    "publish": {
+      "url": "Published link",
+      "cta": "I published it",
+      "done": "Published"
+    },
+    "list": {
+      "published": "Published",
+      "draft": "Draft"
+    }
   },
   "story": {
     "back": "Back to Discover",

@@ -14,12 +14,20 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [{ name: "chromium", use: { ...devices["Desktop Chrome"] } }],
-  webServer: {
-    command: `npm run dev -- --port ${PORT}`,
-    url: `http://localhost:${PORT}`,
-    reuseExistingServer: !process.env.CI,
-    // Auth emails link back to this origin (lib/auth/paths.ts authCallbackUrl).
-    env: { NEXT_PUBLIC_APP_URL: `http://localhost:${PORT}` },
-    timeout: 120_000,
-  },
+  webServer: [
+    {
+      command: `npm run dev -- --port ${PORT}`,
+      url: `http://localhost:${PORT}`,
+      reuseExistingServer: !process.env.CI,
+      // Auth emails link back to this origin (lib/auth/paths.ts authCallbackUrl).
+      env: { NEXT_PUBLIC_APP_URL: `http://localhost:${PORT}` },
+      timeout: 120_000,
+    },
+    {
+      // Stand-in for the Inngest dev server (event intake only).
+      command: "node tests/e2e/support/inngest-stub.mjs",
+      url: "http://localhost:8288",
+      reuseExistingServer: true,
+    },
+  ],
 });

@@ -122,7 +122,93 @@
   },
   "studio": {
     "title": "Studio",
-    "empty": "Henüz brief yok. Discover'dan bir story seçip üret."
+    "empty": "Henüz brief yok. Discover'dan bir story seçip üret.",
+    "newTitle": "Yeni brief",
+    "generate": "Brief üret",
+    "generating": "Üretiliyor…",
+    "filters": {
+      "all": "Tümü",
+      "published": "Yayınlananlar",
+      "draft": "Taslaklar",
+      "label": "Filtre"
+    },
+    "status": {
+      "queued": "Brief'in hazırlanıyor…",
+      "generating": "Brief'in hazırlanıyor…",
+      "ready": "Hazır",
+      "failed": "Üretim başarısız oldu"
+    },
+    "errors": {
+      "limit": "Günlük brief limitine ulaştın.",
+      "notFound": "Bu story kullanılamıyor.",
+      "generic": "Bir şeyler ters gitti. Tekrar dene."
+    },
+    "controls": {
+      "title": "Ayarlar",
+      "platform": "Platform",
+      "format": "Format",
+      "tone": "Ton",
+      "audience": "Hedef kitle",
+      "length": "Uzunluk",
+      "userTake": "Kendi görüşün",
+      "regenerate": "Yeniden üret",
+      "platforms": {
+        "x": "X",
+        "linkedin": "LinkedIn",
+        "youtube_shorts": "YouTube Shorts",
+        "reels": "Reels",
+        "newsletter": "Bülten",
+        "blog": "Blog"
+      },
+      "formats": {
+        "thread": "Thread",
+        "post": "Tek post",
+        "video_hook": "Video hook",
+        "video_script": "Video script",
+        "newsletter_section": "Bülten bölümü",
+        "blog_draft": "Blog taslağı"
+      },
+      "lengths": {
+        "short": "Kısa",
+        "medium": "Orta",
+        "long": "Uzun"
+      }
+    },
+    "editor": {
+      "hooks": "Hook seçenekleri",
+      "titles": "Başlık alternatifleri",
+      "tweet": "Tweet {n}",
+      "linkedin": "LinkedIn gönderisi",
+      "shortsHooks": "Shorts hook'ları",
+      "shortsScript": "Shorts script",
+      "newsletter": "Bülten bölümü",
+      "blog": "Blog taslağı",
+      "sources": "Kaynaklar",
+      "disclosure": "AI kullanım beyanı",
+      "save": "Kaydet",
+      "saved": "Kaydedildi",
+      "saving": "Kaydediliyor…",
+      "copy": "Kopyala",
+      "copied": "Kopyalandı",
+      "versions": "Versiyonlar",
+      "restore": "Geri yükle",
+      "tabs": {
+        "x": "X thread",
+        "linkedin": "LinkedIn",
+        "shorts": "Shorts",
+        "newsletter": "Bülten",
+        "blog": "Blog"
+      }
+    },
+    "publish": {
+      "url": "Yayın linki",
+      "cta": "Yayınladım",
+      "done": "Yayınlandı"
+    },
+    "list": {
+      "published": "Yayınlandı",
+      "draft": "Taslak"
+    }
   },
   "story": {
     "back": "Discover'a dön",
