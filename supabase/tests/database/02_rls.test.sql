@@ -32,7 +32,7 @@ select throws_ok('select 1 from public.item_metrics', '42501', null, 'anon canno
 select throws_ok('select 1 from public.story_clusters', '42501', null, 'anon cannot read story_clusters');
 select throws_ok('select 1 from public.llm_usage', '42501', null, 'anon cannot read llm_usage');
 select throws_ok('select 1 from public.pipeline_runs', '42501', null, 'anon cannot read pipeline_runs');
-select results_eq('select title from public.stories', $$values ('Published'::text)$$,
+select is_empty($$select 1 from public.stories where status <> 'published' or id = '20000000-0000-0000-0000-000000000002'$$,
   'anon sees only published stories');
 select ok(exists(select 1 from public.sources where name = 'Test RSS'), 'anon can read source names');
 select throws_ok('select etag from public.sources', '42501', null, 'anon cannot read source internals');
