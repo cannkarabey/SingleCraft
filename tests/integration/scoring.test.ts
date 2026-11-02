@@ -14,15 +14,13 @@ async function makeStory(
     .insert({ status, source_count: itemIds.length })
     .select("id")
     .single();
-  await db
-    .from("story_sources")
-    .insert(
-      itemIds.map(({ id, source }) => ({
-        story_id: story!.id,
-        raw_item_id: id,
-        source_id: source,
-      })),
-    );
+  await db.from("story_sources").insert(
+    itemIds.map(({ id, source }) => ({
+      story_id: story!.id,
+      raw_item_id: id,
+      source_id: source,
+    })),
+  );
   return story!.id;
 }
 
