@@ -159,17 +159,23 @@ isOneToOne: false
                   ]
                 },"raw_items": {
                   Row: {
-                    "author": string | null,"canonical_url": string,"content_hash": string,"content_text": string | null,"description": string | null,"embedding": string | null,"external_id": string,"fetched_at": string,"filter_status": string,"id": number,"language": string | null,"published_at": string | null,"raw_metadata": NonNullable<Json>,"reject_reason": string | null,"simhash": number | null,"source_id": string,"title": string,"url": string
+                    "author": string | null,"canonical_url": string,"content_hash": string,"content_text": string | null,"description": string | null,"duplicate_of": number | null,"embedding": string | null,"external_id": string,"fetched_at": string,"filter_status": string,"id": number,"language": string | null,"published_at": string | null,"raw_metadata": NonNullable<Json>,"reject_reason": string | null,"simhash": number | null,"source_id": string,"title": string,"url": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "author"?: string | null,"canonical_url": string,"content_hash": string,"content_text"?: string | null,"description"?: string | null,"embedding"?: string | null,"external_id": string,"fetched_at"?: string,"filter_status"?: string,"id"?: number,"language"?: string | null,"published_at"?: string | null,"raw_metadata"?: NonNullable<Json>,"reject_reason"?: string | null,"simhash"?: number | null,"source_id": string,"title": string,"url": string
+                    "author"?: string | null,"canonical_url": string,"content_hash": string,"content_text"?: string | null,"description"?: string | null,"duplicate_of"?: number | null,"embedding"?: string | null,"external_id": string,"fetched_at"?: string,"filter_status"?: string,"id"?: number,"language"?: string | null,"published_at"?: string | null,"raw_metadata"?: NonNullable<Json>,"reject_reason"?: string | null,"simhash"?: number | null,"source_id": string,"title": string,"url": string
                   }
                   Update: {
-                    "author"?: string | null,"canonical_url"?: string,"content_hash"?: string,"content_text"?: string | null,"description"?: string | null,"embedding"?: string | null,"external_id"?: string,"fetched_at"?: string,"filter_status"?: string,"id"?: number,"language"?: string | null,"published_at"?: string | null,"raw_metadata"?: NonNullable<Json>,"reject_reason"?: string | null,"simhash"?: number | null,"source_id"?: string,"title"?: string,"url"?: string
+                    "author"?: string | null,"canonical_url"?: string,"content_hash"?: string,"content_text"?: string | null,"description"?: string | null,"duplicate_of"?: number | null,"embedding"?: string | null,"external_id"?: string,"fetched_at"?: string,"filter_status"?: string,"id"?: number,"language"?: string | null,"published_at"?: string | null,"raw_metadata"?: NonNullable<Json>,"reject_reason"?: string | null,"simhash"?: number | null,"source_id"?: string,"title"?: string,"url"?: string
                   }
                   Relationships: [
                     {
+      foreignKeyName: "raw_items_duplicate_of_fkey"
+      columns: ["duplicate_of"]
+isOneToOne: false
+      referencedRelation: "raw_items"
+      referencedColumns: ["id"]
+    },{
       foreignKeyName: "raw_items_source_id_fkey"
       columns: ["source_id"]
 isOneToOne: false
@@ -381,7 +387,35 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "increment_usage":
+            "due_sources":
+{ Args: Record<PropertyKey, never>; Returns: {
+              "active": boolean,
+"config": NonNullable<Json>,
+"consecutive_failures": number,
+"created_at": string,
+"etag": string | null,
+"fetch_interval_min": number,
+"id": string,
+"last_error": string | null,
+"last_fetched_at": string | null,
+"last_modified": string | null,
+"name": string,
+"trust_weight": number,
+"type": Database["public"]['Enums']["source_type"],
+"url": string
+            }[]
+                          SetofOptions: {
+        from: "*"
+        to: "sources"
+        isOneToOne: false
+        isSetofReturn: true
+      } },
+"find_duplicate":
+{ Args: { "p_item_id": number,"p_max_distance": number,"p_since": string }; Returns: {
+              "duplicate_of": number,"kind": string
+            }[]
+                           },
+"increment_usage":
 { Args: { "p_kind": string,"p_limit": number,"p_user": string }; Returns: boolean
                            },
 "match_story_cluster":

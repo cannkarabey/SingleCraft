@@ -22,7 +22,7 @@ insert into public.sources (name, type, url, trust_weight, fetch_interval_min, a
   ('Cloudflare Blog',       'rss', 'https://blog.cloudflare.com/rss/',                              0.85, 60, true,  '{"niche_specific": true}'),
   ('Linear Changelog',      'rss', 'https://linear.app/rss/changelog.xml',                          0.80, 60, true,  '{"niche_specific": true}'),
   -- Hacker News (Algolia API)
-  ('Hacker News Front Page','hn',  'https://hn.algolia.com/api/v1/search?tags=front_page',          0.75, 30, true,  '{"tags": "front_page"}'),
+  ('Hacker News Front Page','hn',  'https://hn.algolia.com/api/v1/search?tags=front_page',          0.75, 30, true,  '{"tags": "front_page", "niche_specific": false}'),
   ('Show HN',               'hn',  'https://hn.algolia.com/api/v1/search_by_date?tags=show_hn',     0.65, 30, true,  '{"tags": "show_hn"}'),
   -- Reddit (subreddit RSS; see plan §1 #20)
   ('r/MachineLearning',     'reddit', 'https://www.reddit.com/r/MachineLearning/.rss',              0.60, 60, true,  '{"subreddit": "MachineLearning"}'),
