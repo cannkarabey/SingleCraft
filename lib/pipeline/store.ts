@@ -13,9 +13,19 @@ export type Db = SupabaseClient<Database>;
 /** Consecutive fetch failures after which a source is deactivated (plan §5.1). */
 export const MAX_CONSECUTIVE_FAILURES = 5;
 
-function check<T>(result: { data: T; error: { message: string } | null }): T {
+type Result<T> = { data: T; error: { message: string } | null };
+
+/** Unwraps a query that returns rows. */
+function check<T>(result: Result<T>): NonNullable<T> {
   if (result.error) throw new Error(result.error.message);
-  return result.data;
+  if (result.data === null || result.data === undefined)
+    throw new Error("Query returned no data");
+  return result.data as NonNullable<T>;
+}
+
+/** Fails on error for writes that return no rows. */
+function assertOk(result: { error: { message: string } | null }): void {
+  if (result.error) throw new Error(result.error.message);
 }
 
 export async function getSource(db: Db, id: string): Promise<Source> {
@@ -83,7 +93,7 @@ export async function insertMetrics(
   rows: { raw_item_id: number; metric: string; value: number }[],
 ): Promise<void> {
   if (rows.length === 0) return;
-  check(await db.from("item_metrics").insert(rows));
+  assertOk(await db.from("item_metrics").insert(rows));
 }
 
 export async function recordFetchSuccess(
@@ -101,7 +111,7 @@ export async function recordFetchSuccess(
     patch.etag = validators.etag ?? null;
     patch.last_modified = validators.lastModified ?? null;
   }
-  check(await db.from("sources").update(patch).eq("id", sourceId));
+  assertOk(await db.from("sources").update(patch).eq("id", sourceId));
 }
 
 /** Counts a failure; the source still waits its interval before the next attempt. */
@@ -111,7 +121,7 @@ export async function recordFetchFailure(
   message: string,
 ): Promise<void> {
   const failures = source.consecutive_failures + 1;
-  check(
+  assertOk(
     await db
       .from("sources")
       .update({
@@ -173,7 +183,7 @@ export async function updateItem(
   id: number,
   patch: TablesUpdate<"raw_items"> & { raw_metadata?: Json },
 ): Promise<void> {
-  check(await db.from("raw_items").update(patch).eq("id", id));
+  assertOk(await db.from("raw_items").update(patch).eq("id", id));
 }
 
 export async function recentHnItems(

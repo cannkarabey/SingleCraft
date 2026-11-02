@@ -8,6 +8,7 @@ import {
 } from "@/lib/pipeline/ingest";
 import { fakeFetch, fixture } from "../helpers/fixtures";
 import type { SourceType } from "@/lib/pipeline/types";
+import type { Json } from "@/lib/supabase/types";
 
 const db = createAdminClient();
 const now = new Date("2026-11-02T12:00:00Z");
@@ -15,7 +16,7 @@ const created: string[] = [];
 
 async function makeSource(
   type: SourceType,
-  config: object = { niche_specific: true },
+  config: Record<string, Json> = { niche_specific: true },
 ) {
   const id = randomUUID();
   const { error } = await db.from("sources").insert({
