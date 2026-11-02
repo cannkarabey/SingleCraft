@@ -455,6 +455,11 @@ isOneToOne: false
 "prune_trend_scores":
 { Args: { "p_before": string }; Returns: number
                            },
+"radar_feed":
+{ Args: { "p_niche": string }; Returns: {
+              "bucket": string,"category": Database["public"]['Enums']["story_category"],"engagement_score": number,"final_score": number,"first_seen_at": string,"global_score": number,"is_early_signal": boolean,"niche_fit": number,"saved": boolean,"slug": string,"source_count": number,"story_id": string,"summary": string,"title": string,"trust_score": number,"velocity_score": number,"why_it_matters": string
+            }[]
+                           },
 "release_usage":
 { Args: { "p_kind": string,"p_user": string }; Returns: undefined
                            },
