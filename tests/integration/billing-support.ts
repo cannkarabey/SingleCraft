@@ -12,10 +12,21 @@ export function configureBilling() {
 /** A Lemon Squeezy subscription webhook for `userId`, as Lemon Squeezy would sign it. */
 export function subscriptionWebhook(
   userId: string,
-  overrides: { event?: string; status?: string; endsAt?: string | null; updatedAt: string; subscriptionId?: string },
+  overrides: {
+    event?: string;
+    status?: string;
+    endsAt?: string | null;
+    updatedAt: string;
+    subscriptionId?: string;
+  },
   secret = WEBHOOK_SECRET,
 ) {
-  const payload = JSON.parse(readFileSync("tests/fixtures/lemonsqueezy/subscription_created.json", "utf8"));
+  const payload = JSON.parse(
+    readFileSync(
+      "tests/fixtures/lemonsqueezy/subscription_created.json",
+      "utf8",
+    ),
+  );
   payload.meta.event_name = overrides.event ?? "subscription_updated";
   payload.meta.custom_data.user_id = userId;
   payload.data.id = overrides.subscriptionId ?? `sub-${userId.slice(0, 8)}`;

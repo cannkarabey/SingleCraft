@@ -10,7 +10,10 @@ import {
   verifyWebhookSignature,
 } from "@/lib/billing/lemonsqueezy";
 
-const raw = readFileSync("tests/fixtures/lemonsqueezy/subscription_created.json", "utf8");
+const raw = readFileSync(
+  "tests/fixtures/lemonsqueezy/subscription_created.json",
+  "utf8",
+);
 const env = { ...process.env };
 beforeEach(() => {
   process.env.LEMONSQUEEZY_API_KEY = "ls_test";
@@ -33,7 +36,8 @@ function fakeFetch(body: object, status = 200) {
 }
 
 describe("webhook signature", () => {
-  const sign = (body: string, secret = "whsec") => createHmac("sha256", secret).update(body).digest("hex");
+  const sign = (body: string, secret = "whsec") =>
+    createHmac("sha256", secret).update(body).digest("hex");
 
   test("valid HMAC-SHA256 of the raw body", () => {
     expect(verifyWebhookSignature(raw, sign(raw), "whsec")).toBe(true);
@@ -66,7 +70,13 @@ describe("parseSubscriptionEvent", () => {
 
   test("ignores non-subscription events and unknown variants", () => {
     const payload = JSON.parse(raw);
-    expect(parseSubscriptionEvent({ ...payload, meta: { ...payload.meta, event_name: "order_created" }, data: { ...payload.data, type: "orders" } })).toBeNull();
+    expect(
+      parseSubscriptionEvent({
+        ...payload,
+        meta: { ...payload.meta, event_name: "order_created" },
+        data: { ...payload.data, type: "orders" },
+      }),
+    ).toBeNull();
     payload.data.attributes.variant_id = 9999;
     expect(parseSubscriptionEvent(payload)).toBeNull();
   });
@@ -86,9 +96,21 @@ test("planForVariant", () => {
 
 describe("API calls", () => {
   test("createCheckout sends store, variant, email and user id; returns the URL", async () => {
-    const { impl, calls } = fakeFetch({ data: { attributes: { url: "https://store.lemonsqueezy.com/checkout/buy/x" } } }, 201);
+    const { impl, calls } = fakeFetch(
+      {
+        data: {
+          attributes: { url: "https://store.lemonsqueezy.com/checkout/buy/x" },
+        },
+      },
+      201,
+    );
     const url = await createCheckout(
-      { variantId: "5001", email: "a@test.dev", userId: "u-1", redirectUrl: "https://app.test/settings?billing=success" },
+      {
+        variantId: "5001",
+        email: "a@test.dev",
+        userId: "u-1",
+        redirectUrl: "https://app.test/settings?billing=success",
+      },
       impl,
     );
     expect(url).toBe("https://store.lemonsqueezy.com/checkout/buy/x");
@@ -97,20 +119,41 @@ describe("API calls", () => {
     expect(headers.get("authorization")).toBe("Bearer ls_test");
     expect(headers.get("content-type")).toBe("application/vnd.api+json");
     const body = JSON.parse(String(calls[0].init?.body));
-    expect(body.data.relationships.store.data).toEqual({ type: "stores", id: "1234" });
-    expect(body.data.relationships.variant.data).toEqual({ type: "variants", id: "5001" });
-    expect(body.data.attributes.checkout_data).toMatchObject({ email: "a@test.dev", custom: { user_id: "u-1" } });
-    expect(body.data.attributes.product_options.redirect_url).toBe("https://app.test/settings?billing=success");
+    expect(body.data.relationships.store.data).toEqual({
+      type: "stores",
+      id: "1234",
+    });
+    expect(body.data.relationships.variant.data).toEqual({
+      type: "variants",
+      id: "5001",
+    });
+    expect(body.data.attributes.checkout_data).toMatchObject({
+      email: "a@test.dev",
+      custom: { user_id: "u-1" },
+    });
+    expect(body.data.attributes.product_options.redirect_url).toBe(
+      "https://app.test/settings?billing=success",
+    );
   });
 
   test("customerPortalUrl reads a fresh signed portal URL", async () => {
-    const { impl, calls } = fakeFetch({ data: { attributes: { urls: { customer_portal: "https://portal.test/x" } } } });
-    expect(await customerPortalUrl("987654", impl)).toBe("https://portal.test/x");
-    expect(calls[0].url).toBe("https://api.lemonsqueezy.com/v1/subscriptions/987654");
+    const { impl, calls } = fakeFetch({
+      data: {
+        attributes: { urls: { customer_portal: "https://portal.test/x" } },
+      },
+    });
+    expect(await customerPortalUrl("987654", impl)).toBe(
+      "https://portal.test/x",
+    );
+    expect(calls[0].url).toBe(
+      "https://api.lemonsqueezy.com/v1/subscriptions/987654",
+    );
   });
 
   test("API errors throw", async () => {
-    await expect(customerPortalUrl("1", fakeFetch({ errors: [] }, 404).impl)).rejects.toThrow(/404/);
+    await expect(
+      customerPortalUrl("1", fakeFetch({ errors: [] }, 404).impl),
+    ).rejects.toThrow(/404/);
   });
 
   test("billingConfigured needs key, store and creator variant", () => {
