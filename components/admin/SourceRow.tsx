@@ -23,9 +23,10 @@ export function SourceRow({ source }: { source: Source }) {
   const [status, setStatus] = useState<"saved" | "error" | null>(null);
   const [pending, startTransition] = useTransition();
 
-  const save = (body: { active?: boolean; trust_weight?: number }) =>
+  const save = (body: { active?: boolean; trust_weight?: number }) => {
+    // Cleared outside the transition so a previous "Saved" never stands for this save.
+    setStatus(null);
     startTransition(async () => {
-      setStatus(null);
       const res = await fetch(`/api/admin/sources/${source.id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
@@ -33,6 +34,7 @@ export function SourceRow({ source }: { source: Source }) {
       }).catch(() => null);
       setStatus(res?.ok ? "saved" : "error");
     });
+  };
 
   return (
     <tr className="border-t align-top">

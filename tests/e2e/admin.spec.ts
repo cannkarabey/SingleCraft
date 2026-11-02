@@ -38,7 +38,13 @@ test.describe("admin panel (plan §8.2)", () => {
       await row.getByLabel("Güven").fill("0.42");
       await row.getByRole("button", { name: "Kaydet" }).click();
       await expect(row.getByRole("status")).toHaveText("Kaydedildi");
+      const patched = page.waitForResponse(
+        (r) =>
+          r.url().includes(`/api/admin/sources/${source.id}`) &&
+          r.request().method() === "PATCH",
+      );
       await row.getByRole("checkbox", { name: "Aktif" }).uncheck();
+      expect((await patched).ok()).toBe(true);
       await expect(row.getByRole("status")).toHaveText("Kaydedildi");
 
       await page.reload();
