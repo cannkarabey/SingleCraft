@@ -101,6 +101,9 @@ export const buildStoriesFn = inngest.createFunction(
       }
       stats[outcome === "skipped" ? "skipped" : outcome]++;
     }
+    if (stats.built > 0) {
+      await step.sendEvent("built", { name: "stories/built", data: stats });
+    }
     await step.run("record-run", () =>
       recordPipelineRun(pipelineDeps().db, {
         fn: "build-stories",

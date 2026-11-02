@@ -5,6 +5,7 @@ test("registers the pipeline functions", () => {
   expect(functions.map((fn) => fn.id()).sort()).toEqual([
     "archive-stories",
     "build-stories",
+    "check-alerts",
     "cluster-items",
     "fetch-sources",
     "niche-embed",
@@ -12,6 +13,7 @@ test("registers the pipeline functions", () => {
     "radar-angle",
     "refresh-metrics",
     "score-stories",
+    "send-digest",
     "studio-generate",
   ]);
 });

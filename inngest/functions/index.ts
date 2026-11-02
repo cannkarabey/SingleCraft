@@ -1,3 +1,4 @@
+import { checkAlertsFn, sendDigest } from "./email";
 import { fetchSources } from "./fetch-sources";
 import { processItemsFn } from "./process-items";
 import { nicheEmbed, radarAngle } from "./radar";
@@ -21,4 +22,6 @@ export const functions = [
   nicheEmbed,
   radarAngle,
   studioGenerate,
+  sendDigest,
+  checkAlertsFn,
 ];
