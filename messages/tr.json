@@ -12,7 +12,8 @@
     "language": "Dil",
     "signIn": "Giriş yap",
     "signOut": "Çıkış yap",
-    "account": "Hesap"
+    "account": "Hesap",
+    "settings": "Ayarlar"
   },
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
@@ -408,5 +409,29 @@
     "footer": "Bu e-postayı SignalCraft ayarların nedeniyle alıyorsun.",
     "unsubscribe": "Abonelikten çık",
     "manage": "E-posta ayarları"
+  },
+  "settings": {
+    "title": "E-posta ayarları",
+    "saved": "Kaydedildi.",
+    "error": "Kaydedilemedi. Değerleri kontrol et.",
+    "save": "Kaydet",
+    "timezone": "Saat dilimi",
+    "digest": {
+      "title": "Günlük özet",
+      "hint": "Her sabah seçtiğin saatte en iyi beş story. Creator ve Pro planlarında.",
+      "enabled": "Günlük özeti gönder",
+      "hour": "Günlük özet saati"
+    },
+    "alerts": {
+      "title": "Alarmlar",
+      "hint": "Bir story nişinin alarm eşiğini geçince e-posta (günde en fazla 3).",
+      "enabled": "Alarm e-postaları"
+    },
+    "unsubscribed": {
+      "title": "Abonelikten çıktın",
+      "digest": "Artık günlük özet almayacaksın.",
+      "alerts": "Artık alarm e-postası almayacaksın.",
+      "manage": "E-posta ayarlarını yönet"
+    }
   }
 }

@@ -12,7 +12,8 @@
     "language": "Language",
     "signIn": "Sign in",
     "signOut": "Sign out",
-    "account": "Account"
+    "account": "Account",
+    "settings": "Settings"
   },
   "hero": {
     "title": "The daily signal radar for tech content creators.",
@@ -408,5 +409,29 @@
     "footer": "You get this email because of your SignalCraft settings.",
     "unsubscribe": "Unsubscribe",
     "manage": "Email settings"
+  },
+  "settings": {
+    "title": "Email settings",
+    "saved": "Saved.",
+    "error": "Could not save. Please check the values.",
+    "save": "Save",
+    "timezone": "Time zone",
+    "digest": {
+      "title": "Daily digest",
+      "hint": "Your top five stories, every morning at the hour you choose. Included in Creator and Pro.",
+      "enabled": "Send me the daily digest",
+      "hour": "Daily digest hour"
+    },
+    "alerts": {
+      "title": "Alerts",
+      "hint": "An email when a story crosses your niche's alert threshold (at most 3 a day).",
+      "enabled": "Alert emails"
+    },
+    "unsubscribed": {
+      "title": "You are unsubscribed",
+      "digest": "You will no longer receive the daily digest.",
+      "alerts": "You will no longer receive alert emails.",
+      "manage": "Manage email settings"
+    }
   }
 }

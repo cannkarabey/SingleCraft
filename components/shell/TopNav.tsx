@@ -42,16 +42,21 @@ export async function TopNav() {
           </Button>
           <LanguageSwitcher />
           {user ? (
-            <form action={signOut}>
-              <Button
-                type="submit"
-                size="sm"
-                variant="ghost"
-                title={user.email ?? undefined}
-              >
-                {t("signOut")}
+            <>
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/settings">{t("settings")}</Link>
               </Button>
-            </form>
+              <form action={signOut}>
+                <Button
+                  type="submit"
+                  size="sm"
+                  variant="ghost"
+                  title={user.email ?? undefined}
+                >
+                  {t("signOut")}
+                </Button>
+              </form>
+            </>
           ) : (
             <>
               <Button asChild size="sm" variant="ghost">
