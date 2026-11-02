@@ -1,3 +1,4 @@
+import { DEDUPE } from "./config";
 import { fetchSource, type FetchDeps } from "./fetchers";
 import { hnItemsByIds } from "./fetchers/hn";
 import { filterItem } from "./filter";
@@ -19,9 +20,9 @@ import {
 import type { FetchedItem } from "./types";
 
 const HOUR_MS = 60 * 60 * 1000;
-/** Window and Hamming threshold for near-duplicate detection (plan §5.3). */
-const DEDUPE_WINDOW_MS = 72 * HOUR_MS;
-const NEAR_DUPLICATE_DISTANCE = 3;
+/** Window and Hamming threshold for near-duplicate detection (plan §5.3); see ./config. */
+const DEDUPE_WINDOW_MS = DEDUPE.windowMs;
+const NEAR_DUPLICATE_DISTANCE = DEDUPE.nearDuplicateDistance;
 const METRICS_REFRESH_WINDOW_MS = 48 * HOUR_MS;
 
 type IngestDeps = FetchDeps & { db: Db };

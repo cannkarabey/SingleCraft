@@ -1,4 +1,5 @@
 import { preCategory, type StoryCategory } from "./categories";
+import { FILTER } from "./config";
 import type { DetectedLanguage } from "./language";
 import type { Database } from "@/lib/supabase/types";
 
@@ -24,22 +25,15 @@ export type FilterResult =
   | { status: "accepted"; category: StoryCategory }
   | { status: "rejected"; reason: RejectReason; category: StoryCategory };
 
-const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
-const MIN_EDITORIAL_LENGTH = 80;
-/** HN link posts carry only a headline. */
-const MIN_HN_TITLE_LENGTH = 15;
-/** Reddit/GitHub/Product Hunt titles are short ("v17.0.0") but come with a body. */
-const MIN_COMMUNITY_LENGTH = 30;
-const MIN_TRUST = 0.3;
-const COMMUNITY_SOURCES: ReadonlySet<SourceType> = new Set([
-  "reddit",
-  "github",
-  "producthunt",
-]);
-// Only phrases that are unambiguous in tech coverage: bare "airdrop", "betting" or
-// "giveaway" show up in ordinary headlines (Apple AirDrop, "betting on AI").
-const SPAM_PATTERN =
-  /\b(crypto airdrop|token airdrop|online casino|sports betting|porn|escort service|buy followers|onlyfans|sponsored post)\b/i;
+const {
+  maxAgeMs: MAX_AGE_MS,
+  minEditorialLength: MIN_EDITORIAL_LENGTH,
+  minHnTitleLength: MIN_HN_TITLE_LENGTH,
+  minCommunityLength: MIN_COMMUNITY_LENGTH,
+  minTrust: MIN_TRUST,
+  communitySources: COMMUNITY_SOURCES,
+  spamPattern: SPAM_PATTERN,
+} = FILTER;
 
 /** Rule-based pre-LLM filter (IMPLEMENTATION_PLAN §5.4). First failing rule wins. */
 export function filterItem(

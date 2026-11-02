@@ -1,0 +1,53 @@
+{
+  "note": "SimHash golden set (plan §5.3, Faz 9). 'same' = one article syndicated or re-posted with cosmetic changes; must be within DEDUPE.nearDuplicateDistance. 'different' = separate stories, often on the same topic; must stay apart. Rewritten headlines of the same event are NOT near duplicates: embeddings cluster those.",
+  "pairs": [
+    {
+      "same": true,
+      "label": "case and punctuation",
+      "a": "OpenAI releases the Agents SDK with built-in tracing and handoffs for multi-agent workflows",
+      "b": "openai releases the agents sdk, with built-in tracing and handoffs for multi-agent workflows!"
+    },
+    {
+      "same": true,
+      "label": "syndication suffix",
+      "a": "Google DeepMind unveils Gemini model that plans multi-step robot tasks in unfamiliar homes",
+      "b": "Google DeepMind unveils Gemini model that plans multi-step robot tasks in unfamiliar homes - The Verge"
+    },
+    {
+      "same": true,
+      "label": "smart quotes and whitespace",
+      "a": "Anthropic's new model can operate a computer: it moves the cursor, clicks buttons and types text",
+      "b": "Anthropic’s new model can operate a computer:  it moves the cursor, clicks buttons and types text"
+    },
+    {
+      "same": true,
+      "label": "identical re-post",
+      "a": "Show HN: I built an open-source vector database in Rust that fits on a Raspberry Pi",
+      "b": "Show HN: I built an open-source vector database in Rust that fits on a Raspberry Pi"
+    },
+    {
+      "same": false,
+      "label": "same company, different launch",
+      "a": "OpenAI releases the Agents SDK with built-in tracing and handoffs for multi-agent workflows",
+      "b": "OpenAI raises prices for its API as demand for reasoning models outpaces data center capacity"
+    },
+    {
+      "same": false,
+      "label": "same topic, different story",
+      "a": "Next.js 16 ships with Turbopack as the default bundler and a new caching model",
+      "b": "Vite 7 drops Node 18 support and makes Rolldown the default bundler for production builds"
+    },
+    {
+      "same": false,
+      "label": "same event, rewritten headline (embedding territory)",
+      "a": "Google DeepMind unveils Gemini model that plans multi-step robot tasks in unfamiliar homes",
+      "b": "DeepMind's latest Gemini Robotics release lets household robots follow long instructions"
+    },
+    {
+      "same": false,
+      "label": "unrelated",
+      "a": "Show HN: I built an open-source vector database in Rust that fits on a Raspberry Pi",
+      "b": "EU regulators open an investigation into app store payment rules for game developers"
+    }
+  ]
+}

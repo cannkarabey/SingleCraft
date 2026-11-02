@@ -1,3 +1,4 @@
+import { DEDUPE } from "./config";
 import { generateText, Output, type LanguageModel } from "ai";
 import {
   assertBudget,
@@ -27,9 +28,9 @@ import type { SourceType } from "./types";
 import type { Json } from "@/lib/supabase/types";
 
 const HOUR_MS = 60 * 60 * 1000;
-/** Cosine similarity for joining a cluster, and how far back clusters stay open (plan §5.3). */
-export const CLUSTER_THRESHOLD = 0.85;
-const CLUSTER_WINDOW_MS = 72 * HOUR_MS;
+/** Cosine similarity for joining a cluster (plan §5.3); tuned in ./config. */
+export const CLUSTER_THRESHOLD = DEDUPE.clusterThreshold;
+const CLUSTER_WINDOW_MS = DEDUPE.clusterWindowMs;
 /** Items embedded per run; bounds embedding quota use. Newest items first. */
 const MAX_ITEMS_PER_RUN = 500;
 const EMBED_TEXT_CHARS = 1000;

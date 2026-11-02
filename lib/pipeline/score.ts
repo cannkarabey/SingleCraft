@@ -1,25 +1,14 @@
+import {
+  EARLY_SIGNAL,
+  ENGAGEMENT_CAPS,
+  FRESHNESS_HALF_LIFE_HOURS,
+  SCORE_WEIGHTS,
+  VELOCITY,
+} from "./config";
 import type { SourceType } from "./types";
 
-// Scoring (IMPLEMENTATION_PLAN §5.5). Every sub-score is 0–100 except trust (0–1).
-// Weights and thresholds live here so Faz 9 calibration touches one file.
-
-export const SCORE_WEIGHTS = {
-  velocity: 0.35,
-  engagement: 0.25,
-  nicheFit: 0.2, // Radar only (Faz 5); excluded from global_score
-  diversity: 0.1,
-  freshness: 0.1,
-} as const;
-
-/** Value at which a platform metric counts as maximal engagement. */
-export const ENGAGEMENT_CAPS: Partial<
-  Record<SourceType, Record<string, number>>
-> = {
-  hn: { points: 500, comments: 300 },
-  reddit: { upvotes: 2000 },
-  github: { stars: 1000 },
-  producthunt: { votes: 500 },
-};
+// Scoring (IMPLEMENTATION_PLAN §5.5). Weights and thresholds live in ./config.
+export { EARLY_SIGNAL, ENGAGEMENT_CAPS, SCORE_WEIGHTS } from "./config";
 
 /** Metrics whose growth drives velocity. */
 const GROWTH_METRICS: Partial<Record<SourceType, string>> = {
@@ -28,16 +17,6 @@ const GROWTH_METRICS: Partial<Record<SourceType, string>> = {
   github: "stars",
   producthunt: "votes",
 };
-
-const NEW_SOURCE_WEIGHT = 0.5;
-const FRESHNESS_HALF_LIFE_HOURS = 18;
-
-export const EARLY_SIGNAL = {
-  minVelocityPercentile: 70,
-  maxSourceCount: 3,
-  maxEngagement: 50,
-  maxAgeHours: 12,
-} as const;
 
 function cap(sourceType: SourceType, metric: string): number | undefined {
   return ENGAGEMENT_CAPS[sourceType]?.[metric];
@@ -85,7 +64,7 @@ export function velocityRaw(
     },
     0,
   );
-  return growth + NEW_SOURCE_WEIGHT * newSourcesInWindow;
+  return growth + VELOCITY.newSourceWeight * newSourcesInWindow;
 }
 
 /** Percentile rank (0–100) of each value within the list; ties share the mid-rank. */
