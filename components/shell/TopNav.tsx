@@ -2,12 +2,14 @@ import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { signOut } from "@/lib/auth/actions";
+import { currentUser } from "@/lib/auth/session";
 import { LanguageSwitcher } from "./LanguageSwitcher";
 
 const MODULES = ["discover", "radar", "studio"] as const;
 
 export async function TopNav() {
-  const t = await getTranslations("nav");
+  const [t, user] = await Promise.all([getTranslations("nav"), currentUser()]);
   return (
     <header className="bg-background/90 sticky top-0 z-40 border-b backdrop-blur">
       <nav
@@ -39,9 +41,27 @@ export async function TopNav() {
             <Search />
           </Button>
           <LanguageSwitcher />
-          <Button asChild size="sm" className="hidden sm:inline-flex">
-            <Link href="/discover">{t("cta")}</Link>
-          </Button>
+          {user ? (
+            <form action={signOut}>
+              <Button
+                type="submit"
+                size="sm"
+                variant="ghost"
+                title={user.email ?? undefined}
+              >
+                {t("signOut")}
+              </Button>
+            </form>
+          ) : (
+            <>
+              <Button asChild size="sm" variant="ghost">
+                <Link href="/login">{t("signIn")}</Link>
+              </Button>
+              <Button asChild size="sm" className="hidden sm:inline-flex">
+                <Link href="/login?next=%2Fonboarding">{t("cta")}</Link>
+              </Button>
+            </>
+          )}
         </div>
       </nav>
     </header>

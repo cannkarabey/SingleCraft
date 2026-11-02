@@ -18,5 +18,7 @@ export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
 };
 
 export function limitsFor(plan: string | null | undefined): PlanLimits {
-  return plan && plan in PLAN_LIMITS ? PLAN_LIMITS[plan as Plan] : PLAN_LIMITS.free;
+  return plan && plan in PLAN_LIMITS
+    ? PLAN_LIMITS[plan as Plan]
+    : PLAN_LIMITS.free;
 }

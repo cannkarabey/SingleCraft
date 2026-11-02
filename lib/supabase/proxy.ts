@@ -1,5 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
+import { isProtectedPath } from "@/lib/auth/paths";
 import { publicEnv } from "@/lib/env";
 
 // Refreshes the Supabase auth session on every matched request and forwards
@@ -31,6 +32,17 @@ export async function updateSession(request: NextRequest) {
   );
 
   // Do not run code between createServerClient and getClaims: it validates and refreshes the token.
-  await supabase.auth.getClaims();
+  const { data } = await supabase.auth.getClaims();
+
+  if (!data?.claims && isProtectedPath(request.nextUrl.pathname)) {
+    const login = request.nextUrl.clone();
+    login.pathname = "/login";
+    login.search = `?next=${encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search)}`;
+    const redirect = NextResponse.redirect(login);
+    // Keep any cookies the refresh attempt set (e.g. clearing an expired session).
+    for (const cookie of response.cookies.getAll())
+      redirect.cookies.set(cookie);
+    return redirect;
+  }
   return response;
 }

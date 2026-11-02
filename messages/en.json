@@ -9,7 +9,10 @@
     "studio": "Studio",
     "search": "Search",
     "cta": "Start free",
-    "language": "Language"
+    "language": "Language",
+    "signIn": "Sign in",
+    "signOut": "Sign out",
+    "account": "Account"
   },
   "hero": {
     "title": "The daily signal radar for tech content creators.",
@@ -194,6 +197,23 @@
         "q": "How fresh is the data?",
         "a": "Sources are checked every 15–60 minutes and scores update every 30 minutes."
       }
+    }
+  },
+  "auth": {
+    "title": "Sign in",
+    "subtitle": "We'll email you a sign-in link. No password needed.",
+    "email": "Email",
+    "sendLink": "Send sign-in link",
+    "sent": "We sent a sign-in link to your email.",
+    "or": "or",
+    "providers": {
+      "google": "Continue with Google",
+      "github": "Continue with GitHub"
+    },
+    "errors": {
+      "email": "Enter a valid email address.",
+      "provider": "That sign-in method is not available right now.",
+      "generic": "Sign-in failed. Please try again."
     }
   }
 }

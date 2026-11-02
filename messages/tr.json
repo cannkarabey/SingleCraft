@@ -9,7 +9,10 @@
     "studio": "Studio",
     "search": "Ara",
     "cta": "Ücretsiz başla",
-    "language": "Dil"
+    "language": "Dil",
+    "signIn": "Giriş yap",
+    "signOut": "Çıkış yap",
+    "account": "Hesap"
   },
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
@@ -194,6 +197,23 @@
         "q": "Veri ne kadar güncel?",
         "a": "Kaynaklar 15–60 dakikada bir kontrol edilir, skorlar 30 dakikada bir güncellenir."
       }
+    }
+  },
+  "auth": {
+    "title": "Giriş yap",
+    "subtitle": "E-postana bir giriş linki göndereceğiz. Şifre gerekmez.",
+    "email": "E-posta",
+    "sendLink": "Giriş linki gönder",
+    "sent": "Giriş linkini e-postana gönderdik.",
+    "or": "veya",
+    "providers": {
+      "google": "Google ile devam et",
+      "github": "GitHub ile devam et"
+    },
+    "errors": {
+      "email": "Geçerli bir e-posta adresi gir.",
+      "provider": "Bu giriş yöntemi şu an kullanılamıyor.",
+      "generic": "Giriş başarısız oldu. Tekrar dene."
     }
   }
 }
