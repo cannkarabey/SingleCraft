@@ -1,3 +1,4 @@
+import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { pipelineDeps } from "@/inngest/deps";
 import { recordPipelineRun } from "@/lib/pipeline/store";
@@ -5,7 +6,13 @@ import { recordPipelineRun } from "@/lib/pipeline/store";
 // Daily safety net: users whose cancelled period ended drop to free even if the
 // subscription_expired webhook was missed.
 export const billingReconcile = inngest.createFunction(
-  { id: "billing-reconcile", triggers: [{ cron: "15 2 * * *" }] },
+  {
+    id: "billing-reconcile",
+    triggers: [
+      { cron: "15 2 * * *" },
+      { event: adminRunEvent("billing-reconcile") },
+    ],
+  },
   async ({ step }) => {
     const startedAt = await step.run("start", () => new Date().toISOString());
     const expired = await step.run("expire", async () => {

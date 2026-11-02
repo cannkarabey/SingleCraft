@@ -1,3 +1,4 @@
+import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { pipelineDeps } from "@/inngest/deps";
 import { ingestSource } from "@/lib/pipeline/ingest";
@@ -12,7 +13,10 @@ import {
 export const fetchSources = inngest.createFunction(
   {
     id: "fetch-sources",
-    triggers: [{ cron: "*/15 * * * *" }],
+    triggers: [
+      { cron: "*/15 * * * *" },
+      { event: adminRunEvent("fetch-sources") },
+    ],
     concurrency: 1,
     onFailure: async ({ error }) => {
       await recordPipelineRun(pipelineDeps().db, {

@@ -439,7 +439,17 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "apply_story_scores":
+            "admin_llm_spend":
+{ Args: { "p_days": number,"p_now": string }; Returns: {
+              "calls": number,"cost_usd": number,"day": string
+            }[]
+                           },
+"admin_reject_reasons":
+{ Args: { "p_since": string }; Returns: {
+              "count": number,"reason": string
+            }[]
+                           },
+"apply_story_scores":
 { Args: { "p_scores": Json }; Returns: number
                            },
 "apply_subscription":

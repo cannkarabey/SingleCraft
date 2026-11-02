@@ -1,3 +1,4 @@
+import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { pipelineDeps } from "@/inngest/deps";
 import { checkAlerts } from "@/lib/email/alerts";
@@ -9,7 +10,11 @@ const appUrl = () => process.env.NEXT_PUBLIC_APP_URL || "http://localhost:3000";
 
 // Hourly: each user gets the digest when their local hour equals their digest hour.
 export const sendDigest = inngest.createFunction(
-  { id: "send-digest", triggers: [{ cron: "5 * * * *" }], concurrency: 1 },
+  {
+    id: "send-digest",
+    triggers: [{ cron: "5 * * * *" }, { event: adminRunEvent("send-digest") }],
+    concurrency: 1,
+  },
   async ({ step }) => {
     const startedAt = await step.run("start", () => new Date().toISOString());
     const stats = await step.run("send", () => {

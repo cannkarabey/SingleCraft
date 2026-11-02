@@ -1,3 +1,4 @@
+import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { embedDeps, pipelineDeps, storyBuildDeps } from "@/inngest/deps";
 import {
@@ -57,7 +58,10 @@ export const clusterItemsFn = inngest.createFunction(
 export const scoreStoriesFn = inngest.createFunction(
   {
     id: "score-stories",
-    triggers: [{ cron: "*/30 * * * *" }],
+    triggers: [
+      { cron: "*/30 * * * *" },
+      { event: adminRunEvent("score-stories") },
+    ],
     concurrency: 1,
     onFailure: onFailure("score-stories"),
   },
@@ -81,7 +85,10 @@ export const scoreStoriesFn = inngest.createFunction(
 export const buildStoriesFn = inngest.createFunction(
   {
     id: "build-stories",
-    triggers: [{ event: "stories/scored" }],
+    triggers: [
+      { event: "stories/scored" },
+      { event: adminRunEvent("build-stories") },
+    ],
     concurrency: 1,
     onFailure: onFailure("build-stories"),
   },
@@ -116,7 +123,13 @@ export const buildStoriesFn = inngest.createFunction(
 );
 
 export const archiveStoriesFn = inngest.createFunction(
-  { id: "archive-stories", triggers: [{ cron: "0 3 * * *" }] },
+  {
+    id: "archive-stories",
+    triggers: [
+      { cron: "0 3 * * *" },
+      { event: adminRunEvent("archive-stories") },
+    ],
+  },
   async ({ step }) => {
     const startedAt = await step.run("start", () => new Date().toISOString());
     const archived = await step.run("archive", async () => {

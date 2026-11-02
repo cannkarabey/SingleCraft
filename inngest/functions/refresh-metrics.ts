@@ -1,3 +1,4 @@
+import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { pipelineDeps } from "@/inngest/deps";
 import { refreshHnMetrics } from "@/lib/pipeline/ingest";
@@ -8,7 +9,10 @@ import { recordPipelineRun } from "@/lib/pipeline/store";
 export const refreshMetrics = inngest.createFunction(
   {
     id: "refresh-metrics",
-    triggers: [{ cron: "*/30 * * * *" }],
+    triggers: [
+      { cron: "*/30 * * * *" },
+      { event: adminRunEvent("refresh-metrics") },
+    ],
     concurrency: 1,
   },
   async ({ step }) => {
