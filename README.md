@@ -52,6 +52,21 @@ Optional tokens in `.env.local`: `GITHUB_TOKEN` (higher rate limit), `PRODUCTHUN
 (Product Hunt is skipped without it). Reddit and some publishers rate-limit anonymous
 requests (HTTP 429); a source that fails 5 times in a row is deactivated.
 
+## Stories (Faz 3)
+
+- `cluster-items` — on `items/processed`; embeds accepted items (768-dim) and joins each to the
+  nearest story cluster (cosine ≥ 0.85, last 72 h) or starts a new pending story; duplicates
+  join their root's story.
+- `score-stories` — every 30 min; velocity, engagement, source diversity, freshness, trust →
+  `global_score`, early-signal flag, `trend_scores` snapshots.
+- `build-stories` — after scoring; LLM writes title/summary/why it matters/category/angles for
+  the top `STORY_BUILD_TOP_N` stories, at most `STORY_BUILD_DAILY_LIMIT` calls per UTC day and
+  within `LLM_DAILY_BUDGET_USD`; built stories become `published`.
+- `archive-stories` — daily; stories older than 7 days are archived.
+
+Needs `LLM_EMBED_MODEL`, `LLM_STORY_MODEL` and the provider key (`GOOGLE_GENERATIVE_AI_API_KEY`
+and/or `ANTHROPIC_API_KEY`). `npm run ingest:once` runs these steps too when they are set.
+
 ## Checks
 
 ```bash

@@ -1,7 +1,14 @@
 // One ingestion pass outside Inngest, using the same orchestrators:
-// fetch every due source → dedupe + filter pending items → refresh HN metrics.
+// fetch every due source → dedupe + filter pending items → refresh HN metrics
+// → (when LLM_EMBED_MODEL / LLM_STORY_MODEL are set) cluster → score → build stories.
 //   npm run ingest:once
-import { pipelineDeps } from "@/inngest/deps";
+import { embedDeps, pipelineDeps, storyBuildDeps } from "@/inngest/deps";
+import { storyPipelineConfigured } from "@/lib/llm/provider";
+import {
+  buildStories,
+  clusterItems,
+  scoreStories,
+} from "@/lib/pipeline/stories";
 import {
   ingestSource,
   processItems,
@@ -39,6 +46,21 @@ async function main() {
 
   const metrics = await refreshHnMetrics(pipelineDeps());
   console.log("hn metrics:", metrics);
+
+  if (!storyPipelineConfigured()) {
+    console.log(
+      "stories: skipped (set LLM_EMBED_MODEL and LLM_STORY_MODEL in .env.local)",
+    );
+    return;
+  }
+  // clusterItems handles at most 500 items per call; drain the backlog.
+  for (;;) {
+    const clustered = await clusterItems(embedDeps());
+    console.log("clustered:", clustered);
+    if (clustered.embedded < 500) break;
+  }
+  console.log("scored:", await scoreStories(pipelineDeps()));
+  console.log("built:", await buildStories(storyBuildDeps()));
 }
 
 main().catch((error) => {
