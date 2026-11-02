@@ -209,7 +209,8 @@
     "list": {
       "published": "Yayınlandı",
       "draft": "Taslak"
-    }
+    },
+    "upgrade": "Yükselt"
   },
   "story": {
     "back": "Discover'a dön",
@@ -278,33 +279,7 @@
       "shorts": "\"AI agent'larını zor yoldan debug ediyordun. Bu yeni SDK bunu tek satırda çözüyor.\""
     },
     "pricing": {
-      "title": "Fiyatlandırma",
-      "perMonth": "/ay",
-      "free": {
-        "name": "Free",
-        "price": "$0",
-        "features": {
-          "a": "Günde 3 Radar sinyali",
-          "b": "Tam Discover",
-          "c": "1 niş",
-          "d": "Sınırlı Studio brief'i"
-        }
-      },
-      "creator": {
-        "name": "Creator",
-        "price": "$19",
-        "features": {
-          "a": "Sınırsız brief",
-          "b": "3 niş",
-          "c": "Günlük özet",
-          "d": "Kayıtlı fikir havuzu"
-        }
-      },
-      "pro": {
-        "name": "Pro",
-        "soon": "Yakında"
-      },
-      "cta": "Ücretsiz başla"
+      "title": "Fiyatlandırma"
     },
     "faq": {
       "title": "SSS",
@@ -433,5 +408,33 @@
       "alerts": "Artık alarm e-postası almayacaksın.",
       "manage": "E-posta ayarlarını yönet"
     }
+  },
+  "pricing": {
+    "title": "Fiyatlandırma",
+    "subtitle": "Ücretsiz başla. Radar ve Studio rutinin olunca yükselt.",
+    "perMonth": "/ay",
+    "soon": "Yakında",
+    "freeCta": "Ücretsiz başla",
+    "upgradeCta": "Creator'a geç",
+    "features": {
+      "discover": "Tam Discover",
+      "radarRows": "Günde {count} Radar sinyali",
+      "radarUnlimited": "Sınırsız Radar sinyali",
+      "niches": "{count} niş",
+      "briefs": "Günde {count} Studio brief'i",
+      "briefsUnlimited": "Sınırsız Studio brief'i",
+      "angles": "Günde {count} kişisel açı",
+      "digest": "Günlük özet e-postası"
+    }
+  },
+  "billing": {
+    "title": "Plan ve ödeme",
+    "current": "Mevcut plan: {plan}",
+    "upgrade": "Creator'a geç",
+    "manage": "Aboneliği yönet",
+    "unavailable": "Ödemeler şu an kullanılamıyor.",
+    "error": "Bir şeyler ters gitti. Tekrar dene.",
+    "success": "Ödemen alındı. Planın birkaç saniye içinde güncellenecek.",
+    "cancelling": "Aboneliğin {date} tarihinde bitiyor; sonra Free plana geçeceksin."
   }
 }

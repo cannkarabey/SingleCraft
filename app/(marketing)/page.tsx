@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
 import { ExampleTabs } from "@/components/marketing/ExampleTabs";
+import { PricingTable } from "@/components/marketing/PricingTable";
+import { currentUser } from "@/lib/auth/session";
 import { StoryCard } from "@/components/story/StoryCard";
 import { Button } from "@/components/ui/button";
 import { listStories } from "@/lib/discover/queries";
@@ -38,7 +40,7 @@ function Section({
 
 export default async function Home() {
   const now = new Date();
-  const [t, preview] = await Promise.all([
+  const [t, preview, user] = await Promise.all([
     getTranslations(),
     // The landing shows the real Discover feed (plan §8.2), not a screenshot.
     listStories(createPublicClient(), {
@@ -49,15 +51,12 @@ export default async function Home() {
       items: [],
       nextCursor: null,
     })),
+    currentUser(),
   ]);
 
   const modules = ["discover", "radar", "studio"] as const;
   const steps = ["fetch", "dedupe", "cluster", "score", "brief"] as const;
   const faqs = ["accuracy", "copyright", "ai", "freshness"] as const;
-  const plans = [
-    { key: "free", features: ["a", "b", "c", "d"] },
-    { key: "creator", features: ["a", "b", "c", "d"] },
-  ] as const;
 
   return (
     <main className="mx-auto w-full max-w-6xl flex-1 px-4">
@@ -147,46 +146,7 @@ export default async function Home() {
       </Section>
 
       <Section id="pricing" title={t("landing.pricing.title")}>
-        <div className="grid gap-4 md:grid-cols-3">
-          {plans.map((plan) => (
-            <div
-              key={plan.key}
-              className="bg-card flex flex-col rounded-lg border p-6"
-            >
-              <h3 className="font-semibold">
-                {t(`landing.pricing.${plan.key}.name`)}
-              </h3>
-              <p className="mt-2">
-                <span className="text-3xl font-semibold">
-                  {t(`landing.pricing.${plan.key}.price`)}
-                </span>
-                <span className="text-muted-foreground text-sm">
-                  {t("landing.pricing.perMonth")}
-                </span>
-              </p>
-              <ul className="text-muted-foreground mt-4 flex-1 space-y-1.5 text-sm">
-                {plan.features.map((f) => (
-                  <li key={f}>
-                    {t(`landing.pricing.${plan.key}.features.${f}`)}
-                  </li>
-                ))}
-              </ul>
-              <Button
-                asChild
-                className="mt-6"
-                variant={plan.key === "creator" ? "default" : "outline"}
-              >
-                <Link href="/discover">{t("landing.pricing.cta")}</Link>
-              </Button>
-            </div>
-          ))}
-          <div className="flex flex-col rounded-lg border border-dashed p-6">
-            <h3 className="font-semibold">{t("landing.pricing.pro.name")}</h3>
-            <p className="text-muted-foreground mt-2 text-sm">
-              {t("landing.pricing.pro.soon")}
-            </p>
-          </div>
-        </div>
+        <PricingTable signedIn={Boolean(user)} headingLevel={3} />
       </Section>
 
       <Section id="faq" title={t("landing.faq.title")}>

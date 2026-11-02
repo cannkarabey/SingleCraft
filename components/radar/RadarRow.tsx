@@ -30,7 +30,7 @@ export async function RadarRow({
         <div className="bg-card/60 absolute inset-0 flex items-center justify-between gap-3 px-4">
           <span className="text-muted-foreground text-sm">{t("locked")}</span>
           <Button asChild size="sm">
-            <Link href="/#pricing">{t("upgrade")}</Link>
+            <Link href="/pricing">{t("upgrade")}</Link>
           </Button>
         </div>
       </div>

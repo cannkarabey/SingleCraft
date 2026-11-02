@@ -1,4 +1,5 @@
-import { getTranslations } from "next-intl/server";
+import { getLocale, getTranslations } from "next-intl/server";
+import { BillingActions } from "@/components/settings/BillingActions";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth/session";
 import { saveEmailSettings } from "@/lib/settings/actions";
@@ -12,15 +13,26 @@ export default async function SettingsPage({
   searchParams,
 }: PageProps<"/settings">) {
   const user = await currentUser();
-  const [{ data: profile }, params, t] = await Promise.all([
-    (await createClient())
-      .from("profiles")
-      .select("digest_enabled, digest_hour, timezone, alerts_enabled, plan")
-      .eq("id", user!.id)
-      .single(),
-    searchParams,
-    getTranslations("settings"),
-  ]);
+  const db = await createClient();
+  const [{ data: profile }, { data: subscription }, params, t, tb, locale] =
+    await Promise.all([
+      db
+        .from("profiles")
+        .select("digest_enabled, digest_hour, timezone, alerts_enabled, plan")
+        .eq("id", user!.id)
+        .single(),
+      db
+        .from("subscriptions")
+        .select("status, ends_at")
+        .order("created_at", { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      searchParams,
+      getTranslations("settings"),
+      getTranslations("billing"),
+      getLocale(),
+    ]);
+  const plan = profile?.plan ?? "free";
 
   return (
     <main className="mx-auto w-full max-w-xl flex-1 space-y-6 px-4 py-10">
@@ -35,6 +47,34 @@ export default async function SettingsPage({
           {t("error")}
         </p>
       )}
+      <section
+        id="billing"
+        aria-labelledby="billing-title"
+        className="bg-card space-y-3 rounded-lg border p-4"
+      >
+        <h2 id="billing-title" className="font-semibold">
+          {tb("title")}
+        </h2>
+        {params.billing === "success" && (
+          <p role="status" className="text-signal text-sm">
+            {tb("success")}
+          </p>
+        )}
+        <p className="text-sm">
+          {tb("current", {
+            plan: plan === "free" ? "Free" : plan === "pro" ? "Pro" : "Creator",
+          })}
+        </p>
+        {subscription?.status === "cancelled" && subscription.ends_at && (
+          <p className="text-muted-foreground text-sm">
+            {tb("cancelling", {
+              date: new Date(subscription.ends_at).toLocaleDateString(locale),
+            })}
+          </p>
+        )}
+        <BillingActions paid={plan !== "free"} />
+      </section>
+
       <form action={saveEmailSettings} className="space-y-5">
         <fieldset className="space-y-3">
           <legend className="font-semibold">{t("digest.title")}</legend>

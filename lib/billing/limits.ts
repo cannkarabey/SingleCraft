@@ -42,3 +42,10 @@ export function limitsFor(plan: string | null | undefined): PlanLimits {
     ? PLAN_LIMITS[plan as Plan]
     : PLAN_LIMITS.free;
 }
+
+/** List prices shown on the pricing page (USD/month). Lemon Squeezy charges the real price. */
+export const PLAN_PRICE_USD: Record<Plan, number> = {
+  free: 0,
+  creator: 19,
+  pro: 49,
+};
