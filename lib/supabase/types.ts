@@ -401,6 +401,16 @@ isOneToOne: false
               "created": boolean,"story_id": string
             }[]
                            },
+"discover_story_signals":
+{ Args: { "p_story_ids": (string)[] }; Returns: {
+              "github_stars": number,"hn_comments": number,"hn_points": number,"producthunt_votes": number,"reddit_upvotes": number,"story_id": string
+            }[]
+                           },
+"discover_story_sources":
+{ Args: { "p_story_id": string }; Returns: {
+              "published_at": string,"raw_item_id": number,"source_name": string,"source_type": Database["public"]['Enums']["source_type"],"title": string,"url": string
+            }[]
+                           },
 "due_sources":
 { Args: Record<PropertyKey, never>; Returns: {
               "active": boolean,
