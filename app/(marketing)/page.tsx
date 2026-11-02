@@ -21,6 +21,7 @@ function Section({
 }) {
   return (
     <section
+      id={id}
       aria-labelledby={`${id}-title`}
       className={`space-y-6 py-12 ${className ?? ""}`}
     >

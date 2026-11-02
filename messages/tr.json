@@ -61,7 +61,8 @@
     "whyItMatters": "Neden önemli?",
     "actions": {
       "addToRadar": "Radar'a ekle",
-      "generate": "Studio'da üret"
+      "generate": "Studio'da üret",
+      "added": "Radar'a eklendi"
     },
     "signIn": {
       "title": "Devam etmek için giriş yap",
@@ -78,7 +79,42 @@
   },
   "radar": {
     "title": "Radar",
-    "empty": "Radar'ını görmek için bir niş kur."
+    "empty": "Radar'ını görmek için bir niş kur.",
+    "settings": "Niş ayarları",
+    "niches": "Nişlerin",
+    "score": "Radar skoru",
+    "sources": "{count} kaynak",
+    "nicheFit": "uyum {value}",
+    "trend": "Skor trendi",
+    "why": "Neden önemli:",
+    "brief": "Brief oluştur",
+    "save": "Kaydet",
+    "saved": "Kaydedildi",
+    "hide": "Gizle",
+    "locked": "Kilitli sinyal",
+    "upgrade": "Yükselt",
+    "emptySection": "Bu niş için henüz bir şey yok.",
+    "sections": {
+      "high": {
+        "title": "Yüksek sinyal",
+        "hint": "En hızlı yükselen ve nişine en uygun konular."
+      },
+      "early": {
+        "title": "Erken sinyal",
+        "hint": "Henüz az konuşulan ama hızlanan konular."
+      },
+      "gaps": {
+        "title": "İçerik boşlukları",
+        "hint": "Konuşuluyor ama iyi anlatılmamış."
+      }
+    },
+    "angle": {
+      "cta": "Senin açın",
+      "loading": "Açın yazılıyor…",
+      "label": "Senin açın:",
+      "error": "Şu an açı yazılamadı.",
+      "limit": "Günlük açı limitine ulaştın."
+    }
   },
   "studio": {
     "title": "Studio",

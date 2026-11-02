@@ -1,6 +1,7 @@
 "use server";
 
 import { StoryCard } from "@/components/story/StoryCard";
+import { currentUser } from "@/lib/auth/session";
 import { parseDiscoverQuery } from "@/lib/discover/params";
 import { listStories } from "@/lib/discover/queries";
 import { createPublicClient } from "@/lib/supabase/public";
@@ -13,13 +14,18 @@ export async function loadMoreStories(
   if (!parsed.ok || !parsed.filters.cursor)
     return { nodes: [], nextCursor: null };
   const now = new Date();
-  const { items, nextCursor } = await listStories(createPublicClient(), {
-    ...parsed.filters,
-    now,
-  });
+  const [{ items, nextCursor }, user] = await Promise.all([
+    listStories(createPublicClient(), { ...parsed.filters, now }),
+    currentUser(),
+  ]);
   return {
     nodes: items.map((story) => (
-      <StoryCard key={story.id} story={story} now={now} />
+      <StoryCard
+        key={story.id}
+        story={story}
+        now={now}
+        signedIn={Boolean(user)}
+      />
     )),
     nextCursor,
   };

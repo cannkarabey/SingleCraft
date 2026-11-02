@@ -61,7 +61,8 @@
     "whyItMatters": "Why it matters?",
     "actions": {
       "addToRadar": "Add to Radar",
-      "generate": "Generate in Studio"
+      "generate": "Generate in Studio",
+      "added": "Added to Radar"
     },
     "signIn": {
       "title": "Sign in to continue",
@@ -78,7 +79,42 @@
   },
   "radar": {
     "title": "Radar",
-    "empty": "Set up a niche to see your Radar."
+    "empty": "Set up a niche to see your Radar.",
+    "settings": "Niche settings",
+    "niches": "Your niches",
+    "score": "Radar score",
+    "sources": "{count, plural, one {# source} other {# sources}}",
+    "nicheFit": "fit {value}",
+    "trend": "Score trend",
+    "why": "Why it matters:",
+    "brief": "Create brief",
+    "save": "Save",
+    "saved": "Saved",
+    "hide": "Hide",
+    "locked": "Locked signal",
+    "upgrade": "Upgrade",
+    "emptySection": "Nothing here yet for this niche.",
+    "sections": {
+      "high": {
+        "title": "High signal",
+        "hint": "Rising fastest and most relevant to your niche."
+      },
+      "early": {
+        "title": "Early signal",
+        "hint": "Still little discussed but picking up speed."
+      },
+      "gaps": {
+        "title": "Content gaps",
+        "hint": "People are talking about it, few have explained it well."
+      }
+    },
+    "angle": {
+      "cta": "Your angle",
+      "loading": "Writing your angle…",
+      "label": "Your angle:",
+      "error": "Could not write an angle right now.",
+      "limit": "Daily angle limit reached."
+    }
   },
   "studio": {
     "title": "Studio",

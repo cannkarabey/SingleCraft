@@ -2,17 +2,56 @@
 
 import Link from "next/link";
 import { useTranslations } from "next-intl";
-import { useRef } from "react";
+import { useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 
 /**
  * "Add to Radar" / "Generate in Studio". Both need an account; signed-out visitors get a
  * sign-in prompt (plan §8.2). Signed-in behaviour arrives with Faz 5/6.
  */
-export function StoryActions({ storyId }: { storyId: string }) {
+export function StoryActions({
+  storyId,
+  storyUuid,
+  signedIn = false,
+}: {
+  /** slug or id, for URLs */
+  storyId: string;
+  /** database id, for API calls */
+  storyUuid: string;
+  signedIn?: boolean;
+}) {
   const t = useTranslations("discover");
   const dialog = useRef<HTMLDialogElement>(null);
+  const [added, setAdded] = useState(false);
+  const [pending, startTransition] = useTransition();
   const open = () => dialog.current?.showModal();
+
+  if (signedIn) {
+    const save = () =>
+      startTransition(async () => {
+        const res = await fetch(`/api/radar/${storyUuid}/save`, {
+          method: "POST",
+        });
+        if (res.ok) setAdded(true);
+      });
+    return (
+      <div className="flex flex-wrap gap-2">
+        <Button
+          size="sm"
+          variant="outline"
+          onClick={save}
+          disabled={pending || added}
+        >
+          {added ? t("actions.added") : t("actions.addToRadar")}
+        </Button>
+        <Button asChild size="sm" variant="outline">
+          <Link href={`/studio/new?story=${storyUuid}`}>
+            {t("actions.generate")}
+          </Link>
+        </Button>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-wrap gap-2">

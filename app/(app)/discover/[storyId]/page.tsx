@@ -9,6 +9,7 @@ import { SignalBar } from "@/components/story/SignalBar";
 import { SourceList } from "@/components/story/SourceList";
 import { Sparkline } from "@/components/story/Sparkline";
 import { StoryActions } from "@/components/story/StoryActions";
+import { currentUser } from "@/lib/auth/session";
 import { relativeTime, signalLevel } from "@/lib/discover/format";
 import { getStory } from "@/lib/discover/queries";
 import { createPublicClient } from "@/lib/supabase/public";
@@ -55,10 +56,11 @@ export default async function StoryPage({
   const story = await loadStory((await params).storyId);
   if (!story) notFound();
 
-  const [t, td, locale] = await Promise.all([
+  const [t, td, locale, user] = await Promise.all([
     getTranslations("story"),
     getTranslations("discover"),
     getLocale(),
+    currentUser(),
   ]);
   const now = new Date();
   const entities = asStrings(story.entities);
@@ -92,7 +94,11 @@ export default async function StoryPage({
           </p>
           <PlatformSignals signals={story.signals} />
           {story.summary && <p className="text-lg">{story.summary}</p>}
-          <StoryActions storyId={story.slug ?? story.id} />
+          <StoryActions
+            storyId={story.slug ?? story.id}
+            storyUuid={story.id}
+            signedIn={Boolean(user)}
+          />
         </div>
       </header>
 

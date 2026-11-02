@@ -5,6 +5,7 @@ import { RangeTabs } from "@/components/discover/RangeTabs";
 import { SearchBox } from "@/components/discover/SearchBox";
 import { SidePanels } from "@/components/discover/SidePanels";
 import { StoryCard } from "@/components/story/StoryCard";
+import { currentUser } from "@/lib/auth/session";
 import {
   parseDiscoverQuery,
   type DiscoverFilters,
@@ -31,14 +32,17 @@ export default async function DiscoverPage({
   const db = createPublicClient();
   const now = new Date();
 
-  const [t, page, counts, trending, newTools, github] = await Promise.all([
-    getTranslations("discover"),
-    listStories(db, { ...filters, now }),
-    categoryCounts(db, { range: filters.range, now }),
-    trendingPanel(db, now),
-    newToolsPanel(db, now),
-    githubPanel(db, now),
-  ]);
+  const [t, page, counts, trending, newTools, github, user] = await Promise.all(
+    [
+      getTranslations("discover"),
+      listStories(db, { ...filters, now }),
+      categoryCounts(db, { range: filters.range, now }),
+      trendingPanel(db, now),
+      newToolsPanel(db, now),
+      githubPanel(db, now),
+      currentUser(),
+    ],
+  );
 
   const query = {
     range: filters.range,
@@ -77,7 +81,12 @@ export default async function DiscoverPage({
         ) : (
           <div className="space-y-3">
             {page.items.map((story) => (
-              <StoryCard key={story.id} story={story} now={now} />
+              <StoryCard
+                key={story.id}
+                story={story}
+                now={now}
+                signedIn={Boolean(user)}
+              />
             ))}
             {/* Keyed by filters: a new filter set must not keep pages loaded for the old one. */}
             <LoadMore

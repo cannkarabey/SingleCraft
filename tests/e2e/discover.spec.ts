@@ -50,10 +50,11 @@ test.describe("discover (signed out)", () => {
 
   test("⌘K focuses search", async ({ page }) => {
     await page.goto("/discover");
-    await page.keyboard.press("ControlOrMeta+k");
-    await expect(
-      page.getByRole("searchbox", { name: "Story ara" }),
-    ).toBeFocused();
+    // The shortcut listener attaches on hydration; retry until it is live.
+    await expect(async () => {
+      await page.keyboard.press("ControlOrMeta+k");
+      await expect(page.getByRole("searchbox", { name: "Story ara" })).toBeFocused({ timeout: 500 });
+    }).toPass();
   });
 
   test("loads more stories", async ({ page }) => {

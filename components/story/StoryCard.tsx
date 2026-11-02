@@ -11,12 +11,14 @@ export async function StoryCard({
   now,
   actions = true,
   headingLevel = 2,
+  signedIn = false,
 }: {
   story: StoryCardData;
   now: Date;
   actions?: boolean;
   /** 2 directly under a page h1 (Discover), 3 inside an h2 section (landing). */
   headingLevel?: 2 | 3;
+  signedIn?: boolean;
 }) {
   const Heading = headingLevel === 2 ? "h2" : "h3";
   const [t, locale] = await Promise.all([
@@ -56,7 +58,13 @@ export async function StoryCard({
             <p className="mt-2">{story.why_it_matters}</p>
           </details>
         )}
-        {actions && <StoryActions storyId={story.slug ?? story.id} />}
+        {actions && (
+          <StoryActions
+            storyId={story.slug ?? story.id}
+            storyUuid={story.id}
+            signedIn={signedIn}
+          />
+        )}
       </div>
     </article>
   );
