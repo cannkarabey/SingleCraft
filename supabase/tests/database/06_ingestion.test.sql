@@ -1,5 +1,5 @@
 begin;
-select plan(15);
+select plan(16);
 
 select has_column('raw_items', 'duplicate_of', 'raw_items.duplicate_of exists');
 
@@ -47,6 +47,9 @@ select ok(not has_function_privilege('authenticated', 'public.find_duplicate(big
   'authenticated cannot call find_duplicate');
 select ok(has_function_privilege('service_role', 'public.find_duplicate(bigint, timestamptz, integer)', 'execute'),
   'service role can call find_duplicate');
+
+select ok(not has_function_privilege('authenticated', 'public.ingest_raw_items(uuid, jsonb)', 'execute'),
+  'authenticated cannot call ingest_raw_items');
 
 select * from finish();
 rollback;

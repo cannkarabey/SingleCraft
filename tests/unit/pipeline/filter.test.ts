@@ -106,6 +106,14 @@ describe("filterItem", () => {
     ).toMatchObject({ status: "rejected", reason: "spam" });
   });
 
+  test.each([
+    "Show HN: AirFlick Drop – AirDrop for Windows with zero mobile app installs",
+    "Investors are betting on AI agents to replace legacy developer tools",
+    "GitHub giveaway of free Copilot seats for open source maintainers",
+  ])("does not flag ordinary tech headlines as spam: %s", (title) => {
+    expect(filterItem(item({ title }), hn, now).status).toBe("accepted");
+  });
+
   test("rejects low-trust sources", () => {
     expect(
       filterItem(item(), { ...editorial, trust_weight: 0.2 }, now),

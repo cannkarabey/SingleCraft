@@ -18,3 +18,13 @@ export function fakeFetch(...responses: Response[]) {
   }) as typeof fetch;
   return { impl, requests };
 }
+
+/** fetch stand-in that answers every request with a fresh response from `make`. */
+export function fakeFetchAlways(make: () => Response) {
+  const requests: RecordedRequest[] = [];
+  const impl = (async (input: RequestInfo | URL, init?: RequestInit) => {
+    requests.push({ url: String(input), init });
+    return make();
+  }) as typeof fetch;
+  return { impl, requests };
+}

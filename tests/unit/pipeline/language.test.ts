@@ -28,3 +28,13 @@ test("flags other languages", () => {
 test("returns null when text is too short to tell", () => {
   expect(detectLanguage("Show HN: Zig SQLite")).toBeNull();
 });
+
+test.each([
+  "DiffusionGemma: 4x faster text generation",
+  "Build with Nano Banana Pro, our Gemini 3 Pro Image model",
+])(
+  "short product titles are never flagged as another language: %s",
+  (title) => {
+    expect(detectLanguage(title)).not.toBe("other");
+  },
+);

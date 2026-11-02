@@ -17,7 +17,8 @@
     "db:reset": "supabase db reset",
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local > lib/supabase/types.ts",
-    "test:integration": "vitest run --config vitest.integration.config.mts"
+    "test:integration": "vitest run --config vitest.integration.config.mts",
+    "ingest:once": "tsx --env-file=.env.local --conditions=react-server scripts/ingest-once.ts"
   },
   "dependencies": {
     "@supabase/ssr": "^0.12.7",
@@ -50,6 +51,7 @@
     "prettier-plugin-tailwindcss": "^0.8.1",
     "supabase": "^2.122.0",
     "tailwindcss": "^4",
+    "tsx": "^4.23.15",
     "typescript": "^5",
     "vite-tsconfig-paths": "^6.1.1",
     "vitest": "^5.0.5"

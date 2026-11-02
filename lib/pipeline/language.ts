@@ -2,8 +2,8 @@ import { francAll } from "franc-min";
 
 export type DetectedLanguage = "en" | "tr" | "other";
 
-/** Below this length detection is unreliable, so the language is left unknown. */
-const MIN_LENGTH = 40;
+/** Below this length (e.g. a bare headline full of product names) detection is unreliable, so the language is left unknown. */
+const MIN_LENGTH = 100;
 
 /**
  * Trigram detection confuses jargon-heavy tech English with French/Romance languages

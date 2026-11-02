@@ -34,8 +34,10 @@ const COMMUNITY_SOURCES: ReadonlySet<SourceType> = new Set([
   "github",
   "producthunt",
 ]);
+// Only phrases that are unambiguous in tech coverage: bare "airdrop", "betting" or
+// "giveaway" show up in ordinary headlines (Apple AirDrop, "betting on AI").
 const SPAM_PATTERN =
-  /\b(crypto airdrop|airdrop|casino|betting|porn|escort|giveaway|sponsored post|buy followers|onlyfans)\b/i;
+  /\b(crypto airdrop|token airdrop|online casino|sports betting|porn|escort service|buy followers|onlyfans|sponsored post)\b/i;
 
 /** Rule-based pre-LLM filter (IMPLEMENTATION_PLAN §5.4). First failing rule wins. */
 export function filterItem(

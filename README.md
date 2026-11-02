@@ -32,12 +32,33 @@ npm run db:types    # regenerate lib/supabase/types.ts after a schema change
 
 Schema changes go in a **new** migration file; existing migrations are never edited.
 
+## Ingestion (Faz 2)
+
+Inngest functions (`npm run dev` + `npm run inngest`):
+
+- `fetch-sources` — every 15 min; fetches each source whose `fetch_interval_min` has elapsed,
+  stores normalized items, snapshots metrics, emits `items/fetched`.
+- `process-items` — on `items/fetched`; exact/near dedupe against accepted items, then the
+  rule-based filter (`accepted` / `rejected` + `reject_reason` / `duplicate` + `duplicate_of`).
+- `refresh-metrics` — every 30 min; re-polls HN points/comments for the last 48h.
+
+Without Inngest, one full pass with the same code:
+
+```bash
+npm run ingest:once
+```
+
+Optional tokens in `.env.local`: `GITHUB_TOKEN` (higher rate limit), `PRODUCTHUNT_TOKEN`
+(Product Hunt is skipped without it). Reddit and some publishers rate-limit anonymous
+requests (HTTP 429); a source that fails 5 times in a row is deactivated.
+
 ## Checks
 
 ```bash
 npm run lint
 npm run typecheck
 npm test            # unit (Vitest)
+npm run test:integration  # pipeline against local Supabase (needs .env.local)
 npm run test:e2e    # Playwright (needs .env.local)
 ```
 

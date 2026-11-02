@@ -418,6 +418,11 @@ isOneToOne: false
 "increment_usage":
 { Args: { "p_kind": string,"p_limit": number,"p_user": string }; Returns: boolean
                            },
+"ingest_raw_items":
+{ Args: { "p_items": Json,"p_source_id": string }; Returns: {
+              "external_id": string,"id": number,"inserted": boolean
+            }[]
+                           },
 "match_story_cluster":
 { Args: { "p_embedding": string,"p_since": string,"p_threshold": number }; Returns: {
               "similarity": number,"story_id": string

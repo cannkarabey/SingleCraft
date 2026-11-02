@@ -6,7 +6,8 @@ import {
   processItems,
   refreshHnMetrics,
 } from "@/lib/pipeline/ingest";
-import { fakeFetch, fixture } from "../helpers/fixtures";
+import { allPendingItemIds } from "@/lib/pipeline/store";
+import { fakeFetch, fakeFetchAlways, fixture } from "../helpers/fixtures";
 import type { SourceType } from "@/lib/pipeline/types";
 import type { Json } from "@/lib/supabase/types";
 
@@ -68,6 +69,28 @@ describe("ingestSource", () => {
   let hn: string;
   beforeEach(async () => {
     hn = await makeSource("hn", { niche_specific: false });
+  });
+
+  test("handles large feeds with long ids (no oversized URLs, no 1000-row cap)", async () => {
+    const hits = Array.from({ length: 1200 }, (_, i) => ({
+      objectID: `${"x".repeat(300)}-${i}`,
+      title: `Long id story number ${i} about developer tools`,
+      url: `https://long.test/${"p".repeat(200)}/${i}`,
+      author: "a",
+      points: i,
+      num_comments: 0,
+      created_at: "2026-11-02T09:00:00Z",
+      story_text: null,
+    }));
+    const body = () => new Response(JSON.stringify({ hits }));
+
+    const first = await ingestSource(hn, deps(body()));
+    const second = await ingestSource(hn, deps(body()));
+
+    expect(first.error).toBeUndefined();
+    expect(first.inserted).toHaveLength(1200);
+    expect(second.inserted).toHaveLength(0);
+    expect(second.seen).toBe(1200);
   });
 
   test("inserts once and snapshots metrics on every fetch", async () => {
@@ -205,6 +228,35 @@ describe("processItems", () => {
   });
 });
 
+test("processItems accepts thousands of ids (no oversized request URLs)", async () => {
+  const ids = Array.from({ length: 3000 }, (_, i) => 900_000_000 + i);
+  await expect(processItems(ids, { db, now })).resolves.toEqual({
+    accepted: 0,
+    rejected: 0,
+    duplicate: 0,
+  });
+});
+
+test("allPendingItemIds pages past the 1000-row API limit", async () => {
+  const hn = await makeSource("hn", { niche_specific: false });
+  const hits = Array.from({ length: 1100 }, (_, i) => ({
+    objectID: `page-${hn}-${i}`,
+    title: `Paging story number ${i} about developer tools`,
+    url: `https://paging.test/${hn}/${i}`,
+    author: "a",
+    points: 1,
+    num_comments: 0,
+    created_at: "2026-11-02T09:00:00Z",
+    story_text: null,
+  }));
+  const run = await ingestSource(
+    hn,
+    deps(new Response(JSON.stringify({ hits }))),
+  );
+  const pending = new Set(await allPendingItemIds(db));
+  expect(run.inserted.every((id) => pending.has(id))).toBe(true);
+});
+
 describe("refreshHnMetrics", () => {
   test("snapshots current points for recent HN items", async () => {
     const hn = await makeSource("hn", { niche_specific: false });
@@ -215,12 +267,13 @@ describe("refreshHnMetrics", () => {
     const [row] = await items(hn);
     const before = await metricCount(row.id);
 
-    const { impl, requests } = fakeFetch(
-      new Response(fixture("api/hn-front-page.json")),
+    // Other HN rows in the database make the job batch several requests.
+    const { impl, requests } = fakeFetchAlways(
+      () => new Response(fixture("api/hn-front-page.json")),
     );
     const result = await refreshHnMetrics({ db, fetch: impl, now: new Date() });
 
-    expect(requests[0].url).toContain("story_45810001");
+    expect(requests.some((r) => r.url.includes("story_45810001"))).toBe(true);
     expect(result.snapshots).toBeGreaterThanOrEqual(2);
     expect(await metricCount(row.id)).toBe(before + 2);
   });

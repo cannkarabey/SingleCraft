@@ -15,6 +15,21 @@ export const MAX_CONSECUTIVE_FAILURES = 5;
 
 type Result<T> = { data: T; error: { message: string } | null };
 
+/** PostgREST returns at most this many rows per request (supabase/config.toml max_rows). */
+const PAGE_SIZE = 1000;
+
+/** Runs a range query page by page until a short page; `page` must apply a stable order. */
+async function allPages<T>(
+  page: (from: number, to: number) => PromiseLike<Result<T[] | null>>,
+) {
+  const rows: T[] = [];
+  for (let from = 0; ; from += PAGE_SIZE) {
+    const batch = check(await page(from, from + PAGE_SIZE - 1));
+    rows.push(...batch);
+    if (batch.length < PAGE_SIZE) return rows;
+  }
+}
+
 /** Unwraps a query that returns rows. */
 function check<T>(result: Result<T>): NonNullable<T> {
   if (result.error) throw new Error(result.error.message);
@@ -44,6 +59,8 @@ export async function dueSourceIds(db: Db): Promise<string[]> {
   return check(await db.rpc("due_sources")).map((source) => source.id);
 }
 
+const INGEST_BATCH = 500;
+
 /**
  * Inserts new items (existing (source_id, external_id) pairs are left untouched) and
  * returns the row id of every given item plus the ids that were newly inserted.
@@ -53,39 +70,22 @@ export async function upsertItems(
   sourceId: string,
   items: NormalizedItem[],
 ): Promise<{ ids: Map<string, number>; inserted: number[] }> {
-  if (items.length === 0) return { ids: new Map(), inserted: [] };
-
-  const rows = items.map(
-    (item) =>
-      ({
-        ...item,
-        source_id: sourceId,
-      }) as unknown as TablesInsert<"raw_items">,
-  );
-  const inserted = check(
-    await db
-      .from("raw_items")
-      .upsert(rows, {
-        onConflict: "source_id,external_id",
-        ignoreDuplicates: true,
-      })
-      .select("id"),
-  ).map((row) => row.id);
-
-  const all = check(
-    await db
-      .from("raw_items")
-      .select("id, external_id")
-      .eq("source_id", sourceId)
-      .in(
-        "external_id",
-        items.map((item) => item.external_id),
-      ),
-  );
-  return {
-    ids: new Map(all.map((row) => [row.external_id, row.id])),
-    inserted,
-  };
+  const ids = new Map<string, number>();
+  const inserted: number[] = [];
+  // Batches stay under PostgREST's max_rows, which also caps RPC result sets.
+  for (let i = 0; i < items.length; i += INGEST_BATCH) {
+    const rows = check(
+      await db.rpc("ingest_raw_items", {
+        p_source_id: sourceId,
+        p_items: items.slice(i, i + INGEST_BATCH) as unknown as Json,
+      }),
+    );
+    for (const row of rows) {
+      ids.set(row.external_id, row.id);
+      if (row.inserted) inserted.push(row.id);
+    }
+  }
+  return { ids, inserted };
 }
 
 export async function insertMetrics(
@@ -145,21 +145,28 @@ export type PendingItem = Pick<
   | "raw_metadata"
 >;
 
+/** Ids per `id=in.(...)` filter, keeping PostgREST request URLs well under size limits. */
+const IDS_PER_QUERY = 200;
+
 export async function pendingItems(
   db: Db,
   ids: number[],
 ): Promise<PendingItem[]> {
-  if (ids.length === 0) return [];
-  return check(
-    await db
-      .from("raw_items")
-      .select(
-        "id, source_id, title, content_text, published_at, language, raw_metadata",
-      )
-      .in("id", ids)
-      .eq("filter_status", "pending")
-      .order("id"),
-  );
+  const rows: PendingItem[] = [];
+  for (let i = 0; i < ids.length; i += IDS_PER_QUERY) {
+    rows.push(
+      ...check(
+        await db
+          .from("raw_items")
+          .select(
+            "id, source_id, title, content_text, published_at, language, raw_metadata",
+          )
+          .in("id", ids.slice(i, i + IDS_PER_QUERY))
+          .eq("filter_status", "pending"),
+      ),
+    );
+  }
+  return rows.sort((a, b) => a.id - b.id);
 }
 
 export async function findDuplicate(
@@ -190,13 +197,16 @@ export async function recentHnItems(
   db: Db,
   since: Date,
 ): Promise<{ id: number; external_id: string }[]> {
-  return check(
-    await db
+  const rows = await allPages((from, to) =>
+    db
       .from("raw_items")
       .select("id, external_id, sources!inner(type)")
       .eq("sources.type", "hn")
-      .gte("fetched_at", since.toISOString()),
-  ).map(({ id, external_id }) => ({ id, external_id }));
+      .gte("fetched_at", since.toISOString())
+      .order("id")
+      .range(from, to),
+  );
+  return rows.map(({ id, external_id }) => ({ id, external_id }));
 }
 
 export async function recordPipelineRun(
@@ -212,4 +222,17 @@ export async function recordPipelineRun(
       error: run.error ?? null,
     }),
   );
+}
+
+/** Ids of every item still waiting for dedupe/filter (recovery after an interrupted run). */
+export async function allPendingItemIds(db: Db): Promise<number[]> {
+  const rows = await allPages((from, to) =>
+    db
+      .from("raw_items")
+      .select("id")
+      .eq("filter_status", "pending")
+      .order("id")
+      .range(from, to),
+  );
+  return rows.map((row) => row.id);
 }

@@ -190,8 +190,15 @@ export async function refreshHnMetrics(
     ]);
   }
 
-  const fresh = await hnItemsByIds([...idsByExternal.keys()], deps.fetch);
-  const rows = fresh.flatMap((item) =>
+  // One snapshot per story even if the API repeats a hit across batches: a repeated
+  // (raw_item_id, metric) pair in one insert would collide on the primary key.
+  const fresh = new Map(
+    (await hnItemsByIds([...idsByExternal.keys()], deps.fetch)).map((item) => [
+      item.externalId,
+      item,
+    ]),
+  );
+  const rows = [...fresh.values()].flatMap((item) =>
     (idsByExternal.get(item.externalId) ?? []).flatMap((rawItemId) =>
       Object.entries(item.metrics ?? {}).map(([metric, value]) => ({
         raw_item_id: rawItemId,
