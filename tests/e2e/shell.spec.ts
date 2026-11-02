@@ -37,15 +37,20 @@ test.describe("app shell", () => {
     await expect(page.locator("html")).toHaveAttribute("lang", "en");
   });
 
-  for (const [path, heading] of [
-    ["/discover", "Bugün · AI ve geliştirici sinyalleri"],
-    ["/radar", "Radar"],
-    ["/studio", "Studio"],
-  ] as const) {
-    test(`${path} renders its page`, async ({ page }) => {
-      const response = await page.goto(path);
-      expect(response?.status()).toBe(200);
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(heading);
+  test("/discover renders for signed-out visitors", async ({ page }) => {
+    const response = await page.goto("/discover");
+    expect(response?.status()).toBe(200);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Bugün · AI ve geliştirici sinyalleri",
+    );
+  });
+
+  // Since Faz 5, Radar and Studio need an account.
+  for (const path of ["/radar", "/studio"]) {
+    test(`${path} asks signed-out visitors to sign in`, async ({ page }) => {
+      await page.goto(path);
+      await expect(page).toHaveURL(new RegExp(`/login\\?next=${encodeURIComponent(path)}`));
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText("Giriş yap");
     });
   }
 
