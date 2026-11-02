@@ -122,3 +122,29 @@ export async function deleteE2eUsers() {
   }
   for (const id of doomed) await db.auth.admin.deleteUser(id);
 }
+
+export async function setAdmin(userId: string) {
+  await admin().from("profiles").update({ is_admin: true }).eq("id", userId);
+}
+
+/** An inactive-by-default-safe source only this test touches; returns its id and name. */
+export async function seedSource() {
+  const db = admin();
+  const id = randomUUID();
+  const name = `e2e source ${id.slice(0, 6)}`;
+  const { error } = await db.from("sources").insert({
+    id,
+    name,
+    type: "rss",
+    url: `https://e2e.test/${id}`,
+    trust_weight: 0.7,
+  });
+  if (error) throw error;
+  return {
+    id,
+    name,
+    remove: async () => {
+      await db.from("sources").delete().eq("id", id);
+    },
+  };
+}

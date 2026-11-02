@@ -1,5 +1,11 @@
 /** Where signed-in-only areas live; the proxy redirects signed-out visitors to /login. */
-const PROTECTED_PREFIXES = ["/radar", "/onboarding", "/studio", "/settings"];
+const PROTECTED_PREFIXES = [
+  "/radar",
+  "/onboarding",
+  "/studio",
+  "/settings",
+  "/admin",
+];
 
 export function isProtectedPath(pathname: string): boolean {
   return PROTECTED_PREFIXES.some(
