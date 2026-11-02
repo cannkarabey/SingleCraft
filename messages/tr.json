@@ -215,5 +215,57 @@
       "provider": "Bu giriş yöntemi şu an kullanılamıyor.",
       "generic": "Giriş başarısız oldu. Tekrar dene."
     }
+  },
+  "onboarding": {
+    "title": "Nişini kur",
+    "subtitle": "Ne hakkında içerik ürettiğini söyle. Radar story'leri bu nişe göre sıralar."
+  },
+  "niche": {
+    "step": "Adım {current}/{total}",
+    "next": "İleri",
+    "back": "Geri",
+    "finish": "Bitir",
+    "save": "Kaydet",
+    "saved": "Kaydedildi.",
+    "error": "Kaydedilemedi. Tekrar dene.",
+    "limit": "Planın daha fazla nişe izin vermiyor.",
+    "remove": "Kaldır",
+    "settingsTitle": "Niş ayarları",
+    "topic": {
+      "title": "Konu",
+      "name": "Niş adı",
+      "namePlaceholder": "ör. AI agents",
+      "keywords": "Anahtar kelimeler",
+      "keywordsPlaceholder": "Yaz ve Enter'a bas"
+    },
+    "platforms": {
+      "title": "Nerede yayınlıyorsun?",
+      "x": "X",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube",
+      "newsletter": "Bülten"
+    },
+    "voice": {
+      "title": "Dil ve ton",
+      "language": "İçerik dili",
+      "languages": {
+        "tr": "Türkçe",
+        "en": "İngilizce"
+      },
+      "tone": "Ton",
+      "tones": {
+        "technical": "Teknik",
+        "analytical": "Analitik",
+        "fun": "Eğlenceli",
+        "contrarian": "Karşıt görüşlü",
+        "plain": "Sade"
+      }
+    },
+    "filters": {
+      "title": "Filtreler (opsiyonel)",
+      "excluded": "Bu konuları hiç gösterme",
+      "tracked": "Takip ettiğin hesaplar veya kanallar",
+      "trackedPlaceholder": "ör. Hugging Face"
+    }
   }
 }

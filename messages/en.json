@@ -215,5 +215,57 @@
       "provider": "That sign-in method is not available right now.",
       "generic": "Sign-in failed. Please try again."
     }
+  },
+  "onboarding": {
+    "title": "Set up your niche",
+    "subtitle": "Tell us what you create about. Radar ranks stories for this niche."
+  },
+  "niche": {
+    "step": "Step {current} of {total}",
+    "next": "Next",
+    "back": "Back",
+    "finish": "Finish",
+    "save": "Save",
+    "saved": "Saved.",
+    "error": "Could not save. Please try again.",
+    "limit": "Your plan allows no more niches.",
+    "remove": "Remove",
+    "settingsTitle": "Niche settings",
+    "topic": {
+      "title": "Topic",
+      "name": "Niche name",
+      "namePlaceholder": "e.g. AI agents",
+      "keywords": "Keywords",
+      "keywordsPlaceholder": "Type and press Enter"
+    },
+    "platforms": {
+      "title": "Where do you publish?",
+      "x": "X",
+      "linkedin": "LinkedIn",
+      "youtube": "YouTube",
+      "newsletter": "Newsletter"
+    },
+    "voice": {
+      "title": "Language and tone",
+      "language": "Content language",
+      "languages": {
+        "tr": "Turkish",
+        "en": "English"
+      },
+      "tone": "Tone",
+      "tones": {
+        "technical": "Technical",
+        "analytical": "Analytical",
+        "fun": "Fun",
+        "contrarian": "Contrarian",
+        "plain": "Plain"
+      }
+    },
+    "filters": {
+      "title": "Filters (optional)",
+      "excluded": "Never show stories about",
+      "tracked": "Accounts or channels you follow",
+      "trackedPlaceholder": "e.g. Hugging Face"
+    }
   }
 }
