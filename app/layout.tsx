@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { NextIntlClientProvider } from "next-intl";
 import { getLocale, getTranslations } from "next-intl/server";
+import { AnalyticsProvider } from "@/components/analytics/AnalyticsProvider";
+import { currentUser } from "@/lib/auth/session";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -20,13 +22,14 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default async function RootLayout({ children }: LayoutProps<"/">) {
-  const locale = await getLocale();
+  const [locale, user] = await Promise.all([getLocale(), currentUser()]);
   return (
     <html
       lang={locale}
       className={`${geistSans.variable} ${geistMono.variable} dark h-full antialiased`}
     >
       <body className="flex min-h-full flex-col">
+        <AnalyticsProvider userId={user?.id ?? null} />
         <NextIntlClientProvider>{children}</NextIntlClientProvider>
       </body>
     </html>
