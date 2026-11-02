@@ -224,11 +224,19 @@ describe("buildStories", () => {
     const deps = async () => baseDeps(mockModel("not json"), { topN: 1 });
 
     await buildStories(await deps());
-    const { data: first } = await db.from("stories").select("status, build_failures").eq("id", stuck).single();
+    const { data: first } = await db
+      .from("stories")
+      .select("status, build_failures")
+      .eq("id", stuck)
+      .single();
     expect(first).toEqual({ status: "pending", build_failures: 1 });
 
     await buildStories(await deps());
-    const { data: second } = await db.from("stories").select("status, build_failures").eq("id", stuck).single();
+    const { data: second } = await db
+      .from("stories")
+      .select("status, build_failures")
+      .eq("id", stuck)
+      .single();
     expect(second).toEqual({ status: "suppressed", build_failures: 2 });
   });
 });
