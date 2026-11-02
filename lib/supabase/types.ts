@@ -387,7 +387,18 @@ isOneToOne: false
             [_ in never]: never
           }
           Functions: {
-            "due_sources":
+            "archive_stale_stories":
+{ Args: { "p_cutoff": string }; Returns: number
+                           },
+"attach_duplicates":
+{ Args: Record<PropertyKey, never>; Returns: number
+                           },
+"cluster_item":
+{ Args: { "p_embedding": string,"p_item_id": number,"p_since": string,"p_threshold": number }; Returns: {
+              "created": boolean,"story_id": string
+            }[]
+                           },
+"due_sources":
 { Args: Record<PropertyKey, never>; Returns: {
               "active": boolean,
 "config": NonNullable<Json>,
@@ -430,6 +441,11 @@ isOneToOne: false
                            },
 "release_usage":
 { Args: { "p_kind": string,"p_user": string }; Returns: undefined
+                           },
+"story_metric_window":
+{ Args: { "p_since": string,"p_window_start": string }; Returns: {
+              "baseline": number,"latest": number,"metric": string,"raw_item_id": number,"source_type": Database["public"]['Enums']["source_type"],"story_id": string
+            }[]
                            }
           }
           Enums: {
