@@ -75,6 +75,32 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"email_log": {
+                  Row: {
+                    "created_at": string,"day": string,"id": number,"kind": string,"provider_id": string | null,"story_id": string | null,"user_id": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "created_at"?: string,"day": string,"id"?: number,"kind": string,"provider_id"?: string | null,"story_id"?: string | null,"user_id": string
+                  }
+                  Update: {
+                    "created_at"?: string,"day"?: string,"id"?: number,"kind"?: string,"provider_id"?: string | null,"story_id"?: string | null,"user_id"?: string
+                  }
+                  Relationships: [
+                    {
+      foreignKeyName: "email_log_story_id_fkey"
+      columns: ["story_id"]
+isOneToOne: false
+      referencedRelation: "stories"
+      referencedColumns: ["id"]
+    },{
+      foreignKeyName: "email_log_user_id_fkey"
+      columns: ["user_id"]
+isOneToOne: false
+      referencedRelation: "profiles"
+      referencedColumns: ["id"]
+    }
+                  ]
                 },"item_metrics": {
                   Row: {
                     "captured_at": string,"metric": string,"raw_item_id": number,"value": number
@@ -145,14 +171,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"plan": string,"timezone": string
+                    "alerts_enabled": boolean,"created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"plan": string,"timezone": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
                   }
                   Update: {
-                    "created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
                   }
                   Relationships: [
                     
@@ -425,6 +451,11 @@ isOneToOne: false
 "cluster_item":
 { Args: { "p_embedding": string,"p_item_id": number,"p_since": string,"p_threshold": number }; Returns: {
               "created": boolean,"story_id": string
+            }[]
+                           },
+"digest_due_users":
+{ Args: { "p_now": string }; Returns: {
+              "email": string,"local_day": string,"locale": string,"timezone": string,"user_id": string
             }[]
                            },
 "discover_story_signals":
