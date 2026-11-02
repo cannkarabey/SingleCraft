@@ -77,10 +77,16 @@ export async function requestAngle({
   if (error) throw new Error(error.message);
   if (!allowed) return { status: "limit" };
 
-  await send({
-    name: "radar/angle.requested",
-    data: { userId, nicheId: niche, storyId },
-  });
+  try {
+    await send({
+      name: "radar/angle.requested",
+      data: { userId, nicheId: niche, storyId },
+    });
+  } catch (sendError) {
+    // Nothing was queued, so the unit must not stay spent.
+    await admin.rpc("release_usage", { p_user: userId, p_kind: "personal_angle" });
+    throw sendError;
+  }
   return { status: "queued" };
 }
 

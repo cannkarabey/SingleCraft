@@ -160,6 +160,29 @@ describe("personal angle", () => {
   });
 });
 
+test("a failed enqueue gives the usage back", async () => {
+  const u = await userWithNiche();
+  await expect(
+    requestAngle({
+      userDb: u.client,
+      admin: db,
+      userId: u.id,
+      storyId,
+      plan: "free",
+      send: async () => {
+        throw new Error("inngest down");
+      },
+    }),
+  ).rejects.toThrow("inngest down");
+  const { data } = await db
+    .from("usage_counters")
+    .select("count")
+    .eq("user_id", u.id)
+    .eq("kind", "personal_angle")
+    .single();
+  expect(data!.count).toBe(0);
+});
+
 describe("embedNiche", () => {
   test("stores a 768-dim embedding of name + keywords", async () => {
     const u = await userWithNiche();
