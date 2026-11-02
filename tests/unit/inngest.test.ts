@@ -1,8 +1,12 @@
 import { expect, test } from "vitest";
 import { functions } from "@/inngest/functions";
 
-test("registers at least one function", () => {
-  expect(functions.length).toBeGreaterThan(0);
+test("registers the ingestion functions", () => {
+  expect(functions.map((fn) => fn.id()).sort()).toEqual([
+    "fetch-sources",
+    "process-items",
+    "refresh-metrics",
+  ]);
 });
 
 test("function ids are unique", () => {

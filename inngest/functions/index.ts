@@ -1,3 +1,5 @@
-import { heartbeat } from "./heartbeat";
+import { fetchSources } from "./fetch-sources";
+import { processItemsFn } from "./process-items";
+import { refreshMetrics } from "./refresh-metrics";
 
-export const functions = [heartbeat];
+export const functions = [fetchSources, processItemsFn, refreshMetrics];

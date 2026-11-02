@@ -198,3 +198,18 @@ export async function recentHnItems(
       .gte("fetched_at", since.toISOString()),
   ).map(({ id, external_id }) => ({ id, external_id }));
 }
+
+export async function recordPipelineRun(
+  db: Db,
+  run: { fn: string; startedAt: string; stats?: Json; error?: string },
+): Promise<void> {
+  assertOk(
+    await db.from("pipeline_runs").insert({
+      fn: run.fn,
+      started_at: run.startedAt,
+      finished_at: new Date().toISOString(),
+      stats: run.stats ?? null,
+      error: run.error ?? null,
+    }),
+  );
+}
