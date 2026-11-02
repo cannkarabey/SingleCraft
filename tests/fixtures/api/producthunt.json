@@ -1,0 +1,34 @@
+{
+  "data": {
+    "posts": {
+      "edges": [
+        {
+          "node": {
+            "id": "1001001",
+            "name": "AgentDesk",
+            "tagline": "Run AI agents on your own laptop",
+            "description": "Local-first control panel for coding agents.",
+            "url": "https://www.producthunt.com/posts/agentdesk",
+            "website": "https://agentdesk.example.com/?ref=producthunt",
+            "votesCount": 512,
+            "commentsCount": 48,
+            "createdAt": "2026-11-02T07:01:00Z"
+          }
+        },
+        {
+          "node": {
+            "id": "1001002",
+            "name": "NoSite",
+            "tagline": "Something without a website",
+            "description": null,
+            "url": "https://www.producthunt.com/posts/nosite",
+            "website": null,
+            "votesCount": 12,
+            "commentsCount": 0,
+            "createdAt": "2026-11-02T08:00:00Z"
+          }
+        }
+      ]
+    }
+  }
+}
