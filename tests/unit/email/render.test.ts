@@ -4,9 +4,15 @@ import { renderAlert, renderDigest } from "@/lib/email/render";
 const digest = {
   locale: "tr" as const,
   appUrl: "https://app.test",
-  unsubscribeUrl: "https://app.test/api/email/unsubscribe?u=1&t=abc&list=digest",
+  unsubscribeUrl:
+    "https://app.test/api/email/unsubscribe?u=1&t=abc&list=digest",
   stories: [
-    { id: "s1", title: "Agents SDK <ships>", summary: "Tracing built in.", slug: "agents-sdk" },
+    {
+      id: "s1",
+      title: "Agents SDK <ships>",
+      summary: "Tracing built in.",
+      slug: "agents-sdk",
+    },
     { id: "s2", title: "Rust 2.0", summary: null, slug: null },
   ],
   publishCheck: { briefId: "b1", storyTitle: "Yesterday's story" },
@@ -27,7 +33,11 @@ describe("renderDigest", () => {
   });
 
   test("English and no publish check", async () => {
-    const mail = await renderDigest({ ...digest, locale: "en", publishCheck: null });
+    const mail = await renderDigest({
+      ...digest,
+      locale: "en",
+      publishCheck: null,
+    });
     expect(mail.subject).toMatch(/daily/i);
     expect(mail.html).not.toContain("studio/b1");
   });
@@ -38,9 +48,16 @@ describe("renderAlert", () => {
     const mail = await renderAlert({
       locale: "en",
       appUrl: "https://app.test",
-      unsubscribeUrl: "https://app.test/api/email/unsubscribe?u=1&t=abc&list=alerts",
+      unsubscribeUrl:
+        "https://app.test/api/email/unsubscribe?u=1&t=abc&list=alerts",
       nicheName: "AI agents",
-      story: { id: "s1", title: "Agents SDK ships", summary: "Tracing.", slug: "agents-sdk", score: 88.4 },
+      story: {
+        id: "s1",
+        title: "Agents SDK ships",
+        summary: "Tracing.",
+        slug: "agents-sdk",
+        score: 88.4,
+      },
     });
     expect(mail.subject).toContain("Agents SDK ships");
     expect(mail.html).toContain("88");

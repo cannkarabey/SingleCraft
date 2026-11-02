@@ -30,7 +30,9 @@ describe("sendEmail", () => {
     const { impl, calls } = fakeFetch({ id: "resend-1" });
     expect(await sendEmail(mail, impl)).toEqual({ id: "resend-1" });
     expect(calls[0].url).toBe("https://api.resend.com/emails");
-    expect(new Headers(calls[0].init.headers).get("authorization")).toBe("Bearer re_test");
+    expect(new Headers(calls[0].init.headers).get("authorization")).toBe(
+      "Bearer re_test",
+    );
     expect(JSON.parse(String(calls[0].init.body))).toMatchObject({
       from: "SignalCraft <hi@signalcraft.test>",
       to: ["a@test.dev"],
@@ -45,12 +47,17 @@ describe("sendEmail", () => {
     const { impl, calls } = fakeFetch({ ID: "mp-1" });
     expect(await sendEmail(mail, impl)).toEqual({ id: "mp-1" });
     expect(calls[0].url).toBe("http://mailpit.test/api/v1/send");
-    expect(JSON.parse(String(calls[0].init.body))).toMatchObject({ To: [{ Email: "a@test.dev" }], Subject: "Hi" });
+    expect(JSON.parse(String(calls[0].init.body))).toMatchObject({
+      To: [{ Email: "a@test.dev" }],
+      Subject: "Hi",
+    });
   });
 
   test("production without a key fails loudly", async () => {
     delete process.env.RESEND_API_KEY;
     (process.env as Record<string, string>).NODE_ENV = "production";
-    await expect(sendEmail(mail, fakeFetch({}).impl)).rejects.toThrow(/RESEND_API_KEY/);
+    await expect(sendEmail(mail, fakeFetch({}).impl)).rejects.toThrow(
+      /RESEND_API_KEY/,
+    );
   });
 });

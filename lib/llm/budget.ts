@@ -44,7 +44,13 @@ export async function todaySpendUsd(db: Db): Promise<number> {
     .select("cost_usd")
     .gte("created_at", startOfTodayUtc());
   fail(error);
-  return (data ?? []).reduce((sum, row) => sum + Number(row.cost_usd ?? 0), 0);
+  // cost_usd is numeric(10,5): sum in integer 1e-5 units so the total does not depend on
+  // row order (floating-point addition is not associative).
+  const units = (data ?? []).reduce(
+    (sum, row) => sum + Math.round(Number(row.cost_usd ?? 0) * 1e5),
+    0,
+  );
+  return units / 1e5;
 }
 
 export async function todayCallCount(db: Db, job: string): Promise<number> {

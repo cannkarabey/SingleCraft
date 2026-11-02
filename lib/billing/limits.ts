@@ -9,12 +9,32 @@ export type PlanLimits = {
   radarRows: number | null;
   briefsPerDay: number | null;
   anglesPerDay: number | null;
+  /** Daily digest email (PDF §15: a Creator feature). */
+  digest: boolean;
 };
 
 export const PLAN_LIMITS: Record<Plan, PlanLimits> = {
-  free: { niches: 1, radarRows: 3, briefsPerDay: 2, anglesPerDay: 5 },
-  creator: { niches: 3, radarRows: null, briefsPerDay: null, anglesPerDay: 50 },
-  pro: { niches: 10, radarRows: null, briefsPerDay: null, anglesPerDay: 200 },
+  free: {
+    niches: 1,
+    radarRows: 3,
+    briefsPerDay: 2,
+    anglesPerDay: 5,
+    digest: false,
+  },
+  creator: {
+    niches: 3,
+    radarRows: null,
+    briefsPerDay: null,
+    anglesPerDay: 50,
+    digest: true,
+  },
+  pro: {
+    niches: 10,
+    radarRows: null,
+    briefsPerDay: null,
+    anglesPerDay: 200,
+    digest: true,
+  },
 };
 
 export function limitsFor(plan: string | null | undefined): PlanLimits {
