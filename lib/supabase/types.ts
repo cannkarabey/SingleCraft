@@ -191,14 +191,14 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "alerts_enabled": boolean,"created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"plan": string,"timezone": string
+                    "alerts_enabled": boolean,"created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"plan": string,"signup_captured_at": string | null,"timezone": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"signup_captured_at"?: string | null,"timezone"?: string
                   }
                   Update: {
-                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"signup_captured_at"?: string | null,"timezone"?: string
                   }
                   Relationships: [
                     

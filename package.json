@@ -18,7 +18,8 @@
     "db:test": "supabase test db",
     "db:types": "supabase gen types typescript --local > lib/supabase/types.ts",
     "test:integration": "vitest run --config vitest.integration.config.mts",
-    "ingest:once": "tsx --env-file=.env.local --conditions=react-server scripts/ingest-once.ts"
+    "ingest:once": "tsx --env-file=.env.local --conditions=react-server scripts/ingest-once.ts",
+    "posthog:dashboard": "tsx --env-file-if-exists=.env.local scripts/posthog-dashboard.ts"
   },
   "dependencies": {
     "@ai-sdk/anthropic": "^4.0.94",

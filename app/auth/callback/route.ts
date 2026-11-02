@@ -1,5 +1,7 @@
 import { NextResponse } from "next/server";
+import { trackSignup } from "@/lib/analytics/signup";
 import { safeNextPath } from "@/lib/auth/paths";
+import { createAdminClient } from "@/lib/supabase/admin";
 import { createClient } from "@/lib/supabase/server";
 
 /** OAuth / magic-link (PKCE) landing: exchange the code for a session, then go to `next`. */
@@ -10,8 +12,11 @@ export async function GET(request: Request) {
 
   if (code) {
     const supabase = await createClient();
-    const { error } = await supabase.auth.exchangeCodeForSession(code);
-    if (!error) return NextResponse.redirect(new URL(next, url.origin));
+    const { data, error } = await supabase.auth.exchangeCodeForSession(code);
+    if (!error) {
+      if (data.user) await trackSignup(createAdminClient(), data.user.id);
+      return NextResponse.redirect(new URL(next, url.origin));
+    }
   }
   return NextResponse.redirect(
     new URL(

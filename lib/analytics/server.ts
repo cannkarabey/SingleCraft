@@ -2,11 +2,13 @@
 // called directly: one POST per event, no SDK, no background flush to lose on serverless.
 
 export type AnalyticsEvent =
+  | "signed_up"
   | "niche_created"
   | "story_saved"
   | "brief_generated"
   | "brief_edited"
   | "brief_published"
+  | "digest_sent"
   | "digest_opened";
 
 type Config = { key: string | undefined; host: string };

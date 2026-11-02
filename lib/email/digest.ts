@@ -1,4 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
+import { capture } from "@/lib/analytics/server";
 import { limitsFor } from "@/lib/billing/limits";
 import type { DigestStory } from "@/emails/DailyDigest";
 import type { Database } from "@/lib/supabase/types";
@@ -133,6 +134,12 @@ export async function sendDigests(deps: {
       });
       await confirmEmail(deps.db, claim, sent.id);
       result.sent++;
+      // Denominator of the digest open rate (plan §10).
+      await capture({
+        event: "digest_sent",
+        distinctId: user.user_id,
+        properties: { stories: stories.length },
+      });
     } catch (sendError) {
       await releaseEmail(deps.db, claim);
       console.warn(
