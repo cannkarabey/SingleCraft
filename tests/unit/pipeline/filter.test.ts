@@ -114,6 +114,37 @@ describe("filterItem", () => {
     expect(filterItem(item({ title }), hn, now).status).toBe("accepted");
   });
 
+  test.each([
+    ["github", "v17.0.0", "Highlights: a new compiler and faster builds."],
+    ["github", "vercel/next.js", "The React framework for the web"],
+    [
+      "producthunt",
+      "Raycast AI",
+      "Your AI assistant in every app on your Mac.",
+    ],
+  ] as const)(
+    "%s items with short titles but a body are kept: %s",
+    (type, title, contentText) => {
+      expect(
+        filterItem(
+          item({ title, contentText }),
+          { type, trust_weight: 0.8, config: {} },
+          now,
+        ).status,
+      ).toBe("accepted");
+    },
+  );
+
+  test("community items with neither title nor body are too short", () => {
+    expect(
+      filterItem(
+        item({ title: "v1", contentText: "" }),
+        { type: "github", trust_weight: 0.8, config: {} },
+        now,
+      ),
+    ).toMatchObject({ status: "rejected", reason: "too_short" });
+  });
+
   test("rejects low-trust sources", () => {
     expect(
       filterItem(item(), { ...editorial, trust_weight: 0.2 }, now),

@@ -37,7 +37,7 @@ function decodeEntities(text: string): string {
 /** Plain text from an HTML fragment: tags and script/style bodies removed, entities decoded. */
 export function stripHtml(html: string | null | undefined): string {
   if (!html) return "";
-  const withoutCode = html.replace(
+  const withoutCode = stripNul(html).replace(
     /<(script|style)\b[^>]*>[\s\S]*?<\/\1>/gi,
     "",
   );
@@ -53,8 +53,17 @@ export function normalizeTitle(title: string): string {
     .trim();
 }
 
+/** Cuts to at most `max` UTF-16 units without splitting a surrogate pair (Postgres rejects lone halves). */
 export function truncate(text: string, max: number): string {
-  return text.length > max ? text.slice(0, max) : text;
+  if (text.length <= max) return text;
+  const code = text.charCodeAt(max - 1);
+  const splitsPair = code >= 0xd800 && code <= 0xdbff;
+  return text.slice(0, splitsPair ? max - 1 : max);
+}
+
+/** Removes NUL characters, which Postgres text and jsonb cannot store. */
+export function stripNul(text: string): string {
+  return text.replace(/\u0000/g, "");
 }
 
 /** sha256(normalizeTitle(title) + first 500 chars of content) — exact-dedupe key. */

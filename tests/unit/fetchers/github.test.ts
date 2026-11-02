@@ -62,7 +62,7 @@ describe("fetchGithub", () => {
     const result = await fetchGithub(
       {
         url: "https://github.com/vercel/next.js/releases.atom",
-        config: { mode: "releases" },
+        config: { mode: "releases", repo: "vercel/next.js" },
         etag: null,
         last_modified: null,
       } as unknown as Source,
@@ -72,6 +72,7 @@ describe("fetchGithub", () => {
     expect(requests[0].url).toBe(
       "https://github.com/vercel/next.js/releases.atom",
     );
-    expect(result.items[0].title).toBe("v17.0.0");
+    // Prefixed with the repo so "v1.0.0" from two repos never hash alike.
+    expect(result.items[0].title).toBe("vercel/next.js v17.0.0");
   });
 });

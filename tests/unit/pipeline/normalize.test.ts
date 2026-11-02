@@ -73,3 +73,16 @@ describe("normalizeItem", () => {
     expect(() => normalizeItem({ ...base, url: "not a url" })).toThrow();
   });
 });
+
+describe("review fixes: Postgres-safe output", () => {
+  test("NUL characters are removed from every stored string", () => {
+    const n = normalizeItem({
+      ...base,
+      externalId: "id\u0000x",
+      title: "Title\u0000 here",
+      author: "Ja\u0000ne",
+      metadata: { note: "x\u0000y", nested: { list: ["a\u0000"] } },
+    });
+    expect(JSON.stringify(n)).not.toContain("\\u0000");
+  });
+});

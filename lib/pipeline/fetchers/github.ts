@@ -18,7 +18,11 @@ type GithubRepo = {
   owner: { login: string };
 };
 
-type GithubConfig = { mode?: "search" | "releases"; window_days?: number };
+type GithubConfig = {
+  mode?: "search" | "releases";
+  window_days?: number;
+  repo?: string;
+};
 
 export function parseGithubSearch(response: {
   items: GithubRepo[];
@@ -47,7 +51,20 @@ export async function fetchGithub(
   token?: string,
 ): Promise<FetchResult> {
   const config = (source.config ?? {}) as GithubConfig;
-  if (config.mode === "releases") return fetchFeed(source, fetchImpl);
+  if (config.mode === "releases") {
+    // Release titles are bare tags ("v1.0.0"); prefix the repo so they read on their own
+    // and never hash identically across repositories.
+    const result = await fetchFeed(source, fetchImpl);
+    const repo = config.repo;
+    if (!repo) return result;
+    return {
+      ...result,
+      items: result.items.map((item) => ({
+        ...item,
+        title: `${repo} ${item.title}`,
+      })),
+    };
+  }
 
   const since = new Date(now.getTime() - (config.window_days ?? 7) * DAY_MS);
   const url = new URL(source.url);

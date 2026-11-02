@@ -70,3 +70,16 @@ describe("truncate", () => {
     expect(truncate("abc", 4)).toBe("abc");
   });
 });
+
+describe("review fixes: strings Postgres accepts", () => {
+  test("truncate never splits a surrogate pair", () => {
+    const text = "a".repeat(3) + "😀";
+    const cut = truncate(text, 4);
+    expect(cut).toBe("aaa");
+    expect(() => encodeURIComponent(cut)).not.toThrow();
+  });
+
+  test("stripHtml removes NUL characters", () => {
+    expect(stripHtml("a\u0000b")).toBe("ab");
+  });
+});

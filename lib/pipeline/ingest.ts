@@ -86,8 +86,24 @@ export async function ingestSource(
     }
   }
 
-  const { ids, inserted } = await upsertItems(deps.db, sourceId, normalized);
-  await insertMetrics(deps.db, metricRows([...fetched.values()], ids));
+  // Storage errors (e.g. a value Postgres rejects) count against the source like fetch
+  // errors: the run continues and a persistently broken source gets deactivated.
+  let inserted: number[];
+  try {
+    const stored = await upsertItems(deps.db, sourceId, normalized);
+    inserted = stored.inserted;
+    await insertMetrics(deps.db, metricRows([...fetched.values()], stored.ids));
+  } catch (error) {
+    const message = error instanceof Error ? error.message : String(error);
+    await recordFetchFailure(deps.db, source, message);
+    return {
+      sourceId,
+      inserted: [],
+      seen: normalized.length,
+      invalid,
+      error: message,
+    };
+  }
   await recordFetchSuccess(deps.db, sourceId, result);
 
   return { sourceId, inserted, seen: normalized.length, invalid };

@@ -126,6 +126,45 @@ describe("ingestSource", () => {
     expect(row.consecutive_failures).toBe(5);
     expect(row.active).toBe(false);
     expect(row.last_error).toMatch(/503/);
+
+    // Deactivation is surfaced to admins via pipeline_runs (plan §5.1).
+    const { data: alerts } = await db
+      .from("pipeline_runs")
+      .select("fn, error, stats")
+      .eq("fn", "source-deactivated")
+      .contains("stats", { source_id: hn });
+    expect(alerts).toHaveLength(1);
+    expect(alerts![0].error).toMatch(/503/);
+  });
+
+  test("storage errors are recorded as a source failure, not thrown", async () => {
+    const failingDb = new Proxy(db, {
+      get(target, prop, receiver) {
+        if (prop === "rpc") {
+          return (fn: string, ...args: unknown[]) =>
+            fn === "ingest_raw_items"
+              ? Promise.resolve({
+                  data: null,
+                  error: { message: "boom from storage" },
+                })
+              : (target.rpc as (...a: unknown[]) => unknown).call(
+                  target,
+                  fn,
+                  ...args,
+                );
+        }
+        return Reflect.get(target, prop, receiver);
+      },
+    });
+    const result = await ingestSource(hn, {
+      db: failingDb,
+      fetch: fakeFetch(new Response(fixture("api/hn-front-page.json"))).impl,
+      now,
+    });
+    expect(result.error).toMatch(/boom from storage/);
+    const row = await source(hn);
+    expect(row.consecutive_failures).toBe(1);
+    expect(row.last_error).toMatch(/boom from storage/);
   });
 
   test("success resets the failure counter", async () => {

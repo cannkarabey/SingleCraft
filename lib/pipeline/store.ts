@@ -127,6 +127,19 @@ export async function recordFetchFailure(
       })
       .eq("id", source.id),
   );
+  if (source.active && failures >= MAX_CONSECUTIVE_FAILURES) {
+    // Admin alert (plan §5.1): surfaced in pipeline_runs until the admin panel exists (Faz 9).
+    const now = new Date().toISOString();
+    assertOk(
+      await db.from("pipeline_runs").insert({
+        fn: "source-deactivated",
+        started_at: now,
+        finished_at: now,
+        stats: { source_id: source.id, name: source.name, failures },
+        error: message.slice(0, 1000),
+      }),
+    );
+  }
 }
 
 export type PendingItem = Pick<

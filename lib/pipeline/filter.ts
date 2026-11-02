@@ -26,10 +26,12 @@ export type FilterResult =
 
 const MAX_AGE_MS = 7 * 24 * 60 * 60 * 1000;
 const MIN_EDITORIAL_LENGTH = 80;
-const MIN_COMMUNITY_TITLE_LENGTH = 15;
+/** HN link posts carry only a headline. */
+const MIN_HN_TITLE_LENGTH = 15;
+/** Reddit/GitHub/Product Hunt titles are short ("v17.0.0") but come with a body. */
+const MIN_COMMUNITY_LENGTH = 30;
 const MIN_TRUST = 0.3;
 const COMMUNITY_SOURCES: ReadonlySet<SourceType> = new Set([
-  "hn",
   "reddit",
   "github",
   "producthunt",
@@ -60,12 +62,14 @@ export function filterItem(
   ) {
     return reject("stale");
   }
-  if (COMMUNITY_SOURCES.has(source.type)) {
-    if (item.title.trim().length < MIN_COMMUNITY_TITLE_LENGTH)
-      return reject("too_short");
-  } else if (text.length < MIN_EDITORIAL_LENGTH) {
-    return reject("too_short");
-  }
+  const tooShort =
+    source.type === "hn"
+      ? item.title.trim().length < MIN_HN_TITLE_LENGTH
+      : text.length <
+        (COMMUNITY_SOURCES.has(source.type)
+          ? MIN_COMMUNITY_LENGTH
+          : MIN_EDITORIAL_LENGTH);
+  if (tooShort) return reject("too_short");
   if (SPAM_PATTERN.test(text)) return reject("spam");
   if (source.trust_weight < MIN_TRUST) return reject("low_trust");
   if (source.config.niche_specific === false && category === "other")

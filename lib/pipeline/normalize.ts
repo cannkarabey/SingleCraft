@@ -1,7 +1,7 @@
 import { canonicalizeUrl } from "./canonical-url";
 import { detectLanguage } from "./language";
 import { simhash } from "./simhash";
-import { contentHash, stripHtml, truncate } from "./text";
+import { contentHash, stripHtml, stripNul, truncate } from "./text";
 import type { FetchedItem } from "./types";
 import type { Json } from "@/lib/supabase/types";
 
@@ -24,6 +24,21 @@ export type NormalizedItem = {
   raw_metadata: Record<string, Json>;
 };
 
+/** Deep-copies JSON with NUL characters removed from every string. */
+function sanitizeJson(value: Json): Json {
+  if (typeof value === "string") return stripNul(value);
+  if (Array.isArray(value)) return value.map(sanitizeJson);
+  if (value && typeof value === "object") {
+    return Object.fromEntries(
+      Object.entries(value).map(([k, v]) => [
+        stripNul(k),
+        sanitizeJson(v ?? null),
+      ]),
+    );
+  }
+  return value;
+}
+
 function validDate(date: Date | null | undefined): string | null {
   return date && !Number.isNaN(date.getTime()) ? date.toISOString() : null;
 }
@@ -39,17 +54,17 @@ export function normalizeItem(item: FetchedItem): NormalizedItem {
   );
 
   return {
-    external_id: item.externalId,
+    external_id: stripNul(item.externalId),
     url: item.url,
     canonical_url: canonicalizeUrl(item.url),
     title,
     description,
     content_text: contentText,
-    author: item.author?.trim() || null,
+    author: stripNul(item.author ?? "").trim() || null,
     published_at: validDate(item.publishedAt),
     language: detectLanguage(`${title} ${description ?? ""} ${contentText}`),
     content_hash: contentHash(title, contentText),
     simhash: simhash(`${title} ${description ?? ""}`).toString(),
-    raw_metadata: item.metadata ?? {},
+    raw_metadata: sanitizeJson(item.metadata ?? {}) as Record<string, Json>,
   };
 }
