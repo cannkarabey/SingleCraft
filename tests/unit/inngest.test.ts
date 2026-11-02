@@ -12,6 +12,7 @@ test("registers the pipeline functions", () => {
     "radar-angle",
     "refresh-metrics",
     "score-stories",
+    "studio-generate",
   ]);
 });
 

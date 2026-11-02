@@ -1,6 +1,7 @@
 import { fetchSources } from "./fetch-sources";
 import { processItemsFn } from "./process-items";
 import { nicheEmbed, radarAngle } from "./radar";
+import { studioGenerate } from "./studio";
 import { refreshMetrics } from "./refresh-metrics";
 import {
   archiveStoriesFn,
@@ -19,4 +20,5 @@ export const functions = [
   archiveStoriesFn,
   nicheEmbed,
   radarAngle,
+  studioGenerate,
 ];

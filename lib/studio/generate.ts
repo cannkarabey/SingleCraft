@@ -178,7 +178,7 @@ type Pack<S extends z.ZodType> = {
   tokensOut: number;
 };
 
-async function runPack<S extends z.ZodType>(
+export async function runPack<S extends z.ZodType>(
   deps: { db: Db; llm: { model: LanguageModel; id: string } },
   schema: S,
   system: string,
