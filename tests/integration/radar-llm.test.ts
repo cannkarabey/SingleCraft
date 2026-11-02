@@ -115,14 +115,12 @@ describe("personal angle", () => {
 
   test("daily limit", async () => {
     const u = await userWithNiche();
-    await db
-      .from("usage_counters")
-      .insert({
-        user_id: u.id,
-        day: new Date().toISOString().slice(0, 10),
-        kind: "personal_angle",
-        count: 5,
-      });
+    await db.from("usage_counters").insert({
+      user_id: u.id,
+      day: new Date().toISOString().slice(0, 10),
+      kind: "personal_angle",
+      count: 5,
+    });
     const result = await requestAngle({
       userDb: u.client,
       admin: db,
