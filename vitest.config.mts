@@ -4,6 +4,8 @@ import tsconfigPaths from "vite-tsconfig-paths";
 
 export default defineConfig({
   plugins: [tsconfigPaths()],
+  // Email templates are TSX rendered in plain Node.
+  esbuild: { jsx: "automatic" },
   // `server-only` throws outside a React Server environment; tests run in plain Node.
   resolve: {
     alias: {

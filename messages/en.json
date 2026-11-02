@@ -393,5 +393,20 @@
       "tracked": "Accounts or channels you follow",
       "trackedPlaceholder": "e.g. Hugging Face"
     }
+  },
+  "email": {
+    "digestSubject": "Your daily signals",
+    "digestTitle": "Today's signals for you",
+    "digestIntro": "The five stories worth your attention today.",
+    "createBrief": "Create brief",
+    "publishCheck": "Did you publish it?",
+    "publishCheckBody": "Yesterday you drafted \"{title}\". Mark it as published so we can track what works.",
+    "alertSubject": "High signal: {title}",
+    "alertTitle": "A story crossed your alert threshold",
+    "alertNiche": "Niche: {niche} · score {score}",
+    "openStory": "Open story",
+    "footer": "You get this email because of your SignalCraft settings.",
+    "unsubscribe": "Unsubscribe",
+    "manage": "Email settings"
   }
 }

@@ -393,5 +393,20 @@
       "tracked": "Takip ettiğin hesaplar veya kanallar",
       "trackedPlaceholder": "ör. Hugging Face"
     }
+  },
+  "email": {
+    "digestSubject": "Günlük sinyallerin",
+    "digestTitle": "Bugün senin için öne çıkanlar",
+    "digestIntro": "Bugün dikkatine değer beş story.",
+    "createBrief": "Brief oluştur",
+    "publishCheck": "Yayınladın mı?",
+    "publishCheckBody": "Dün \"{title}\" için taslak hazırladın. Neyin işe yaradığını görebilmemiz için yayınladıysan işaretle.",
+    "alertSubject": "Yüksek sinyal: {title}",
+    "alertTitle": "Bir story alarm eşiğini geçti",
+    "alertNiche": "Niş: {niche} · skor {score}",
+    "openStory": "Story'yi aç",
+    "footer": "Bu e-postayı SignalCraft ayarların nedeniyle alıyorsun.",
+    "unsubscribe": "Abonelikten çık",
+    "manage": "E-posta ayarları"
   }
 }
