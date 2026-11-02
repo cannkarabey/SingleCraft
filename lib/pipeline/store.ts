@@ -1,0 +1,190 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
+import type {
+  Database,
+  Json,
+  TablesInsert,
+  TablesUpdate,
+} from "@/lib/supabase/types";
+import type { NormalizedItem } from "./normalize";
+import type { Source } from "./types";
+
+export type Db = SupabaseClient<Database>;
+
+/** Consecutive fetch failures after which a source is deactivated (plan §5.1). */
+export const MAX_CONSECUTIVE_FAILURES = 5;
+
+function check<T>(result: { data: T; error: { message: string } | null }): T {
+  if (result.error) throw new Error(result.error.message);
+  return result.data;
+}
+
+export async function getSource(db: Db, id: string): Promise<Source> {
+  return check(await db.from("sources").select("*").eq("id", id).single());
+}
+
+export async function getSources(
+  db: Db,
+  ids: string[],
+): Promise<Map<string, Source>> {
+  const rows = check(await db.from("sources").select("*").in("id", ids));
+  return new Map(rows.map((row) => [row.id, row]));
+}
+
+export async function dueSourceIds(db: Db): Promise<string[]> {
+  return check(await db.rpc("due_sources")).map((source) => source.id);
+}
+
+/**
+ * Inserts new items (existing (source_id, external_id) pairs are left untouched) and
+ * returns the row id of every given item plus the ids that were newly inserted.
+ */
+export async function upsertItems(
+  db: Db,
+  sourceId: string,
+  items: NormalizedItem[],
+): Promise<{ ids: Map<string, number>; inserted: number[] }> {
+  if (items.length === 0) return { ids: new Map(), inserted: [] };
+
+  const rows = items.map(
+    (item) =>
+      ({
+        ...item,
+        source_id: sourceId,
+      }) as unknown as TablesInsert<"raw_items">,
+  );
+  const inserted = check(
+    await db
+      .from("raw_items")
+      .upsert(rows, {
+        onConflict: "source_id,external_id",
+        ignoreDuplicates: true,
+      })
+      .select("id"),
+  ).map((row) => row.id);
+
+  const all = check(
+    await db
+      .from("raw_items")
+      .select("id, external_id")
+      .eq("source_id", sourceId)
+      .in(
+        "external_id",
+        items.map((item) => item.external_id),
+      ),
+  );
+  return {
+    ids: new Map(all.map((row) => [row.external_id, row.id])),
+    inserted,
+  };
+}
+
+export async function insertMetrics(
+  db: Db,
+  rows: { raw_item_id: number; metric: string; value: number }[],
+): Promise<void> {
+  if (rows.length === 0) return;
+  check(await db.from("item_metrics").insert(rows));
+}
+
+export async function recordFetchSuccess(
+  db: Db,
+  sourceId: string,
+  validators: { etag?: string | null; lastModified?: string | null } | null,
+): Promise<void> {
+  const patch: TablesUpdate<"sources"> = {
+    last_fetched_at: new Date().toISOString(),
+    last_error: null,
+    consecutive_failures: 0,
+  };
+  // A 304 keeps the validators we already have.
+  if (validators) {
+    patch.etag = validators.etag ?? null;
+    patch.last_modified = validators.lastModified ?? null;
+  }
+  check(await db.from("sources").update(patch).eq("id", sourceId));
+}
+
+/** Counts a failure; the source still waits its interval before the next attempt. */
+export async function recordFetchFailure(
+  db: Db,
+  source: Source,
+  message: string,
+): Promise<void> {
+  const failures = source.consecutive_failures + 1;
+  check(
+    await db
+      .from("sources")
+      .update({
+        last_fetched_at: new Date().toISOString(),
+        last_error: message.slice(0, 1000),
+        consecutive_failures: failures,
+        active: failures < MAX_CONSECUTIVE_FAILURES && source.active,
+      })
+      .eq("id", source.id),
+  );
+}
+
+export type PendingItem = Pick<
+  Database["public"]["Tables"]["raw_items"]["Row"],
+  | "id"
+  | "source_id"
+  | "title"
+  | "content_text"
+  | "published_at"
+  | "language"
+  | "raw_metadata"
+>;
+
+export async function pendingItems(
+  db: Db,
+  ids: number[],
+): Promise<PendingItem[]> {
+  if (ids.length === 0) return [];
+  return check(
+    await db
+      .from("raw_items")
+      .select(
+        "id, source_id, title, content_text, published_at, language, raw_metadata",
+      )
+      .in("id", ids)
+      .eq("filter_status", "pending")
+      .order("id"),
+  );
+}
+
+export async function findDuplicate(
+  db: Db,
+  itemId: number,
+  since: Date,
+  maxDistance: number,
+): Promise<number | null> {
+  const rows = check(
+    await db.rpc("find_duplicate", {
+      p_item_id: itemId,
+      p_since: since.toISOString(),
+      p_max_distance: maxDistance,
+    }),
+  );
+  return rows[0]?.duplicate_of ?? null;
+}
+
+export async function updateItem(
+  db: Db,
+  id: number,
+  patch: TablesUpdate<"raw_items"> & { raw_metadata?: Json },
+): Promise<void> {
+  check(await db.from("raw_items").update(patch).eq("id", id));
+}
+
+export async function recentHnItems(
+  db: Db,
+  since: Date,
+): Promise<{ id: number; external_id: string }[]> {
+  return check(
+    await db
+      .from("raw_items")
+      .select("id, external_id, sources!inner(type)")
+      .eq("sources.type", "hn")
+      .gte("fetched_at", since.toISOString()),
+  ).map(({ id, external_id }) => ({ id, external_id }));
+}
