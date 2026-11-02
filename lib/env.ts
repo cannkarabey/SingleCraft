@@ -35,6 +35,7 @@ const serverSchema = publicSchema.extend({
   PRODUCTHUNT_TOKEN: optionalString,
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: optionalString,
+  RESEND_WEBHOOK_SECRET: optionalString,
   LEMONSQUEEZY_API_KEY: optionalString,
   LEMONSQUEEZY_STORE_ID: optionalString,
   LEMONSQUEEZY_WEBHOOK_SECRET: optionalString,

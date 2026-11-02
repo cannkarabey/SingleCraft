@@ -10,6 +10,8 @@ describe("proxy matcher", () => {
     "/api/discover/some-story",
     "/api/categories",
     "/api/trending",
+    "/api/email/webhook",
+    "/api/billing/webhook",
   ])("skips public API %s", (path) => {
     expect(
       unstable_doesMiddlewareMatch({ config, url: `http://localhost${path}` }),

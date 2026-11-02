@@ -77,14 +77,14 @@ isOneToOne: false
                   ]
                 },"email_log": {
                   Row: {
-                    "created_at": string,"day": string,"id": number,"kind": string,"provider_id": string | null,"story_id": string | null,"user_id": string
+                    "created_at": string,"day": string,"id": number,"kind": string,"opened_at": string | null,"provider_id": string | null,"story_id": string | null,"user_id": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "created_at"?: string,"day": string,"id"?: number,"kind": string,"provider_id"?: string | null,"story_id"?: string | null,"user_id": string
+                    "created_at"?: string,"day": string,"id"?: number,"kind": string,"opened_at"?: string | null,"provider_id"?: string | null,"story_id"?: string | null,"user_id": string
                   }
                   Update: {
-                    "created_at"?: string,"day"?: string,"id"?: number,"kind"?: string,"provider_id"?: string | null,"story_id"?: string | null,"user_id"?: string
+                    "created_at"?: string,"day"?: string,"id"?: number,"kind"?: string,"opened_at"?: string | null,"provider_id"?: string | null,"story_id"?: string | null,"user_id"?: string
                   }
                   Relationships: [
                     {
