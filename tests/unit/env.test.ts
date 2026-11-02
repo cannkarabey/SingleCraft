@@ -38,6 +38,7 @@ describe("parseServerEnv", () => {
     const env = parseServerEnv(serverEnv);
     expect(env.LLM_DAILY_BUDGET_USD).toBe(1);
     expect(env.STORY_BUILD_TOP_N).toBe(30);
+    expect(env.STORY_BUILD_DAILY_LIMIT).toBe(40);
   });
 
   test("coerces numeric strings", () => {

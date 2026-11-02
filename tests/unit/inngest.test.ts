@@ -1,11 +1,15 @@
 import { expect, test } from "vitest";
 import { functions } from "@/inngest/functions";
 
-test("registers the ingestion functions", () => {
+test("registers the pipeline functions", () => {
   expect(functions.map((fn) => fn.id()).sort()).toEqual([
+    "archive-stories",
+    "build-stories",
+    "cluster-items",
     "fetch-sources",
     "process-items",
     "refresh-metrics",
+    "score-stories",
   ]);
 });
 

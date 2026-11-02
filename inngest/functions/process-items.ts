@@ -37,6 +37,14 @@ export const processItemsFn = inngest.createFunction(
       totals.duplicate += result.duplicate;
     }
 
+    // Accepted items need embedding/clustering; duplicates may join existing stories.
+    if (totals.accepted + totals.duplicate > 0) {
+      await step.sendEvent("items-processed", {
+        name: "items/processed",
+        data: totals,
+      });
+    }
+
     await step.run("record-run", () =>
       recordPipelineRun(pipelineDeps().db, {
         fn: "process-items",
