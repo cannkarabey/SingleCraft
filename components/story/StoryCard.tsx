@@ -10,11 +10,15 @@ export async function StoryCard({
   story,
   now,
   actions = true,
+  headingLevel = 2,
 }: {
   story: StoryCardData;
   now: Date;
   actions?: boolean;
+  /** 2 directly under a page h1 (Discover), 3 inside an h2 section (landing). */
+  headingLevel?: 2 | 3;
 }) {
+  const Heading = headingLevel === 2 ? "h2" : "h3";
   const [t, locale] = await Promise.all([
     getTranslations("discover"),
     getLocale(),
@@ -30,11 +34,11 @@ export async function StoryCard({
             {t(`categories.${story.category}`)}
           </p>
         )}
-        <h3 className="text-lg leading-snug font-semibold tracking-tight">
+        <Heading className="text-lg leading-snug font-semibold tracking-tight">
           <Link href={href} className="hover:underline">
             {story.title}
           </Link>
-        </h3>
+        </Heading>
         {story.summary && (
           <p className="text-muted-foreground">{story.summary}</p>
         )}

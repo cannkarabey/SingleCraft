@@ -79,7 +79,12 @@ export default async function DiscoverPage({
             {page.items.map((story) => (
               <StoryCard key={story.id} story={story} now={now} />
             ))}
-            <LoadMore query={query} initialCursor={page.nextCursor} />
+            {/* Keyed by filters: a new filter set must not keep pages loaded for the old one. */}
+            <LoadMore
+              key={JSON.stringify(query)}
+              query={query}
+              initialCursor={page.nextCursor}
+            />
           </div>
         )}
       </section>

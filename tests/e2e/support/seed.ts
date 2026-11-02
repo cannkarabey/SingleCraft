@@ -16,17 +16,55 @@ export type Seed = {
   old: { id: string; slug: string; title: string };
 };
 
+/**
+ * "hours ago", clamped into the current UTC day unless `allowPastDays`: Discover's default
+ * range is "today" (since 00:00 UTC), so runs just after midnight must still see the seed.
+ */
+export function seedTime(
+  hoursAgo: number,
+  now = new Date(),
+  opts: { allowPastDays?: boolean } = {},
+) {
+  const t = now.getTime() - hoursAgo * 3600_000;
+  if (opts.allowPastDays) return new Date(t).toISOString();
+  const dayStart = Date.UTC(
+    now.getUTCFullYear(),
+    now.getUTCMonth(),
+    now.getUTCDate(),
+  );
+  // Keep relative order inside the day: map into (dayStart, now).
+  const clamped =
+    t >= dayStart
+      ? t
+      : dayStart + ((now.getTime() - dayStart) * (1 - hoursAgo / 48)) / 2;
+  return new Date(Math.min(clamped, now.getTime() - 1000)).toISOString();
+}
+
+function must<T>(
+  result: { data: T; error: { message: string } | null },
+  what: string,
+): T {
+  if (result.error)
+    throw new Error(`e2e seed: ${what}: ${result.error.message}`);
+  return result.data;
+}
+
 function admin() {
   if (existsSync(".env.local")) process.loadEnvFile(".env.local");
-  return createClient(process.env.NEXT_PUBLIC_SUPABASE_URL!, process.env.SUPABASE_SERVICE_ROLE_KEY!, {
-    auth: { persistSession: false },
-  });
+  return createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL!,
+    process.env.SUPABASE_SERVICE_ROLE_KEY!,
+    {
+      auth: { persistSession: false },
+    },
+  );
 }
 
 export async function seed(): Promise<Seed> {
   const db = admin();
   const tag = randomUUID().slice(0, 6);
-  const hours = (h: number) => new Date(Date.now() - h * 3600_000).toISOString();
+  const now = new Date();
+  const hours = (h: number) => seedTime(h, now);
 
   const sourceRows = ["hn", "github"].map((type) => ({
     id: randomUUID(),
@@ -35,11 +73,26 @@ export async function seed(): Promise<Seed> {
     url: `https://e2e.test/${type}/${tag}`,
     trust_weight: 0.8,
   }));
-  const { error: sourceError } = await db.from("sources").insert(sourceRows);
-  if (sourceError) throw sourceError;
-
   const stories: string[] = [];
-  async function story(title: string, fields: Record<string, unknown>, metric?: [string, number]) {
+  // Written after every insert, so teardown can remove whatever a failed seed left behind.
+  const record = (extra: Partial<Seed> = {}) =>
+    writeFileSync(
+      SEED_FILE,
+      JSON.stringify({
+        tag,
+        sources: sourceRows.map((s) => s.id),
+        stories,
+        ...extra,
+      }),
+    );
+  record();
+  must(await db.from("sources").insert(sourceRows), "sources");
+
+  async function story(
+    title: string,
+    fields: Record<string, unknown>,
+    metric?: [string, number],
+  ) {
     const slug = `${title.toLowerCase().replace(/[^a-z0-9]+/g, "-")}`;
     const { data, error } = await db
       .from("stories")
@@ -50,7 +103,11 @@ export async function seed(): Promise<Seed> {
         summary: `${title}: a short factual summary of what happened.`,
         why_it_matters: `${title} matters for builders.`,
         entities: ["Acme"],
-        suggested_angles: ["Hands-on review", "What changed", "Who should care"],
+        suggested_angles: [
+          "Hands-on review",
+          "What changed",
+          "Who should care",
+        ],
         source_count: 1,
         trust_score: 0.8,
         ...fields,
@@ -59,7 +116,9 @@ export async function seed(): Promise<Seed> {
       .single();
     if (error) throw error;
     stories.push(data.id);
-    const source = metric?.[0] === "stars" ? sourceRows[1].id : sourceRows[0].id;
+    record();
+    const source =
+      metric?.[0] === "stars" ? sourceRows[1].id : sourceRows[0].id;
     const { data: item, error: itemError } = await db
       .from("raw_items")
       .insert({
@@ -75,11 +134,25 @@ export async function seed(): Promise<Seed> {
       .select("id")
       .single();
     if (itemError) throw itemError;
-    await db.from("story_sources").insert({ story_id: data.id, raw_item_id: item.id, source_id: source });
+    must(
+      await db
+        .from("story_sources")
+        .insert({ story_id: data.id, raw_item_id: item.id, source_id: source }),
+      "story_sources",
+    );
     if (metric) {
-      await db.from("item_metrics").insert({ raw_item_id: item.id, metric: metric[0], value: metric[1] });
+      must(
+        await db
+          .from("item_metrics")
+          .insert({
+            raw_item_id: item.id,
+            metric: metric[0],
+            value: metric[1],
+          }),
+        "item_metrics",
+      );
     }
-    await db.from("trend_scores").insert(
+    const trend = await db.from("trend_scores").insert(
       [40, 55, 70, 90].map((value, i) => ({
         story_id: data.id,
         metric: "global",
@@ -87,23 +160,34 @@ export async function seed(): Promise<Seed> {
         calculated_at: hours(4 - i),
       })),
     );
+    must(trend, "trend_scores");
     return { id: data.id, slug, title };
   }
 
   const top = await story(
     `Quokka agent launch ${tag}`,
-    { category: "ai_tools", global_score: 99_900, velocity_score: 950, is_early_signal: false, first_seen_at: hours(1) },
+    {
+      category: "ai_tools",
+      global_score: 99_900,
+      velocity_score: 950,
+      is_early_signal: false,
+      first_seen_at: hours(1),
+    },
     ["points", 412],
   );
   const devTool = await story(
     `Wombat compiler release ${tag}`,
-    { category: "developer_tools", global_score: 99_800, first_seen_at: hours(2) },
+    {
+      category: "developer_tools",
+      global_score: 99_800,
+      first_seen_at: hours(2),
+    },
     ["stars", 999_999],
   );
   const old = await story(`Bilby breach report ${tag}`, {
     category: "security",
     global_score: 99_700,
-    first_seen_at: hours(72),
+    first_seen_at: seedTime(72, now, { allowPastDays: true }),
   });
   // Enough filler to need a second page (page size 20).
   for (let i = 0; i < 24; i++) {
@@ -114,9 +198,8 @@ export async function seed(): Promise<Seed> {
     });
   }
 
-  const result: Seed = { tag, sources: sourceRows.map((s) => s.id), stories, top, devTool, old };
-  writeFileSync(SEED_FILE, JSON.stringify(result));
-  return result;
+  record({ top, devTool, old });
+  return readSeed();
 }
 
 export function readSeed(): Seed {

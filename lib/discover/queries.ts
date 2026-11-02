@@ -165,15 +165,17 @@ export type StoryDetail = NonNullable<Awaited<ReturnType<typeof getStory>>>;
 
 /** global_score history for the sparkline (trend_scores is public for published stories). */
 export async function storyTrend(db: Db, storyId: string) {
-  return check(
+  // Newest points (two days at the 30-minute scoring cadence), returned oldest → newest.
+  const rows = check(
     await db
       .from("trend_scores")
       .select("value, calculated_at")
       .eq("story_id", storyId)
       .eq("metric", "global")
-      .order("calculated_at", { ascending: true })
+      .order("calculated_at", { ascending: false })
       .limit(96),
   );
+  return rows.reverse();
 }
 
 /** Published stories per category in the range. */

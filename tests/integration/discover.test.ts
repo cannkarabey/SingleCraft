@@ -5,6 +5,7 @@ import {
   githubPanel,
   listStories,
   newToolsPanel,
+  storyTrend,
   trendingPanel,
 } from "@/lib/discover/queries";
 import { anon, seedDiscover, type Fixture } from "./discover-fixtures";
@@ -121,5 +122,23 @@ describe("side data", () => {
     expect((await githubPanel(anon, now)).map((s) => s.id)).toContain(
       f.second.id,
     );
+  });
+});
+
+describe("storyTrend (review I2)", () => {
+  test("returns the newest 96 points in chronological order", async () => {
+    const start = Date.now() - 100 * 30 * 60_000;
+    const rows = Array.from({ length: 100 }, (_, i) => ({
+      story_id: f.top.id,
+      metric: "global",
+      value: i,
+      calculated_at: new Date(start + i * 30 * 60_000).toISOString(),
+    }));
+    const { db } = await import("./helpers");
+    await db.from("trend_scores").insert(rows);
+    const trend = await storyTrend(anon, f.top.id);
+    expect(trend).toHaveLength(96);
+    expect(trend.at(-1)!.value).toBe(99);
+    expect(trend[0].value).toBe(4);
   });
 });

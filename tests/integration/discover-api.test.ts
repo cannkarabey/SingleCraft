@@ -21,15 +21,21 @@ describe("GET /api/discover", () => {
     expect(res.headers.get("cache-control")).toContain("s-maxage=60");
     const body = await res.json();
     expect(body.items.map((s: { id: string }) => s.id)).toContain(f.top.id);
-    expect(body.items.map((s: { id: string }) => s.id)).not.toContain(f.pending.id);
+    expect(body.items.map((s: { id: string }) => s.id)).not.toContain(
+      f.pending.id,
+    );
     expect(JSON.stringify(body)).not.toContain("SECRET FULL TEXT");
   });
 
   test("cursor round trip", async () => {
-    const first = await (await listGet(req("/api/discover?range=week&limit=1"))).json();
+    const first = await (
+      await listGet(req("/api/discover?range=week&limit=1"))
+    ).json();
     expect(first.nextCursor).toBeTruthy();
     const second = await (
-      await listGet(req(`/api/discover?range=week&limit=1&cursor=${first.nextCursor}`))
+      await listGet(
+        req(`/api/discover?range=week&limit=1&cursor=${first.nextCursor}`),
+      )
     ).json();
     expect(second.items[0].id).not.toBe(first.items[0].id);
   });
@@ -66,7 +72,9 @@ describe("GET /api/discover/[storyId]", () => {
 
 describe("side routes", () => {
   test("GET /api/categories counts by category", async () => {
-    const body = await (await categoriesGet(req("/api/categories?range=week"))).json();
+    const body = await (
+      await categoriesGet(req("/api/categories?range=week"))
+    ).json();
     expect(body.counts.ai_tools).toBeGreaterThanOrEqual(1);
   });
 
@@ -76,6 +84,8 @@ describe("side routes", () => {
       expect(res.status).toBe(200);
       expect(Array.isArray((await res.json()).items)).toBe(true);
     }
-    expect((await trendingGet(req("/api/trending?panel=gossip"))).status).toBe(400);
+    expect((await trendingGet(req("/api/trending?panel=gossip"))).status).toBe(
+      400,
+    );
   });
 });

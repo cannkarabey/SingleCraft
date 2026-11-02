@@ -88,6 +88,7 @@ export default async function Home() {
                 story={story}
                 now={now}
                 actions={false}
+                headingLevel={3}
               />
             ))}
           </div>
