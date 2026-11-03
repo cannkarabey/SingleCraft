@@ -12,13 +12,18 @@ test.describe("auth", () => {
     ).toBeVisible();
   });
 
-  test("magic link signs in, then sign out", async ({ page }) => {
+  test("sign up by magic link, then sign out and sign in again", async ({
+    page,
+  }) => {
     const email = `e2e-${Date.now()}@test.dev`;
-    await page.goto("/login?next=%2Fdiscover");
-    await page.getByLabel("E-posta").fill(email);
-    await page.getByRole("button", { name: "Giriş linki gönder" }).click();
+    await page.goto("/signup?next=%2Fdiscover");
     await expect(
-      page.getByText("Giriş linkini e-postana gönderdik."),
+      page.getByRole("heading", { level: 1, name: "Kayıt ol" }),
+    ).toBeVisible();
+    await page.getByLabel("E-posta").fill(email);
+    await page.getByRole("button", { name: "Kayıt linki gönder" }).click();
+    await expect(
+      page.getByText("Kayıt linkini e-postana gönderdik."),
     ).toBeVisible();
 
     await page.goto(await latestMagicLink(email));
@@ -35,6 +40,40 @@ test.describe("auth", () => {
         .getByRole("navigation", { name: "SignalCraft" })
         .getByRole("link", { name: "Giriş yap" }),
     ).toBeVisible();
+
+    // Local Supabase refuses a second link for the same user within 1 s (max_frequency).
+    await page.waitForTimeout(1500);
+    await page.goto("/login?next=%2Fdiscover");
+    await page.getByLabel("E-posta").fill(email);
+    await page.getByRole("button", { name: "Giriş linki gönder" }).click();
+    await expect(
+      page.getByText("Giriş linkini e-postana gönderdik."),
+    ).toBeVisible();
+    await page.goto(await latestMagicLink(email));
+    await expect(page).toHaveURL(/\/discover$/);
+    await expect(
+      page
+        .getByRole("navigation", { name: "Uygulama" })
+        .getByRole("button", { name: "Çıkış yap" }),
+    ).toBeVisible();
+  });
+
+  test("signing in with an unknown email points to sign up", async ({
+    page,
+  }) => {
+    await page.goto("/login");
+    await page.getByLabel("E-posta").fill(`nobody-${Date.now()}@test.dev`);
+    await page.getByRole("button", { name: "Giriş linki gönder" }).click();
+    await expect(page.locator("p[role=alert]")).toContainText("Önce kayıt ol");
+    await page.getByRole("link", { name: "Kayıt ol" }).click();
+    await expect(page).toHaveURL(/\/signup/);
+  });
+
+  test("guest session cannot reach member-only pages", async ({ page }) => {
+    await page.goto("/studio");
+    await expect(page).toHaveURL(/\/studio$/);
+    await page.goto("/radar");
+    await expect(page).toHaveURL(/\/login\?next=%2Fradar/);
   });
 
   test("callback without a code returns to login with an error", async ({

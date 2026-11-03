@@ -18,7 +18,8 @@
     "openApp": "Uygulamayı aç",
     "app": "Uygulama",
     "menu": "Menü",
-    "admin": "Admin"
+    "admin": "Admin",
+    "signUp": "Kayıt ol"
   },
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
@@ -75,7 +76,7 @@
     },
     "signIn": {
       "title": "Devam etmek için giriş yap",
-      "body": "Ücretsiz hesapla story'leri Radar'ına kaydet ve içerik brief'ine dönüştür.",
+      "body": "Radar'ı kullanmak için ücretsiz bir hesap aç; story'leri Radar'ına kaydet.",
       "cta": "Giriş yap",
       "close": "Kapat"
     },
@@ -357,7 +358,19 @@
     "errors": {
       "email": "Geçerli bir e-posta adresi gir.",
       "provider": "Bu giriş yöntemi şu an kullanılamıyor.",
-      "generic": "Giriş başarısız oldu. Tekrar dene."
+      "generic": "Giriş başarısız oldu. Tekrar dene.",
+      "noAccount": "Bu e-posta ile kayıtlı hesap yok. Önce kayıt ol.",
+      "send": "Link gönderilemedi. Biraz sonra tekrar dene."
+    },
+    "switch": "Hesabın yok mu?",
+    "switchCta": "Kayıt ol",
+    "signup": {
+      "title": "Kayıt ol",
+      "subtitle": "E-postanı gir, kayıt linkini gönderelim. Şifre gerekmez.",
+      "sendLink": "Kayıt linki gönder",
+      "sent": "Kayıt linkini e-postana gönderdik.",
+      "switch": "Zaten hesabın var mı?",
+      "switchCta": "Giriş yap"
     }
   },
   "onboarding": {
@@ -531,9 +544,114 @@
     "tagline": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
     "label": "Alt bilgi",
     "product": "Ürün",
-    "resources": "Kaynaklar",
     "legal": "Yasal",
-    "legalSoon": "Gizlilik ve kullanım şartları hazırlanıyor.",
-    "copyright": "© {year} SignalCraft"
+    "copyright": "© {year} SignalCraft",
+    "privacy": "Gizlilik Politikası",
+    "terms": "Kullanım Şartları",
+    "account": "Hesap",
+    "signUp": "Kayıt ol",
+    "rights": "Tüm hakları saklıdır."
+  },
+  "legal": {
+    "privacy": {
+      "title": "Gizlilik Politikası",
+      "updated": "Son güncelleme: 3 Kasım 2026",
+      "sections": {
+        "s1": {
+          "title": "Kimiz",
+          "body": "SignalCraft (“biz”), bu web sitesini ve uygulamayı işleten taraftır. Bu politika, hizmeti kullanırken hangi kişisel verileri işlediğimizi, neden işlediğimizi ve haklarını açıklar."
+        },
+        "s2": {
+          "title": "Hangi verileri topluyoruz",
+          "body": "Hesap verileri: e-posta adresin ve giriş yöntemin. Tercihler: niş adın, anahtar kelimelerin, dil ve ton seçimlerin, e-posta ve saat dilimi ayarların. Kullanım verileri: kaydettiğin veya gizlediğin story’ler, ürettiğin brief’ler ve düzenlemelerin, günlük kullanım sayaçların. Ödeme verileri: planın ve abonelik durumun; kart bilgilerini biz görmez ve saklamayız, ödemeyi ödeme sağlayıcımız işler. Geri bildirim: bize yazdığın mesajlar. Teknik veriler: hata kayıtları ve ürün kullanım olayları. Hesap açmadan Studio’yu kullanırsan e-posta toplamayan, rastgele kimlikli bir misafir oturum oluşturulur."
+        },
+        "s3": {
+          "title": "Verileri neden işliyoruz",
+          "body": "Hizmeti sunmak ve hesabını yönetmek, giriş güvenliğini sağlamak, plan limitlerini ve ödemeleri yönetmek, istediğin takdirde günlük özet ve alarm e-postaları göndermek, hizmeti geliştirmek ve hataları gidermek, yasal yükümlülükleri yerine getirmek için. Hukuki dayanaklarımız; sözleşmenin ifası, meşru menfaatlerimiz, hukuki yükümlülükler ve gerektiğinde açık rızandır (KVKK m.5, GDPR m.6)."
+        },
+        "s4": {
+          "title": "Hizmet sağlayıcılar",
+          "body": "Hizmeti sunarken şu tür sağlayıcılardan yararlanırız: veritabanı ve kimlik doğrulama (Supabase), arka plan işleri (Inngest), e-posta gönderimi (Resend), ödeme (Lemon Squeezy; satıcı olarak ödemeyi alır), ürün analitiği (PostHog), hata izleme (Sentry) ve yapay zekâ model sağlayıcıları (Google, Anthropic). Brief üretirken story metni ile senin girdilerin (hedef kitle, kendi görüşün, niş dilin ve ses örneklerin) model sağlayıcısına gönderilir; e-posta adresin gönderilmez. Bu sağlayıcıların her biri yalnızca yapılandırıldığı ölçüde etkindir."
+        },
+        "s5": {
+          "title": "Çerezler ve yerel depolama",
+          "body": "Oturumunu sürdürmek için zorunlu oturum çerezleri ve dil tercihini hatırlamak için bir çerez kullanırız. Analitik etkinse ürün kullanımını ölçmek için analitik çerezi veya yerel depolama kullanılabilir. Reklam veya çapraz site takip çerezi kullanmayız."
+        },
+        "s6": {
+          "title": "Saklama süresi",
+          "body": "Verilerini hesabın açık olduğu sürece ve hizmeti sunmak için gerekli olduğu kadar saklarız. Silme talebinde, yasal saklama yükümlülükleri dışında, verilerini makul bir sürede sileriz."
+        },
+        "s7": {
+          "title": "Yurt dışına aktarım",
+          "body": "Sağlayıcılarımız verileri Türkiye veya AB/AEA dışındaki ülkelerde işleyebilir. Bu durumda geçerli mevzuatın aradığı güvenceleri (standart sözleşme hükümleri gibi) sağlamaya özen gösteririz."
+        },
+        "s8": {
+          "title": "Haklarınız",
+          "body": "KVKK m.11 ve GDPR kapsamında; verilerinin işlenip işlenmediğini öğrenme, erişim, düzeltme, silme, işlemeye itiraz etme, verilerini taşıma ve verdiğin rızayı geri çekme haklarına sahipsin. Ayrıca yetkili veri koruma otoritesine şikâyet edebilirsin. Taleplerini uygulamadaki Geri bildirim özelliğiyle iletebilirsin."
+        },
+        "s9": {
+          "title": "Güvenlik",
+          "body": "Verilerini korumak için şifreli bağlantı, kimlik doğrulama ve satır düzeyinde erişim kontrolü gibi önlemler kullanırız. Hiçbir sistem tamamen risksiz değildir; bu nedenle mutlak güvenlik garanti edemeyiz."
+        },
+        "s10": {
+          "title": "Değişiklikler",
+          "body": "Bu politikayı zaman zaman güncelleyebiliriz. Güncel sürüm her zaman bu sayfada yayınlanır ve en üstteki tarih değiştirilir."
+        }
+      }
+    },
+    "terms": {
+      "title": "Kullanım Şartları",
+      "updated": "Son güncelleme: 3 Kasım 2026",
+      "sections": {
+        "s1": {
+          "title": "Kabul",
+          "body": "SignalCraft’ı kullanarak bu şartları kabul etmiş olursun. Kabul etmiyorsan hizmeti kullanma."
+        },
+        "s2": {
+          "title": "Hizmet",
+          "body": "SignalCraft; teknoloji haberlerini kaynaklardan derleyip story’lere dönüştüren Discover, nişine göre fırsatları sıralayan Radar ve yapay zekâ ile içerik taslağı üreten Studio’dan oluşur. Hizmetin özellikleri zamanla değişebilir."
+        },
+        "s3": {
+          "title": "Hesap ve misafir kullanım",
+          "body": "Hesap açmak için geçerli bir e-posta adresi gerekir; giriş linklerini korumak senin sorumluluğundadır. Studio’yu hesap açmadan misafir olarak da kullanabilirsin; misafir oturum aynı limitlere tabidir ve oturum kaybolursa içerikler de erişilemez olabilir. Hizmeti kullanmak için reşit olmalı veya yasal temsilcinin izniyle hareket etmelisin."
+        },
+        "s4": {
+          "title": "Planlar ve limitler",
+          "body": "Ücretsiz ve ücretli planlar vardır. Radar satırı, günlük brief ve niş sayısı gibi limitler planına göre uygulanır ve fiyatlandırma sayfasında gösterilir. Limitleri ve fiyatları makul bir bildirimle değiştirebiliriz."
+        },
+        "s5": {
+          "title": "Ödeme ve abonelik",
+          "body": "Ücretli plan ödemeleri, satıcı (merchant of record) olarak çalışan ödeme sağlayıcımız Lemon Squeezy üzerinden alınır; vergiler ve faturalama onun şartlarına tabidir. Aboneliği istediğin zaman iptal edebilirsin; iptal, ödediğin dönemin sonunda geçerli olur ve o zamana kadar planın devam eder. İadeler ödeme sağlayıcısının iade politikasına göre değerlendirilir."
+        },
+        "s6": {
+          "title": "Kabul edilebilir kullanım",
+          "body": "Hizmeti yasalara aykırı amaçlarla kullanamaz, limitleri aşmak için sistemi otomatik yüklemelerle zorlayamaz, güvenliğini veya işleyişini bozamaz, başkalarının hesaplarına erişmeye çalışamaz veya yazılımı tersine mühendislikle çözmeye çalışamazsın."
+        },
+        "s7": {
+          "title": "Yapay zekâ ile üretilen içerik",
+          "body": "Studio çıktıları yapay zekâ ile üretilir ve hatalı ya da eksik olabilir. Yayınlamadan önce bilgileri ve kaynakları kontrol etmek senin sorumluluğundadır; yayınladığın içeriğin sorumluluğu sana aittir. Story’lerde yalnızca kendi kısa özetimizi gösterir ve orijinal kaynaklara bağlantı veririz; kaynak içeriklerin hakları ilgili sahiplerine aittir."
+        },
+        "s8": {
+          "title": "Fikri mülkiyet",
+          "body": "Girdilerin ve düzenlediğin çıktılar sana aittir; hizmeti sunabilmemiz için bunları işlememize gerekli ölçüde izin vermiş olursun. Yazılım, tasarım ve marka bizde kalır."
+        },
+        "s9": {
+          "title": "Garanti reddi",
+          "body": "Hizmet “olduğu gibi” sunulur. Kesintisiz veya hatasız çalışacağını, kaynakların her zaman eksiksiz ve doğru olacağını garanti etmeyiz; kaynaklar üçüncü taraflara aittir."
+        },
+        "s10": {
+          "title": "Sorumluluğun sınırı",
+          "body": "Yasanın izin verdiği ölçüde, hizmetin kullanımından doğan dolaylı veya sonuçsal zararlardan sorumlu değiliz ve toplam sorumluluğumuz, olay öncesindeki on iki ayda bize ödediğin tutarla sınırlıdır. Tüketici olarak sahip olduğun zorunlu haklar saklıdır."
+        },
+        "s11": {
+          "title": "Askıya alma ve fesih",
+          "body": "Bu şartları ihlal edersen hesabını askıya alabilir veya kapatabiliriz. Hesabını istediğin zaman kapatabilir, silme talebini Geri bildirim özelliğiyle iletebilirsin."
+        },
+        "s12": {
+          "title": "Değişiklikler",
+          "body": "Bu şartları güncelleyebiliriz. Güncel sürüm bu sayfada yayınlanır; değişiklikten sonra hizmeti kullanmaya devam etmen güncel şartları kabul ettiğin anlamına gelir."
+        }
+      }
+    }
   }
 }

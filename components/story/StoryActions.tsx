@@ -6,8 +6,8 @@ import { useRef, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
 
 /**
- * "Add to Radar" / "Generate in Studio". Both need an account; signed-out visitors get a
- * sign-in prompt (plan §8.2). Signed-in behaviour arrives with Faz 5/6.
+ * "Add to Radar" (members only: visitors get a sign-in prompt) and "Generate in Studio"
+ * (open to everyone).
  */
 export function StoryActions({
   storyId,
@@ -26,16 +26,17 @@ export function StoryActions({
   const [pending, startTransition] = useTransition();
   const open = () => dialog.current?.showModal();
 
-  if (signedIn) {
-    const save = () =>
-      startTransition(async () => {
-        const res = await fetch(`/api/radar/${storyUuid}/save`, {
-          method: "POST",
-        });
-        if (res.ok) setAdded(true);
+  const save = () =>
+    startTransition(async () => {
+      const res = await fetch(`/api/radar/${storyUuid}/save`, {
+        method: "POST",
       });
-    return (
-      <div className="flex flex-wrap gap-2">
+      if (res.ok) setAdded(true);
+    });
+
+  return (
+    <div className="flex flex-wrap gap-2">
+      {signedIn ? (
         <Button
           size="sm"
           variant="outline"
@@ -44,22 +45,16 @@ export function StoryActions({
         >
           {added ? t("actions.added") : t("actions.addToRadar")}
         </Button>
-        <Button asChild size="sm" variant="outline">
-          <Link href={`/studio/new?story=${storyUuid}`}>
-            {t("actions.generate")}
-          </Link>
+      ) : (
+        <Button size="sm" variant="outline" onClick={open}>
+          {t("actions.addToRadar")}
         </Button>
-      </div>
-    );
-  }
-
-  return (
-    <div className="flex flex-wrap gap-2">
-      <Button size="sm" variant="outline" onClick={open}>
-        {t("actions.addToRadar")}
-      </Button>
-      <Button size="sm" variant="outline" onClick={open}>
-        {t("actions.generate")}
+      )}
+      {/* Studio needs no account: visitors get a guest session on arrival. */}
+      <Button asChild size="sm" variant="outline">
+        <Link href={`/studio/new?story=${storyUuid}`}>
+          {t("actions.generate")}
+        </Link>
       </Button>
       <dialog
         ref={dialog}

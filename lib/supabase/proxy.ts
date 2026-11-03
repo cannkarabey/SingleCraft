@@ -1,6 +1,6 @@
 import { createServerClient } from "@supabase/ssr";
 import { NextResponse, type NextRequest } from "next/server";
-import { isProtectedPath } from "@/lib/auth/paths";
+import { isGuestPath, isProtectedPath } from "@/lib/auth/paths";
 import { publicEnv } from "@/lib/env";
 
 // Refreshes the Supabase auth session on every matched request and forwards
@@ -34,7 +34,25 @@ export async function updateSession(request: NextRequest) {
   // Do not run code between createServerClient and getClaims: it validates and refreshes the token.
   const { data } = await supabase.auth.getClaims();
 
-  if (!data?.claims && isProtectedPath(request.nextUrl.pathname)) {
+  const pathname = request.nextUrl.pathname;
+  const isPrefetch =
+    request.headers.has("next-router-prefetch") ||
+    request.headers.get("purpose") === "prefetch";
+
+  // Studio is open to everyone: no session yet -> a guest session, then back here.
+  if (!data?.claims && isGuestPath(pathname) && !isPrefetch) {
+    const guest = request.nextUrl.clone();
+    guest.pathname = "/auth/guest";
+    guest.search = `?next=${encodeURIComponent(pathname + request.nextUrl.search)}`;
+    const redirect = NextResponse.redirect(guest);
+    for (const cookie of response.cookies.getAll())
+      redirect.cookies.set(cookie);
+    return redirect;
+  }
+
+  // Guests (anonymous sessions) are not members: member-only areas treat them as signed out.
+  const signedIn = Boolean(data?.claims) && data?.claims?.is_anonymous !== true;
+  if (!signedIn && isProtectedPath(pathname)) {
     const login = request.nextUrl.clone();
     login.pathname = "/login";
     login.search = `?next=${encodeURIComponent(request.nextUrl.pathname + request.nextUrl.search)}`;

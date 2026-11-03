@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { isProtectedPath, safeNextPath } from "@/lib/auth/paths";
+import { isGuestPath, isProtectedPath, safeNextPath } from "@/lib/auth/paths";
 
 describe("safeNextPath (no open redirects)", () => {
   test.each([
@@ -35,10 +35,11 @@ describe("isProtectedPath", () => {
     "/radar",
     "/radar/settings",
     "/onboarding",
-    "/studio",
-    "/studio/new",
     "/settings/account",
-  ])("%s needs a session", (path) => expect(isProtectedPath(path)).toBe(true));
+    "/admin",
+  ])("%s needs a member account", (path) =>
+    expect(isProtectedPath(path)).toBe(true),
+  );
   test.each([
     "/",
     "/discover",
@@ -46,5 +47,19 @@ describe("isProtectedPath", () => {
     "/login",
     "/auth/callback",
     "/radarx",
-  ])("%s is public", (path) => expect(isProtectedPath(path)).toBe(false));
+    "/studio",
+    "/studio/new",
+  ])("%s is not member-only", (path) =>
+    expect(isProtectedPath(path)).toBe(false),
+  );
+});
+
+describe("isGuestPath", () => {
+  test.each(["/studio", "/studio/new", "/studio/abc"])(
+    "%s opens with a guest session",
+    (path) => expect(isGuestPath(path)).toBe(true),
+  );
+  test.each(["/radar", "/discover", "/studiox", "/"])("%s does not", (path) =>
+    expect(isGuestPath(path)).toBe(false),
+  );
 });

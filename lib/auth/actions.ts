@@ -6,36 +6,51 @@ import { authCallbackUrl, safeNextPath } from "@/lib/auth/paths";
 import { createClient } from "@/lib/supabase/server";
 
 const Email = z.email().max(254);
+const Mode = z.enum(["login", "signup"]).catch("login");
+const Provider = z.enum(["google", "github"]);
 
+const pageFor = (mode: "login" | "signup", next: string) =>
+  `/${mode}?next=${encodeURIComponent(next)}`;
+
+/**
+ * Magic link. Sign-in only reaches existing accounts (`shouldCreateUser: false`); sign-up
+ * creates the account on first use.
+ */
 export async function sendMagicLink(formData: FormData) {
   const next = safeNextPath(formData.get("next")?.toString());
+  const mode = Mode.parse(formData.get("mode"));
+  const back = pageFor(mode, next);
   const email = Email.safeParse(formData.get("email")?.toString().trim());
-  const back = `/login?next=${encodeURIComponent(next)}`;
   if (!email.success) redirect(`${back}&error=email`);
 
   const supabase = await createClient();
   const { error } = await supabase.auth.signInWithOtp({
     email: email.data,
-    options: { emailRedirectTo: authCallbackUrl(next) },
+    options: {
+      emailRedirectTo: authCallbackUrl(next),
+      shouldCreateUser: mode === "signup",
+    },
   });
-  redirect(`${back}&${error ? "error=send" : "sent=1"}`);
+  if (!error) redirect(`${back}&sent=1`);
+  const noAccount =
+    mode === "login" &&
+    (error.code === "otp_disabled" ||
+      /signups? not allowed/i.test(error.message));
+  redirect(`${back}&error=${noAccount ? "noAccount" : "send"}`);
 }
-
-const Provider = z.enum(["google", "github"]);
 
 export async function signInWithProvider(formData: FormData) {
   const next = safeNextPath(formData.get("next")?.toString());
+  const mode = Mode.parse(formData.get("mode"));
   const provider = Provider.safeParse(formData.get("provider"));
-  if (!provider.success)
-    redirect(`/login?next=${encodeURIComponent(next)}&error=provider`);
+  if (!provider.success) redirect(`${pageFor(mode, next)}&error=provider`);
 
   const supabase = await createClient();
   const { data, error } = await supabase.auth.signInWithOAuth({
     provider: provider.data,
     options: { redirectTo: authCallbackUrl(next) },
   });
-  if (error || !data.url)
-    redirect(`/login?next=${encodeURIComponent(next)}&error=provider`);
+  if (error || !data.url) redirect(`${pageFor(mode, next)}&error=provider`);
   redirect(data.url);
 }
 

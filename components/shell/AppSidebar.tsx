@@ -22,14 +22,16 @@ async function SidebarBody() {
     label: t(key),
   });
 
-  const modules = user
+  // Guests (anonymous sessions) can use Studio but are not members.
+  const member = Boolean(user && !user.anonymous);
+  const modules = member
     ? [
         item("discover", "/discover"),
         item("radar", "/radar"),
         item("studio", "/studio"),
       ]
-    : [item("discover", "/discover")];
-  const account = user
+    : [item("discover", "/discover"), item("studio", "/studio")];
+  const account = member
     ? [
         item("settings", "/settings"),
         ...(admin ? [item("admin", "/admin")] : []),
@@ -50,15 +52,15 @@ async function SidebarBody() {
           <SidebarNav items={[item("search", "/discover?focus=search")]} />
           <SidebarNav items={modules} />
           <SidebarNav items={account} />
-          {!user && (
+          {!member && (
             <Button asChild size="sm" className="w-full">
-              <Link href="/login?next=%2Fonboarding">{t("cta")}</Link>
+              <Link href="/signup?next=%2Fonboarding">{t("cta")}</Link>
             </Button>
           )}
         </div>
         <div className="space-y-2 border-t px-1 pt-3">
           <LanguageSwitcher />
-          {user && (
+          {member && user && (
             <div className="flex items-center gap-2">
               <p
                 title={user.email ?? undefined}

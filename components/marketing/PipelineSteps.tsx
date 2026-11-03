@@ -41,7 +41,7 @@ export function PipelineSteps({
         className="bg-border absolute top-[2.15rem] right-[10%] left-[10%] hidden h-px lg:block"
       >
         <div
-          className="from-brand to-brand-text h-full bg-gradient-to-r shadow-[0_0_12px_rgba(139,148,236,0.9)] transition-[width] duration-700 ease-out"
+          className="from-brand to-brand-text h-full bg-gradient-to-r shadow-[0_0_12px_rgba(255,255,255,0.405)] transition-[width] duration-700 ease-out"
           style={{ width: `${(active / (steps.length - 1)) * 100}%` }}
         />
       </div>
@@ -60,7 +60,7 @@ export function PipelineSteps({
                 className={cn(
                   "relative block h-full w-full rounded-xl border p-5 text-left transition-all duration-500",
                   on
-                    ? "border-brand/60 bg-[color-mix(in_oklab,var(--sc-brand)_14%,var(--sc-surface-1))] shadow-[0_16px_48px_-16px_rgba(94,106,210,0.8)] lg:-translate-y-1.5"
+                    ? "border-brand/60 bg-[color-mix(in_oklab,var(--sc-brand)_14%,var(--sc-surface-1))] shadow-[0_16px_48px_-16px_rgba(255,255,255,0.224)] lg:-translate-y-1.5"
                     : "bg-surface-1 hover:border-white/20",
                 )}
               >
@@ -68,7 +68,7 @@ export function PipelineSteps({
                   className={cn(
                     "mb-4 grid size-9 place-items-center rounded-full border transition-all duration-500",
                     on
-                      ? "bg-brand animate-pulse-ring border-transparent text-white"
+                      ? "bg-brand animate-pulse-ring border-transparent text-[#08090a]"
                       : done
                         ? "border-brand/50 text-brand-text"
                         : "bg-surface-2 text-muted-foreground",

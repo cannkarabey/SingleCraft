@@ -18,7 +18,8 @@
     "openApp": "Open app",
     "app": "App",
     "menu": "Menu",
-    "admin": "Admin"
+    "admin": "Admin",
+    "signUp": "Sign up"
   },
   "hero": {
     "title": "The daily signal radar for tech content creators.",
@@ -75,7 +76,7 @@
     },
     "signIn": {
       "title": "Sign in to continue",
-      "body": "Save stories to your Radar and turn them into content briefs with a free account.",
+      "body": "Open a free account to use Radar and save stories to it.",
       "cta": "Sign in",
       "close": "Close"
     },
@@ -357,7 +358,19 @@
     "errors": {
       "email": "Enter a valid email address.",
       "provider": "That sign-in method is not available right now.",
-      "generic": "Sign-in failed. Please try again."
+      "generic": "Sign-in failed. Please try again.",
+      "noAccount": "There is no account for this email. Sign up first.",
+      "send": "Could not send the link. Try again shortly."
+    },
+    "switch": "No account yet?",
+    "switchCta": "Sign up",
+    "signup": {
+      "title": "Sign up",
+      "subtitle": "Enter your email and we'll send a sign-up link. No password needed.",
+      "sendLink": "Send sign-up link",
+      "sent": "We sent the sign-up link to your email.",
+      "switch": "Already have an account?",
+      "switchCta": "Sign in"
     }
   },
   "onboarding": {
@@ -531,9 +544,114 @@
     "tagline": "The daily signal radar for tech content creators.",
     "label": "Footer",
     "product": "Product",
-    "resources": "Resources",
     "legal": "Legal",
-    "legalSoon": "Privacy and terms are in preparation.",
-    "copyright": "© {year} SignalCraft"
+    "copyright": "© {year} SignalCraft",
+    "privacy": "Privacy Policy",
+    "terms": "Terms of Service",
+    "account": "Account",
+    "signUp": "Sign up",
+    "rights": "All rights reserved."
+  },
+  "legal": {
+    "privacy": {
+      "title": "Privacy Policy",
+      "updated": "Last updated: November 3, 2026",
+      "sections": {
+        "s1": {
+          "title": "Who we are",
+          "body": "SignalCraft (“we”) operates this website and app. This policy explains which personal data we process while you use the service, why, and what rights you have."
+        },
+        "s2": {
+          "title": "What data we collect",
+          "body": "Account data: your email address and sign-in method. Preferences: your niche name, keywords, language and tone choices, email and time zone settings. Usage data: stories you save or hide, the briefs you generate and your edits, your daily usage counters. Payment data: your plan and subscription status; we never see or store card details, our payment provider processes the payment. Feedback: messages you send us. Technical data: error logs and product usage events. If you use Studio without an account, a guest session with a random ID is created; no email is collected."
+        },
+        "s3": {
+          "title": "Why we process it",
+          "body": "To provide the service and manage your account, keep sign-in secure, manage plan limits and payments, send the daily digest and alert emails if you want them, improve the service and fix errors, and meet legal obligations. Our legal bases are performance of the contract, our legitimate interests, legal obligations and, where needed, your consent (GDPR Art. 6; KVKK Art. 5)."
+        },
+        "s4": {
+          "title": "Service providers",
+          "body": "We rely on providers such as: database and authentication (Supabase), background jobs (Inngest), email delivery (Resend), payments (Lemon Squeezy, which sells as merchant of record), product analytics (PostHog), error monitoring (Sentry) and AI model providers (Google, Anthropic). When a brief is generated, the story text and your inputs (audience, your take, niche language and voice samples) are sent to the model provider; your email address is not. Each provider is active only to the extent it is configured."
+        },
+        "s5": {
+          "title": "Cookies and local storage",
+          "body": "We use strictly necessary session cookies to keep you signed in and a cookie to remember your language. If analytics is enabled, an analytics cookie or local storage may be used to measure product usage. We do not use advertising or cross-site tracking cookies."
+        },
+        "s6": {
+          "title": "Retention",
+          "body": "We keep your data while your account is open and as long as needed to provide the service. When you ask us to delete it, we delete it within a reasonable time, except where the law requires us to keep it."
+        },
+        "s7": {
+          "title": "International transfers",
+          "body": "Our providers may process data in countries outside Türkiye or the EU/EEA. In that case we aim to ensure the safeguards the applicable law requires, such as standard contractual clauses."
+        },
+        "s8": {
+          "title": "Your rights",
+          "body": "Under GDPR and KVKK Art. 11 you can ask whether your data is processed, access it, have it corrected or deleted, object to processing, receive it in a portable form and withdraw consent. You may also complain to your data protection authority. Send requests through the Feedback feature in the app."
+        },
+        "s9": {
+          "title": "Security",
+          "body": "We protect your data with measures such as encrypted connections, authentication and row-level access control. No system is risk-free, so we cannot guarantee absolute security."
+        },
+        "s10": {
+          "title": "Changes",
+          "body": "We may update this policy from time to time. The current version is always published on this page and the date at the top is updated."
+        }
+      }
+    },
+    "terms": {
+      "title": "Terms of Service",
+      "updated": "Last updated: November 3, 2026",
+      "sections": {
+        "s1": {
+          "title": "Acceptance",
+          "body": "By using SignalCraft you accept these terms. If you do not accept them, do not use the service."
+        },
+        "s2": {
+          "title": "The service",
+          "body": "SignalCraft consists of Discover, which gathers technology news from sources and turns it into stories; Radar, which ranks opportunities for your niche; and Studio, which drafts content with AI. Features may change over time."
+        },
+        "s3": {
+          "title": "Accounts and guest use",
+          "body": "Creating an account needs a valid email address; keeping your sign-in links safe is your responsibility. You can also use Studio without an account as a guest; a guest session is subject to the same limits and its content may become unavailable if the session is lost. You must be of legal age or act with a guardian’s permission."
+        },
+        "s4": {
+          "title": "Plans and limits",
+          "body": "There are free and paid plans. Limits such as Radar rows, daily briefs and the number of niches apply according to your plan and are shown on the pricing page. We may change limits and prices with reasonable notice."
+        },
+        "s5": {
+          "title": "Payment and subscription",
+          "body": "Paid plans are charged through Lemon Squeezy, our payment provider acting as merchant of record; taxes and invoicing follow its terms. You can cancel at any time; cancellation takes effect at the end of the period you paid for and your plan continues until then. Refunds are handled under the payment provider’s refund policy."
+        },
+        "s6": {
+          "title": "Acceptable use",
+          "body": "You may not use the service for unlawful purposes, strain it with automated loads to get around limits, disrupt its security or operation, try to access other people’s accounts, or reverse-engineer the software."
+        },
+        "s7": {
+          "title": "AI-generated content",
+          "body": "Studio output is generated by AI and can be wrong or incomplete. Checking facts and sources before publishing is your responsibility, and you are responsible for what you publish. In stories we show only our own short summary and link to the original sources; rights in source content belong to their owners."
+        },
+        "s8": {
+          "title": "Intellectual property",
+          "body": "Your inputs and the outputs you edit are yours; you allow us to process them as needed to provide the service. The software, design and brand remain ours."
+        },
+        "s9": {
+          "title": "Disclaimer",
+          "body": "The service is provided “as is”. We do not guarantee it will be uninterrupted or error-free, or that sources will always be complete and accurate; sources belong to third parties."
+        },
+        "s10": {
+          "title": "Limitation of liability",
+          "body": "To the extent the law allows, we are not liable for indirect or consequential damages from using the service, and our total liability is limited to the amount you paid us in the twelve months before the event. Mandatory consumer rights you have remain unaffected."
+        },
+        "s11": {
+          "title": "Suspension and termination",
+          "body": "If you breach these terms we may suspend or close your account. You can close your account at any time and send a deletion request through the Feedback feature."
+        },
+        "s12": {
+          "title": "Changes",
+          "body": "We may update these terms. The current version is published on this page; continuing to use the service after a change means you accept the updated terms."
+        }
+      }
+    }
   }
 }

@@ -103,7 +103,7 @@ export async function userIdByEmail(email: string): Promise<string> {
   }
 }
 
-/** Deletes every user created by e2e sign-ins (emails e2e-…@test.dev). */
+/** Deletes every user created by e2e runs (emails e2e-…@test.dev and guest sessions). */
 export async function deleteE2eUsers() {
   const db = admin();
   const doomed: string[] = [];
@@ -115,7 +115,9 @@ export async function deleteE2eUsers() {
     if (error) throw error;
     doomed.push(
       ...data.users
-        .filter((u) => /^e2e-.*@test\.dev$/.test(u.email ?? ""))
+        .filter(
+          (u) => /^e2e-.*@test\.dev$/.test(u.email ?? "") || u.is_anonymous,
+        )
         .map((u) => u.id),
     );
     if (data.users.length < 1000) break;

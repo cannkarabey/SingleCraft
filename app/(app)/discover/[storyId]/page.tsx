@@ -105,7 +105,7 @@ export default async function StoryPage({
               <StoryActions
                 storyId={story.slug ?? story.id}
                 storyUuid={story.id}
-                signedIn={Boolean(user)}
+                signedIn={Boolean(user && !user.anonymous)}
               />
             </div>
           </header>

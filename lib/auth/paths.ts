@@ -1,17 +1,17 @@
-/** Where signed-in-only areas live; the proxy redirects signed-out visitors to /login. */
-const PROTECTED_PREFIXES = [
-  "/radar",
-  "/onboarding",
-  "/studio",
-  "/settings",
-  "/admin",
-];
+/** Where member-only areas live; the proxy redirects visitors and guests to /login. */
+const PROTECTED_PREFIXES = ["/radar", "/onboarding", "/settings", "/admin"];
+/** Open to everyone: visitors without a session get a guest (anonymous) one. */
+const GUEST_PREFIXES = ["/studio"];
 
-export function isProtectedPath(pathname: string): boolean {
-  return PROTECTED_PREFIXES.some(
+const under = (pathname: string, prefixes: string[]) =>
+  prefixes.some(
     (prefix) => pathname === prefix || pathname.startsWith(`${prefix}/`),
   );
-}
+
+export const isProtectedPath = (pathname: string) =>
+  under(pathname, PROTECTED_PREFIXES);
+export const isGuestPath = (pathname: string) =>
+  under(pathname, GUEST_PREFIXES);
 
 const MAX_LENGTH = 512;
 

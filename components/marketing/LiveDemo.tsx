@@ -106,7 +106,7 @@ function StudioPanel() {
               aria-hidden
               className={cn(
                 "mt-0.5 grid size-4 shrink-0 place-items-center rounded-full border transition-colors",
-                hook === i && "border-brand bg-brand text-white",
+                hook === i && "border-brand bg-brand text-[#08090a]",
               )}
             >
               {hook === i && <Check className="size-3" />}
@@ -188,7 +188,7 @@ export function LiveDemo({ discover }: { discover: React.ReactNode }) {
   }
 
   return (
-    <div className="border-border-strong bg-surface-1 overflow-hidden rounded-xl border shadow-[0_32px_120px_-32px_rgba(94,106,210,0.45)] transition-shadow duration-500 hover:shadow-[0_32px_140px_-28px_rgba(94,106,210,0.65)]">
+    <div className="border-border-strong bg-surface-1 overflow-hidden rounded-xl border shadow-[0_32px_120px_-32px_rgba(255,255,255,0.126)] transition-shadow duration-500 hover:shadow-[0_32px_140px_-28px_rgba(255,255,255,0.182)]">
       <div className="flex h-10 items-center gap-3 border-b px-3">
         <div aria-hidden className="flex gap-1.5">
           <span className="size-2.5 rounded-full bg-[#ff5f57]/80" />

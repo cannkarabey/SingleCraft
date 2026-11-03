@@ -109,6 +109,7 @@ export default async function Home() {
   const modules = ["discover", "radar", "studio"] as const;
   const steps = ["fetch", "dedupe", "cluster", "score", "brief"] as const;
   const faqs = ["accuracy", "copyright", "ai", "freshness"] as const;
+  const member = Boolean(user && !user.anonymous);
   const imageLocale = locale === "en" ? "en" : "tr";
 
   return (
@@ -117,9 +118,9 @@ export default async function Home() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[720px] overflow-hidden"
       >
-        <div className="animate-drift absolute -top-40 left-[8%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(94,106,210,0.38),transparent)] blur-2xl" />
+        <div className="animate-drift absolute -top-40 left-[8%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.106),transparent)] blur-2xl" />
         <div
-          className="animate-drift absolute top-10 right-[4%] h-[380px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(76,183,130,0.2),transparent)] blur-2xl"
+          className="animate-drift absolute top-10 right-[4%] h-[380px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.05),transparent)] blur-2xl"
           style={{ animationDelay: "-7s" }}
         />
       </div>
@@ -150,7 +151,7 @@ export default async function Home() {
             style={{ animationDelay: "280ms" }}
           >
             <Button asChild size="lg" variant="brand" className="rounded-full">
-              <Link href={user ? "/discover" : "/login?next=%2Fonboarding"}>
+              <Link href={member ? "/discover" : "/signup?next=%2Fonboarding"}>
                 {t("hero.primaryCta")}
               </Link>
             </Button>
@@ -273,7 +274,7 @@ export default async function Home() {
         label={t("landing.labels.pricing")}
         title={t("landing.pricing.title")}
       >
-        <PricingTable signedIn={Boolean(user)} headingLevel={3} />
+        <PricingTable signedIn={member} headingLevel={3} />
       </Section>
 
       <Section
@@ -307,7 +308,7 @@ export default async function Home() {
         >
           <div
             aria-hidden
-            className="animate-drift pointer-events-none absolute -bottom-32 left-1/2 h-72 w-[640px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(94,106,210,0.5),transparent)] blur-2xl"
+            className="animate-drift pointer-events-none absolute -bottom-32 left-1/2 h-72 w-[640px] -translate-x-1/2 rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.14),transparent)] blur-2xl"
           />
           <h2
             id="cta-title"
@@ -320,7 +321,7 @@ export default async function Home() {
           </p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" variant="brand" className="rounded-full">
-              <Link href={user ? "/discover" : "/login?next=%2Fonboarding"}>
+              <Link href={member ? "/discover" : "/signup?next=%2Fonboarding"}>
                 {t("hero.primaryCta")}
               </Link>
             </Button>

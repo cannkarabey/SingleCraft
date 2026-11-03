@@ -30,7 +30,7 @@ test.describe("landing", () => {
     const cta = page.getByRole("region", { name: "Sinyali bugün yakala." });
     await expect(
       cta.getByRole("link", { name: "Ücretsiz başla" }),
-    ).toHaveAttribute("href", "/login?next=%2Fonboarding");
+    ).toHaveAttribute("href", "/signup?next=%2Fonboarding");
   });
 
   test("live preview shows real Discover stories", async ({ page }) => {

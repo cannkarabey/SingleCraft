@@ -22,7 +22,7 @@ function Row({ hidden = false }: { hidden?: boolean }) {
   return (
     <ul
       aria-hidden={hidden || undefined}
-      className="flex shrink-0 items-center gap-16 pr-16"
+      className="flex shrink-0 items-center gap-24 pr-24"
     >
       {LOGOS.map(({ name, icon }) => (
         <li key={name}>
@@ -30,7 +30,7 @@ function Row({ hidden = false }: { hidden?: boolean }) {
             role={hidden ? undefined : "img"}
             aria-label={hidden ? undefined : name}
             viewBox="0 0 24 24"
-            className="text-muted-foreground size-9 shrink-0 fill-current opacity-70 transition-all duration-300 hover:scale-110 hover:text-white hover:opacity-100"
+            className="size-14 shrink-0 fill-white opacity-90 transition-all duration-300 hover:scale-110 hover:opacity-100"
           >
             <path d={icon.path} />
           </svg>
@@ -43,7 +43,7 @@ function Row({ hidden = false }: { hidden?: boolean }) {
 /** Logos of the data sources, scrolling left forever (pure CSS; paused on hover). */
 export function LogoMarquee({ label }: { label: string }) {
   return (
-    <div className="space-y-6 border-y py-10">
+    <div className="space-y-8 border-y py-12">
       <p className="text-muted-foreground text-center text-[13px]">{label}</p>
       <div className="mask-fade-x group overflow-hidden">
         <div className="animate-marquee flex w-max group-hover:[animation-play-state:paused]">

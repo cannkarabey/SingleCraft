@@ -25,7 +25,7 @@ test.describe("pricing and billing", () => {
     await expect(page.getByText("Yakında")).toBeVisible();
 
     await creator.getByRole("link", { name: "Creator'a geç" }).click();
-    await expect(page).toHaveURL(/\/login\?next=%2Fsettings/);
+    await expect(page).toHaveURL(/\/signup\?next=%2Fsettings/);
   });
 
   test("free user: settings shows the plan; checkout without configured billing explains it", async ({

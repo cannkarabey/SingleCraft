@@ -5,6 +5,8 @@ import { createClient } from "@/lib/supabase/server";
 export async function currentUser(): Promise<{
   id: string;
   email: string | null;
+  /** A guest session (Studio without an account); not a signed-in member. */
+  anonymous: boolean;
 } | null> {
   const supabase = await createClient();
   const { data } = await supabase.auth.getClaims();
@@ -13,5 +15,6 @@ export async function currentUser(): Promise<{
   return {
     id: claims.sub,
     email: typeof claims.email === "string" ? claims.email : null,
+    anonymous: claims.is_anonymous === true,
   };
 }

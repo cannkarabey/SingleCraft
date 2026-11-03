@@ -38,7 +38,7 @@ export async function PricingTable({
       plan: "free",
       cta: (
         <Button asChild variant="outline" size="lg" className="mt-8">
-          <Link href={signedIn ? "/radar" : "/login?next=%2Fonboarding"}>
+          <Link href={signedIn ? "/radar" : "/signup?next=%2Fonboarding"}>
             {t("freeCta")}
           </Link>
         </Button>
@@ -49,7 +49,7 @@ export async function PricingTable({
       cta: (
         <Button asChild size="lg" variant="brand" className="mt-8">
           <Link
-            href={signedIn ? "/settings#billing" : "/login?next=%2Fsettings"}
+            href={signedIn ? "/settings#billing" : "/signup?next=%2Fsettings"}
           >
             {t("upgradeCta")}
           </Link>
@@ -63,7 +63,7 @@ export async function PricingTable({
       {plans.map(({ plan, cta }) => (
         <article
           key={plan}
-          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_24px_64px_-24px_rgba(94,106,210,0.6)] ${plan === "creator" ? "border-border-strong" : ""}`}
+          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_24px_64px_-24px_rgba(255,255,255,0.168)] ${plan === "creator" ? "border-border-strong" : ""}`}
         >
           {plan === "creator" && (
             <span

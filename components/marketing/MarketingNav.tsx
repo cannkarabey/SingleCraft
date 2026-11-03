@@ -6,9 +6,13 @@ import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth/session";
 import { NavLinks } from "./NavLinks";
 
-/** Top bar of the marketing pages: logo, module links, sign-in and the main CTA. */
+const pill =
+  "h-full inline-flex items-center rounded-full px-3 transition-all duration-200";
+
+/** Top bar of the marketing pages: logo on the left; links, language and account on the right. */
 export async function MarketingNav() {
   const [t, user] = await Promise.all([getTranslations("nav"), currentUser()]);
+  const member = user && !user.anonymous;
   const links = (["discover", "radar", "studio", "pricing"] as const).map(
     (key) => ({
       href: key === "pricing" ? "/pricing" : `/${key}`,
@@ -23,37 +27,35 @@ export async function MarketingNav() {
       >
         <Link
           href="/"
-          className="group mr-2 flex items-center gap-2.5 text-base font-[590] tracking-tight"
+          className="group flex items-center gap-2.5 text-base font-[590] tracking-tight sm:mr-2"
         >
-          <span className="bg-brand/15 ring-brand/30 group-hover:bg-brand/25 grid size-8 place-items-center rounded-lg ring-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
-            <Radio aria-hidden className="text-brand-text size-4" />
+          <span className="bg-brand/10 ring-brand/25 group-hover:bg-brand/20 grid size-8 place-items-center rounded-lg ring-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
+            <Radio aria-hidden className="text-brand size-4" />
           </span>
-          SignalCraft
+          <span className="sr-only sm:not-sr-only">SignalCraft</span>
         </Link>
-        <NavLinks links={links} />
         <div className="ml-auto flex items-center gap-2">
+          <NavLinks links={links} />
           <LanguageSwitcher />
-          {user ? (
+          {member ? (
             <Button asChild variant="brand" className="h-9 px-4 text-sm">
               <Link href="/discover">{t("openApp")}</Link>
             </Button>
           ) : (
-            <>
-              <Button
-                asChild
-                variant="ghost"
-                className="h-9 rounded-full px-4 text-sm"
+            <div className="bg-surface-2/80 flex h-9 items-center gap-0.5 rounded-full border p-0.5 text-[13px] font-medium">
+              <Link
+                href="/login"
+                className={`${pill} text-muted-foreground hover:text-foreground`}
               >
-                <Link href="/login">{t("signIn")}</Link>
-              </Button>
-              <Button
-                asChild
-                variant="brand"
-                className="hidden h-9 rounded-full px-4 text-sm sm:inline-flex"
+                {t("signIn")}
+              </Link>
+              <Link
+                href="/signup"
+                className={`${pill} text-foreground bg-white/15 shadow-sm hover:bg-white/25`}
               >
-                <Link href="/login?next=%2Fonboarding">{t("cta")}</Link>
-              </Button>
-            </>
+                {t("signUp")}
+              </Link>
+            </div>
           )}
         </div>
       </nav>

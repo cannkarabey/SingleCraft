@@ -45,18 +45,61 @@ test.describe("app shell", () => {
     );
   });
 
-  // Since Faz 5, Radar and Studio need an account.
-  for (const path of ["/radar", "/studio"]) {
-    test(`${path} asks signed-out visitors to sign in`, async ({ page }) => {
-      await page.goto(path);
-      await expect(page).toHaveURL(
-        new RegExp(`/login\\?next=${encodeURIComponent(path)}`),
-      );
-      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-        "Giriş yap",
-      );
-    });
-  }
+  // Radar needs an account; Studio is open to everyone (guest session).
+  test("/radar asks signed-out visitors to sign in", async ({ page }) => {
+    await page.goto("/radar");
+    await expect(page).toHaveURL(/\/login\?next=%2Fradar/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Giriş yap",
+    );
+  });
+
+  test("/studio opens for visitors without an account", async ({ page }) => {
+    await page.goto("/studio");
+    await expect(page).toHaveURL(/\/studio$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText("Studio");
+  });
+
+  test("nav: links on the right, sign in and sign up, no start-free button", async ({
+    page,
+  }) => {
+    await page.goto("/");
+    const nav = page.getByRole("navigation", { name: "SignalCraft" });
+    await expect(nav.getByRole("link", { name: "Giriş yap" })).toBeVisible();
+    await expect(nav.getByRole("link", { name: "Kayıt ol" })).toHaveAttribute(
+      "href",
+      "/signup",
+    );
+    await expect(nav.getByRole("link", { name: "Ücretsiz başla" })).toHaveCount(
+      0,
+    );
+    const logo = await nav
+      .getByRole("link", { name: "SignalCraft" })
+      .boundingBox();
+    const discover = await nav
+      .getByRole("link", { name: "Discover" })
+      .boundingBox();
+    expect(discover!.x).toBeGreaterThan(logo!.x + 400);
+  });
+
+  test("footer is centred and links to the legal pages", async ({ page }) => {
+    await page.goto("/");
+    const footer = page.getByRole("contentinfo");
+    await footer.getByRole("link", { name: "Gizlilik Politikası" }).click();
+    await expect(page).toHaveURL(/\/privacy$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Gizlilik Politikası",
+    );
+    await expect(page.getByRole("heading", { level: 2 }).first()).toContainText(
+      "1.",
+    );
+    await page.goto("/");
+    await footer.getByRole("link", { name: "Kullanım Şartları" }).click();
+    await expect(page).toHaveURL(/\/terms$/);
+    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+      "Kullanım Şartları",
+    );
+  });
 
   test("marketing footer lists product links", async ({ page }) => {
     await page.goto("/");

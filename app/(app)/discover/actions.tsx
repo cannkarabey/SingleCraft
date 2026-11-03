@@ -24,7 +24,7 @@ export async function loadMoreStories(
         key={story.id}
         story={story}
         now={now}
-        signedIn={Boolean(user)}
+        signedIn={Boolean(user && !user.anonymous)}
       />
     )),
     nextCursor,

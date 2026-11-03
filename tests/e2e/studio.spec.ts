@@ -86,4 +86,22 @@ test.describe("studio", () => {
       await seed.cleanup();
     }
   });
+
+  test("a visitor without an account can generate a brief as a guest", async ({
+    page,
+  }) => {
+    const seed = await seedStudioStory();
+    try {
+      await page.goto(`/studio/new?story=${seed.story.id}`);
+      await expect(page).toHaveURL(/\/studio\/new\?story=/);
+      await expect(page.getByRole("heading", { level: 1 })).toHaveText(
+        seed.story.title,
+      );
+      await page.getByRole("button", { name: "Brief üret" }).click();
+      await expect(page).toHaveURL(/\/studio\/[0-9a-f-]{36}$/);
+      await expect(page.getByRole("status")).toContainText("hazırlanıyor");
+    } finally {
+      await seed.cleanup();
+    }
+  });
 });
