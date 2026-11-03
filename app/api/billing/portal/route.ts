@@ -6,7 +6,8 @@ import { notFound, unauthorized } from "@/lib/http";
 import { createClient } from "@/lib/supabase/server";
 
 export async function POST() {
-  if (!(await currentUser())) return unauthorized();
+  const user = await currentUser();
+  if (!user || user.anonymous) return unauthorized();
   if (!billingConfigured())
     return NextResponse.json(
       { error: "billing_not_configured" },

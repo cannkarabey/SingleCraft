@@ -8,7 +8,8 @@ const Body = z.object({ plan: z.enum(["creator", "pro"]) });
 
 export async function POST(request: Request) {
   const user = await currentUser();
-  if (!user) return unauthorized();
+  // Guests (anonymous sessions) cannot subscribe: no email, throwaway account.
+  if (!user || user.anonymous) return unauthorized();
   const body = Body.safeParse(await jsonBody(request));
   if (!body.success) return invalid(body.error.issues);
 

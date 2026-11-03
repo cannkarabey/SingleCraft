@@ -2,7 +2,8 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { generateText, Output, type LanguageModel } from "ai";
 import { z } from "zod";
 import { limitsFor } from "@/lib/billing/limits";
-import { recordUsage } from "@/lib/llm/budget";
+import { serverEnv } from "@/lib/env";
+import { assertBudget, recordUsage } from "@/lib/llm/budget";
 import type { Database } from "@/lib/supabase/types";
 
 type Db = SupabaseClient<Database>;
@@ -97,7 +98,12 @@ const AngleSchema = z.object({ angle: z.string().min(10).max(400) });
 
 /** Inngest step: writes one personal angle; on failure the usage unit is given back. */
 export async function generateAngle(
-  deps: { db: Db; llm: { model: LanguageModel; id: string } },
+  deps: {
+    db: Db;
+    llm: { model: LanguageModel; id: string };
+    /** Defaults to LLM_DAILY_BUDGET_USD. */
+    budgetUsd?: number;
+  },
   {
     userId,
     nicheId,
@@ -105,6 +111,10 @@ export async function generateAngle(
   }: { userId: string; nicheId: string; storyId: string },
 ) {
   try {
+    await assertBudget(
+      deps.db,
+      deps.budgetUsd ?? serverEnv().LLM_DAILY_BUDGET_USD,
+    );
     const [
       { data: niche, error: nicheError },
       { data: story, error: storyError },

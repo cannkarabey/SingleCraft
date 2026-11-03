@@ -3,7 +3,8 @@ import { generateText, Output, type LanguageModel } from "ai";
 import type { z } from "zod";
 import { capture } from "@/lib/analytics/server";
 import { limitsFor } from "@/lib/billing/limits";
-import { recordUsage } from "@/lib/llm/budget";
+import { serverEnv } from "@/lib/env";
+import { assertBudget, recordUsage } from "@/lib/llm/budget";
 import type { Database, Json } from "@/lib/supabase/types";
 import {
   buildBriefPrompt,
@@ -180,11 +181,22 @@ type Pack<S extends z.ZodType> = {
 };
 
 export async function runPack<S extends z.ZodType>(
-  deps: { db: Db; llm: { model: LanguageModel; id: string } },
+  deps: {
+    db: Db;
+    llm: { model: LanguageModel; id: string };
+    /** Defaults to LLM_DAILY_BUDGET_USD. */
+    budgetUsd?: number;
+  },
   schema: S,
   system: string,
   prompt: string,
 ): Promise<Pack<S>> {
+  // Guests can open unlimited accounts, so per-user limits are not a spend cap: stop at
+  // the global daily budget like the story pipeline does.
+  await assertBudget(
+    deps.db,
+    deps.budgetUsd ?? serverEnv().LLM_DAILY_BUDGET_USD,
+  );
   const { output, usage } = await generateText({
     model: deps.llm.model,
     output: Output.object({ schema }),
@@ -265,7 +277,11 @@ export async function loadBriefContext(db: Db, briefId: string) {
  * On failure the brief is marked failed and the usage unit is given back.
  */
 export async function generateBrief(
-  deps: { db: Db; llm: { model: LanguageModel; id: string } },
+  deps: {
+    db: Db;
+    llm: { model: LanguageModel; id: string };
+    budgetUsd?: number;
+  },
   briefId: string,
 ) {
   const { brief, sources, language, system, prompt } = await loadBriefContext(
