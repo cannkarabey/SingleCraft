@@ -48,7 +48,7 @@ export function SearchBox({
         maxLength={200}
         aria-label={t("searchLabel")}
         placeholder={t("searchPlaceholder")}
-        className="bg-surface-2 placeholder:text-text-tertiary focus-visible:ring-ring h-8 w-full rounded-md border pr-3 pl-8 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
+        className="bg-surface-2 placeholder:text-muted-foreground focus-visible:ring-ring h-8 w-full rounded-md border pr-3 pl-8 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
       />
     </form>
   );

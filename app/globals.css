@@ -16,8 +16,10 @@
   --sc-border-strong: rgba(255, 255, 255, 0.14);
   --sc-text-primary: #f7f8f8;
   --sc-text-secondary: #8a8f98;
-  --sc-text-tertiary: #62666d;
+  --sc-text-tertiary: #84888f;
   --sc-brand: #5e6ad2;
+  /* Indigo for small text on dark surfaces (the base brand colour is ~3.9:1 there). */
+  --sc-brand-text: #8b94ec;
   --sc-accent: #4cb782;
   --sc-warning: #f2c94c;
   --sc-danger: #eb5757;
@@ -73,6 +75,7 @@
   --color-border-strong: var(--sc-border-strong);
   --color-text-tertiary: var(--sc-text-tertiary);
   --color-brand: var(--sc-brand);
+  --color-brand-text: var(--sc-brand-text);
   --color-signal: var(--sc-accent);
   --color-warning: var(--sc-warning);
   --color-danger: var(--sc-danger);

@@ -116,7 +116,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
               </p>
             </div>
             {rows.length === 0 ? (
-              <p className="text-text-tertiary border-t px-4 py-3 text-[13px]">
+              <p className="text-muted-foreground border-t px-4 py-3 text-[13px]">
                 {t("emptySection")}
               </p>
             ) : (
@@ -149,7 +149,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
             </span>
           </div>
           {radar.saved.length === 0 ? (
-            <p className="text-text-tertiary border-t px-4 py-3 text-[13px]">
+            <p className="text-muted-foreground border-t px-4 py-3 text-[13px]">
               {t("sections.saved.empty")}
             </p>
           ) : (

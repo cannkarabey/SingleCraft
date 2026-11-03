@@ -18,7 +18,7 @@ function Panel({
     <section className="bg-surface-1 rounded-lg border p-4">
       <h2 className="text-[13px] font-medium">{title}</h2>
       {items.length === 0 ? (
-        <p className="text-text-tertiary mt-2 text-[13px]">{empty}</p>
+        <p className="text-muted-foreground mt-2 text-[13px]">{empty}</p>
       ) : (
         <ol className="mt-3 space-y-2.5">
           {items.map((item) => (

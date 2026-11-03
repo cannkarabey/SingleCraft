@@ -172,7 +172,7 @@ export default async function Home() {
         </Button>
       </Section>
 
-      <div className="text-text-tertiary flex flex-wrap items-center gap-x-8 gap-y-2 border-y py-6 text-[13px]">
+      <div className="text-muted-foreground flex flex-wrap items-center gap-x-8 gap-y-2 border-y py-6 text-[13px]">
         <p>{t("landing.sources.label")}</p>
         <ul className="text-muted-foreground flex flex-wrap gap-x-6 gap-y-2">
           {SOURCES.map((name) => (
@@ -222,7 +222,9 @@ export default async function Home() {
         <ol className="grid gap-px overflow-hidden rounded-xl border bg-[var(--sc-border)] sm:grid-cols-5">
           {steps.map((step, i) => (
             <li key={step} className="bg-surface-1 p-5">
-              <span className="text-brand font-mono text-xs">0{i + 1}</span>
+              <span className="text-brand-text font-mono text-xs">
+                0{i + 1}
+              </span>
               <p className="mt-3 text-sm">
                 {t(`landing.pipeline.steps.${step}`)}
               </p>
