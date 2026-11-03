@@ -15,7 +15,10 @@
     "account": "Account",
     "settings": "Settings",
     "pricing": "Pricing",
-    "openApp": "Open app"
+    "openApp": "Open app",
+    "app": "App",
+    "menu": "Menu",
+    "admin": "Admin"
   },
   "hero": {
     "title": "The daily signal radar for tech content creators.",

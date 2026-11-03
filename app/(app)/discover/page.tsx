@@ -24,7 +24,8 @@ const DEFAULTS: DiscoverFilters = { range: "today", limit: 20 };
 export default async function DiscoverPage({
   searchParams,
 }: PageProps<"/discover">) {
-  const parsed = parseDiscoverQuery(await searchParams);
+  const search = await searchParams;
+  const parsed = parseDiscoverQuery(search);
   // Bad query strings fall back to the defaults instead of an error page.
   const filters: DiscoverFilters = parsed.ok
     ? { ...parsed.filters, cursor: undefined, limit: 20 }
@@ -67,6 +68,7 @@ export default async function DiscoverPage({
           <RangeTabs filters={filters} />
         </div>
         <SearchBox
+          autoFocus={search.focus === "search"}
           defaultValue={filters.q}
           hidden={{
             range: filters.range === "today" ? undefined : filters.range,

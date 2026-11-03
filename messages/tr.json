@@ -15,7 +15,10 @@
     "account": "Hesap",
     "settings": "Ayarlar",
     "pricing": "Fiyatlandırma",
-    "openApp": "Uygulamayı aç"
+    "openApp": "Uygulamayı aç",
+    "app": "Uygulama",
+    "menu": "Menü",
+    "admin": "Admin"
   },
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",

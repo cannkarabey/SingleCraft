@@ -23,14 +23,17 @@ test.describe("auth", () => {
 
     await page.goto(await latestMagicLink(email));
     await expect(page).toHaveURL(/\/discover$/);
-    const account = page.getByRole("navigation", { name: "SignalCraft" });
+    const sidebar = page.getByRole("navigation", { name: "Uygulama" });
     await expect(
-      account.getByRole("button", { name: "Çıkış yap" }),
+      sidebar.getByRole("button", { name: "Çıkış yap" }),
     ).toBeVisible();
 
-    await account.getByRole("button", { name: "Çıkış yap" }).click();
+    await sidebar.getByRole("button", { name: "Çıkış yap" }).click();
+    // Sign-out lands on the marketing page, whose nav offers sign-in again.
     await expect(
-      account.getByRole("link", { name: "Giriş yap" }),
+      page
+        .getByRole("navigation", { name: "SignalCraft" })
+        .getByRole("link", { name: "Giriş yap" }),
     ).toBeVisible();
   });
 

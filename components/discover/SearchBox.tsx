@@ -8,12 +8,18 @@ import { useEffect, useRef } from "react";
 export function SearchBox({
   defaultValue,
   hidden,
+  autoFocus = false,
 }: {
+  autoFocus?: boolean;
   defaultValue?: string;
   hidden: Record<string, string | undefined>;
 }) {
   const t = useTranslations("discover");
   const input = useRef<HTMLInputElement>(null);
+
+  useEffect(() => {
+    if (autoFocus) input.current?.focus();
+  }, [autoFocus]);
 
   useEffect(() => {
     const onKey = (event: KeyboardEvent) => {
