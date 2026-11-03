@@ -15,24 +15,24 @@ function Panel({
   locale: string;
 }) {
   return (
-    <section className="bg-card rounded-lg border p-4">
-      <h2 className="text-sm font-semibold">{title}</h2>
+    <section className="bg-surface-1 rounded-lg border p-4">
+      <h2 className="text-[13px] font-medium">{title}</h2>
       {items.length === 0 ? (
-        <p className="text-muted-foreground mt-2 text-sm">{empty}</p>
+        <p className="text-text-tertiary mt-2 text-[13px]">{empty}</p>
       ) : (
-        <ol className="mt-2 space-y-2">
+        <ol className="mt-3 space-y-2.5">
           {items.map((item) => (
             <li
               key={item.id}
-              className="flex items-start justify-between gap-3 text-sm"
+              className="flex items-start justify-between gap-3 text-[13px]"
             >
               <Link
                 href={`/discover/${item.slug ?? item.id}`}
-                className="line-clamp-2 hover:underline"
+                className="text-muted-foreground hover:text-foreground line-clamp-2"
               >
                 {item.title}
               </Link>
-              <span className="text-muted-foreground shrink-0 font-mono text-xs">
+              <span className="text-text-tertiary shrink-0 font-mono text-xs">
                 {compactNumber(Math.round(item.value), locale)}
               </span>
             </li>

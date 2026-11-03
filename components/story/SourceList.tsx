@@ -22,7 +22,7 @@ export async function SourceList({
 }) {
   const locale = await getLocale();
   return (
-    <ul className="divide-y rounded-lg border">
+    <ul className="divide-y overflow-hidden rounded-lg border">
       {sources.map((s) => (
         <li key={s.raw_item_id} className="flex flex-col gap-1 p-3">
           {SAFE_URL.test(s.url) ? (
@@ -30,14 +30,16 @@ export async function SourceList({
               href={s.url}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="font-medium hover:underline"
+              className="text-[13px] font-medium break-words hover:underline"
             >
               {s.title}
             </a>
           ) : (
-            <span className="font-medium">{s.title}</span>
+            <span className="text-[13px] font-medium break-words">
+              {s.title}
+            </span>
           )}
-          <span className="text-muted-foreground font-mono text-xs">
+          <span className="text-text-tertiary font-mono text-xs">
             {s.source_type} · {s.source_name} ·{" "}
             {relativeTime(s.published_at, now, locale)}
           </span>

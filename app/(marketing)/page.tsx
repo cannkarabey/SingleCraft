@@ -154,7 +154,7 @@ export default async function Home() {
               {t("landing.preview.empty")}
             </p>
           ) : (
-            <div className="space-y-3">
+            <div className="overflow-hidden rounded-lg border">
               {preview.items.map((story) => (
                 <StoryCard
                   key={story.id}

@@ -10,7 +10,7 @@ export async function RangeTabs({ filters }: { filters: DiscoverFilters }) {
   return (
     <nav
       aria-label={t("rangeLabel")}
-      className="bg-surface-1 flex gap-1 rounded-md border p-0.5"
+      className="bg-surface-2 flex gap-0.5 rounded-md border p-0.5"
     >
       {RANGES.map((range) => (
         <Link
@@ -18,9 +18,9 @@ export async function RangeTabs({ filters }: { filters: DiscoverFilters }) {
           href={discoverHref(filters, { range })}
           aria-current={filters.range === range ? "page" : undefined}
           className={cn(
-            "rounded px-2.5 py-1 text-sm whitespace-nowrap transition-colors duration-150",
+            "rounded-[5px] px-2.5 py-1 text-[13px] whitespace-nowrap transition-colors duration-150",
             filters.range === range
-              ? "bg-surface-2 text-foreground"
+              ? "bg-surface-3 text-foreground"
               : "text-muted-foreground hover:text-foreground",
           )}
         >

@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { seedRadarStories } from "./support/radar-seed";
 import { readSeed } from "./support/seed";
 
 const seed = () => readSeed();
@@ -115,5 +116,30 @@ test.describe("discover (signed out)", () => {
         exact: true,
       }),
     ).toBeVisible();
+  });
+
+  test("story titles truncate at 375 px instead of overflowing", async ({
+    page,
+  }) => {
+    const long = `${"Unbroken-title-".repeat(14)}end`;
+    const seedStories = await seedRadarStories([
+      { topic: "truncate", title: long },
+    ]);
+    try {
+      await page.setViewportSize({ width: 375, height: 800 });
+      await page.goto(`/discover?range=week&q=${seedStories.tag}`);
+      const title = page.getByRole("heading", { level: 2 }).first();
+      await expect(title).toBeVisible();
+      const { overflowX, clamp, hidden } = await title.evaluate((el) => ({
+        overflowX: document.documentElement.scrollWidth - window.innerWidth,
+        clamp: getComputedStyle(el).webkitLineClamp,
+        hidden: getComputedStyle(el).overflow,
+      }));
+      expect(overflowX).toBeLessThanOrEqual(0);
+      expect(clamp).not.toBe("none");
+      expect(hidden).toBe("hidden");
+    } finally {
+      await seedStories.cleanup();
+    }
   });
 });

@@ -24,7 +24,7 @@ export async function PlatformSignals({
       {chips.map(({ key, label }) => (
         <li
           key={key}
-          className="bg-surface-2 text-muted-foreground rounded border px-1.5 py-0.5"
+          className="bg-surface-2 text-muted-foreground rounded-md border px-1.5 py-0.5"
         >
           {label}{" "}
           <span className="text-foreground">

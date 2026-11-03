@@ -33,17 +33,13 @@ export function SearchBox({
   }, []);
 
   return (
-    <form
-      action="/discover"
-      role="search"
-      className="relative w-full sm:max-w-xs"
-    >
+    <form action="/discover" role="search" className="relative w-full sm:w-56">
       {Object.entries(hidden).map(([name, value]) =>
         value ? (
           <input key={name} type="hidden" name={name} value={value} />
         ) : null,
       )}
-      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-4 -translate-y-1/2" />
+      <Search className="text-muted-foreground pointer-events-none absolute top-1/2 left-2.5 size-3.5 -translate-y-1/2" />
       <input
         ref={input}
         type="search"
@@ -52,7 +48,7 @@ export function SearchBox({
         maxLength={200}
         aria-label={t("searchLabel")}
         placeholder={t("searchPlaceholder")}
-        className="bg-surface-1 placeholder:text-muted-foreground focus-visible:ring-ring h-9 w-full rounded-md border pr-3 pl-8 text-sm focus-visible:ring-2 focus-visible:outline-none"
+        className="bg-surface-2 placeholder:text-text-tertiary focus-visible:ring-ring h-8 w-full rounded-md border pr-3 pl-8 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
       />
     </form>
   );

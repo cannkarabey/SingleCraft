@@ -5,7 +5,7 @@ import type { DiscoverFilters } from "@/lib/discover/params";
 import { CATEGORIES, type StoryCategory } from "@/lib/discover/queries";
 import { cn } from "@/lib/utils";
 
-/** Category list with counts; vertical on desktop, horizontal chips on mobile. */
+/** Category filter chips with counts, one scrollable row under the page header. */
 export async function CategoryNav({
   filters,
   counts,
@@ -25,7 +25,7 @@ export async function CategoryNav({
   ];
   return (
     <nav aria-label={t("categoriesLabel")}>
-      <ul className="-mx-4 flex gap-1.5 overflow-x-auto px-4 pb-1 md:mx-0 md:flex-col md:overflow-visible md:px-0">
+      <ul className="-mx-1 flex gap-1 overflow-x-auto px-1 pb-0.5">
         {items.map(({ key, label, count }) => {
           const active = (filters.category ?? null) === key;
           return (
@@ -34,14 +34,16 @@ export async function CategoryNav({
                 href={discoverHref(filters, { category: key })}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex items-center justify-between gap-3 rounded-md border px-2.5 py-1.5 text-sm transition-colors duration-150 md:border-transparent",
+                  "flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[13px] transition-colors duration-150",
                   active
-                    ? "border-border bg-surface-2 text-foreground"
-                    : "text-muted-foreground hover:text-foreground",
+                    ? "border-border-strong bg-surface-3 text-foreground"
+                    : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",
                 )}
               >
                 <span className="whitespace-nowrap">{label}</span>
-                <span className="font-mono text-xs">{count}</span>
+                <span className="text-text-tertiary font-mono text-xs">
+                  {count}
+                </span>
               </Link>
             </li>
           );

@@ -52,8 +52,8 @@ export function LoadMore({
     <>
       {pages}
       {cursor && (
-        <div ref={sentinel} className="flex justify-center pt-2">
-          <Button variant="outline" onClick={load} disabled={pending}>
+        <div ref={sentinel} className="flex justify-center border-t p-2">
+          <Button variant="ghost" size="sm" onClick={load} disabled={pending}>
             {pending ? t("loading") : t("loadMore")}
           </Button>
         </div>

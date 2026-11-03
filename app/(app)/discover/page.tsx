@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { CategoryNav } from "@/components/discover/CategoryNav";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { LoadMore } from "@/components/discover/LoadMore";
 import { RangeTabs } from "@/components/discover/RangeTabs";
 import { SearchBox } from "@/components/discover/SearchBox";
@@ -55,54 +56,56 @@ export default async function DiscoverPage({
   );
 
   return (
-    <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-4 py-6 md:grid-cols-[13rem_1fr] lg:grid-cols-[13rem_1fr_16rem]">
-      <aside className="min-w-0 md:sticky md:top-20 md:self-start">
-        <CategoryNav filters={filters} counts={counts} />
-      </aside>
-
-      <section className="min-w-0 space-y-4">
-        <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {t("title")}
-          </h1>
-          <RangeTabs filters={filters} />
-        </div>
-        <SearchBox
-          autoFocus={search.focus === "search"}
-          defaultValue={filters.q}
-          hidden={{
-            range: filters.range === "today" ? undefined : filters.range,
-            category: filters.category,
-          }}
-        />
-
-        {page.items.length === 0 ? (
-          <p className="bg-card text-muted-foreground rounded-lg border p-6">
-            {filtered ? t("noResults") : t("empty")}
-          </p>
-        ) : (
-          <div className="space-y-3">
-            {page.items.map((story) => (
-              <StoryCard
-                key={story.id}
-                story={story}
-                now={now}
-                signedIn={Boolean(user)}
-              />
-            ))}
-            {/* Keyed by filters: a new filter set must not keep pages loaded for the old one. */}
-            <LoadMore
-              key={JSON.stringify(query)}
-              query={query}
-              initialCursor={page.nextCursor}
+    <main className="flex flex-1 flex-col">
+      <PageHeader
+        title={t("title")}
+        actions={
+          <>
+            <RangeTabs filters={filters} />
+            <SearchBox
+              autoFocus={search.focus === "search"}
+              defaultValue={filters.q}
+              hidden={{
+                range: filters.range === "today" ? undefined : filters.range,
+                category: filters.category,
+              }}
             />
-          </div>
-        )}
-      </section>
+          </>
+        }
+      >
+        <CategoryNav filters={filters} counts={counts} />
+      </PageHeader>
 
-      <aside className="min-w-0 md:col-start-2 lg:col-start-3 lg:row-start-1">
-        <SidePanels trending={trending} newTools={newTools} github={github} />
-      </aside>
+      <div className="grid flex-1 items-start gap-4 p-4 xl:grid-cols-[minmax(0,1fr)_18rem]">
+        <section className="min-w-0">
+          {page.items.length === 0 ? (
+            <p className="text-muted-foreground rounded-lg border p-6">
+              {filtered ? t("noResults") : t("empty")}
+            </p>
+          ) : (
+            <div className="overflow-hidden rounded-lg border">
+              {page.items.map((story) => (
+                <StoryCard
+                  key={story.id}
+                  story={story}
+                  now={now}
+                  signedIn={Boolean(user)}
+                />
+              ))}
+              {/* Keyed by filters: a new filter set must not keep pages loaded for the old one. */}
+              <LoadMore
+                key={JSON.stringify(query)}
+                query={query}
+                initialCursor={page.nextCursor}
+              />
+            </div>
+          )}
+        </section>
+
+        <aside className="min-w-0 xl:sticky xl:top-4">
+          <SidePanels trending={trending} newTools={newTools} github={github} />
+        </aside>
+      </div>
     </main>
   );
 }

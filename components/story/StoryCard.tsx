@@ -28,30 +28,42 @@ export async function StoryCard({
   const href = `/discover/${story.slug ?? story.id}`;
 
   return (
-    <article className="bg-card flex gap-3 rounded-lg border p-4 transition-colors duration-150 hover:border-white/15">
-      <SignalBar level={signalLevel(story)} />
-      <div className="min-w-0 flex-1 space-y-2">
-        {story.category && (
-          <p className="text-muted-foreground text-xs font-medium tracking-wide uppercase">
-            {t(`categories.${story.category}`)}
-          </p>
-        )}
-        <Heading className="text-lg leading-snug font-semibold tracking-tight">
+    <article className="group hover:bg-surface-2/50 relative space-y-1.5 border-t px-4 py-3 transition-colors duration-150 first:border-t-0">
+      <div className="flex items-start gap-3">
+        <SignalBar
+          level={signalLevel(story)}
+          shape="dot"
+          className="mt-[7px]"
+        />
+        <Heading className="line-clamp-2 min-w-0 flex-1 text-[14px] leading-snug font-medium sm:line-clamp-1">
           <Link href={href} className="hover:underline">
             {story.title}
           </Link>
         </Heading>
+        <span
+          className="text-muted-foreground shrink-0 font-mono text-xs"
+          title={t("meta.velocity", {
+            value: Math.round(story.velocity_score),
+          })}
+        >
+          {Math.round(story.global_score)}
+        </span>
+      </div>
+      <div className="space-y-1.5 pl-5">
         {story.summary && (
-          <p className="text-muted-foreground">{story.summary}</p>
+          <p className="text-muted-foreground line-clamp-2 text-[13px]">
+            {story.summary}
+          </p>
         )}
-        <p className="text-muted-foreground font-mono text-xs">
+        <p className="text-text-tertiary font-mono text-xs">
+          {story.category && <>{t(`categories.${story.category}`)} · </>}
           {relativeTime(story.first_seen_at, now, locale)} ·{" "}
           {t("meta.sources", { count: story.source_count })} ·{" "}
           {t("meta.velocity", { value: Math.round(story.velocity_score) })}
         </p>
         <PlatformSignals signals={story.signals} />
         {story.why_it_matters && (
-          <details className="group text-sm">
+          <details className="group/why text-[13px]">
             <summary className="text-muted-foreground hover:text-foreground cursor-pointer">
               {t("whyItMatters")}
             </summary>
@@ -59,11 +71,13 @@ export async function StoryCard({
           </details>
         )}
         {actions && (
-          <StoryActions
-            storyId={story.slug ?? story.id}
-            storyUuid={story.id}
-            signedIn={signedIn}
-          />
+          <div className="pt-1 transition-opacity duration-150 md:absolute md:right-4 md:bottom-2.5 md:pt-0 md:opacity-0 md:group-focus-within:opacity-100 md:group-hover:opacity-100">
+            <StoryActions
+              storyId={story.slug ?? story.id}
+              storyUuid={story.id}
+              signedIn={signedIn}
+            />
+          </div>
         )}
       </div>
     </article>

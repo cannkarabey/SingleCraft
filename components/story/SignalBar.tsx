@@ -12,9 +12,12 @@ const COLORS: Record<SignalLevel, string> = {
 /** Thin left-edge bar on a story card (PDF §12): green high, yellow early, red low trust. */
 export async function SignalBar({
   level,
+  shape = "bar",
   className,
 }: {
   level: SignalLevel;
+  /** "bar" on the detail header, "dot" in list rows. */
+  shape?: "bar" | "dot";
   className?: string;
 }) {
   const t = await getTranslations("discover.signal");
@@ -24,7 +27,8 @@ export async function SignalBar({
       aria-label={t(level)}
       title={t(level)}
       className={cn(
-        "w-[3px] shrink-0 self-stretch rounded-full",
+        "shrink-0 rounded-full",
+        shape === "dot" ? "size-2" : "w-[3px] self-stretch",
         COLORS[level],
         className,
       )}
