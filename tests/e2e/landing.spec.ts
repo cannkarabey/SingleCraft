@@ -15,7 +15,22 @@ test.describe("landing", () => {
       "Örnek çıktı",
       "Fiyatlandırma",
       "SSS",
+      "Sinyali bugün yakala.",
     ]);
+  });
+
+  test("hero badge, module figures and closing CTA", async ({ page }) => {
+    await page.goto("/");
+    await expect(
+      page.getByRole("link", { name: /Yeni: Radar'da kişisel açılar/ }),
+    ).toHaveAttribute("href", "/discover");
+    for (const figure of ["1.0 Discover", "2.0 Radar", "3.0 Studio"]) {
+      await expect(page.getByText(figure, { exact: true })).toBeVisible();
+    }
+    const cta = page.getByRole("region", { name: "Sinyali bugün yakala." });
+    await expect(
+      cta.getByRole("link", { name: "Ücretsiz başla" }),
+    ).toHaveAttribute("href", "/login?next=%2Fonboarding");
   });
 
   test("live preview shows real Discover stories", async ({ page }) => {

@@ -21,7 +21,8 @@
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
     "subtitle": "Yükselen AI ve geliştirici konularını keşfet, nişine göre fırsatları gör, dakikalar içinde yayınlanabilir içerik üret.",
     "primaryCta": "Ücretsiz başla",
-    "secondaryCta": "Canlı Discover'ı gör"
+    "secondaryCta": "Canlı Discover'ı gör",
+    "badge": "Yeni: Radar'da kişisel açılar →"
   },
   "discover": {
     "title": "Bugün · AI ve geliştirici sinyalleri",
@@ -301,6 +302,22 @@
         "q": "Veri ne kadar güncel?",
         "a": "Kaynaklar 15–60 dakikada bir kontrol edilir, skorlar 30 dakikada bir güncellenir."
       }
+    },
+    "sources": {
+      "label": "Şunlardan beslenir"
+    },
+    "labels": {
+      "preview": "Canlı",
+      "modules": "Modüller",
+      "problem": "Sorun",
+      "pipeline": "Akış",
+      "example": "Çıktı",
+      "pricing": "Fiyat",
+      "faq": "Sorular"
+    },
+    "cta": {
+      "title": "Sinyali bugün yakala.",
+      "body": "Ücretsiz başla; Radar ve Studio rutinin olunca yükselt."
     }
   },
   "auth": {

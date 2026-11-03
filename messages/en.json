@@ -21,7 +21,8 @@
     "title": "The daily signal radar for tech content creators.",
     "subtitle": "Discover rising AI and developer topics, see opportunities for your niche, and produce publish-ready content in minutes.",
     "primaryCta": "Start free",
-    "secondaryCta": "See live Discover"
+    "secondaryCta": "See live Discover",
+    "badge": "New: personal angles in Radar →"
   },
   "discover": {
     "title": "Today · AI & developer signals",
@@ -301,6 +302,22 @@
         "q": "How fresh is the data?",
         "a": "Sources are checked every 15–60 minutes and scores update every 30 minutes."
       }
+    },
+    "sources": {
+      "label": "Fed by"
+    },
+    "labels": {
+      "preview": "Live",
+      "modules": "Modules",
+      "problem": "Problem",
+      "pipeline": "Pipeline",
+      "example": "Output",
+      "pricing": "Pricing",
+      "faq": "Questions"
+    },
+    "cta": {
+      "title": "Catch the signal today.",
+      "body": "Start free; upgrade when Radar and Studio are part of your routine."
     }
   },
   "auth": {

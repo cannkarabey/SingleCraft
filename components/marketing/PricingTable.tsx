@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getTranslations } from "next-intl/server";
+import { Check } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { PLAN_LIMITS, PLAN_PRICE_USD, type Plan } from "@/lib/billing/limits";
 
@@ -36,7 +37,7 @@ export async function PricingTable({
     {
       plan: "free",
       cta: (
-        <Button asChild variant="outline" className="mt-6">
+        <Button asChild variant="outline" size="lg" className="mt-8">
           <Link href={signedIn ? "/radar" : "/login?next=%2Fonboarding"}>
             {t("freeCta")}
           </Link>
@@ -46,7 +47,7 @@ export async function PricingTable({
     {
       plan: "creator",
       cta: (
-        <Button asChild className="mt-6">
+        <Button asChild size="lg" className="mt-8">
           <Link
             href={signedIn ? "/settings#billing" : "/login?next=%2Fsettings"}
           >
@@ -62,29 +63,38 @@ export async function PricingTable({
       {plans.map(({ plan, cta }) => (
         <article
           key={plan}
-          className="bg-card flex flex-col rounded-lg border p-6"
+          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 ${plan === "creator" ? "border-border-strong" : ""}`}
         >
-          <Heading className="font-semibold capitalize">
+          {plan === "creator" && (
+            <span
+              aria-hidden
+              className="bg-brand absolute inset-x-0 top-0 h-px"
+            />
+          )}
+          <Heading className="font-[590] capitalize">
             {plan === "free" ? "Free" : "Creator"}
           </Heading>
           <p className="mt-2">
-            <span className="text-3xl font-semibold">
+            <span className="text-4xl font-[590] tracking-tight">
               ${PLAN_PRICE_USD[plan]}
             </span>
             <span className="text-muted-foreground text-sm">
               {t("perMonth")}
             </span>
           </p>
-          <ul className="text-muted-foreground mt-4 flex-1 space-y-1.5 text-sm">
+          <ul className="text-muted-foreground mt-6 flex-1 space-y-2.5 text-sm">
             {features(plan).map((f) => (
-              <li key={f}>{f}</li>
+              <li key={f} className="flex items-center gap-2">
+                <Check aria-hidden className="text-signal size-3.5 shrink-0" />
+                {f}
+              </li>
             ))}
           </ul>
           {cta}
         </article>
       ))}
-      <article className="flex flex-col rounded-lg border border-dashed p-6">
-        <Heading className="font-semibold">Pro</Heading>
+      <article className="flex flex-col rounded-xl border border-dashed p-6">
+        <Heading className="font-[590]">Pro</Heading>
         <p className="text-muted-foreground mt-2 text-sm">{t("soon")}</p>
       </article>
     </div>

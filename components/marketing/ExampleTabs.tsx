@@ -22,10 +22,10 @@ export function ExampleTabs({
   }
 
   return (
-    <div className="bg-card rounded-lg border">
+    <div>
       <div
         role="tablist"
-        className="flex gap-1 border-b p-1"
+        className="flex gap-1 border-b pb-2"
         onKeyDown={onKeyDown}
       >
         {tabs.map((tab, i) => (
@@ -39,9 +39,9 @@ export function ExampleTabs({
             tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)}
             className={cn(
-              "rounded px-3 py-1.5 text-sm transition-colors duration-150",
+              "rounded-md px-3 py-1.5 text-[13px] transition-colors duration-150",
               i === active
-                ? "bg-surface-2 text-foreground"
+                ? "bg-surface-3 text-foreground"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
@@ -53,7 +53,7 @@ export function ExampleTabs({
         id={`${id}-panel`}
         role="tabpanel"
         aria-labelledby={`${id}-tab-${active}`}
-        className="p-5 text-sm leading-relaxed whitespace-pre-line"
+        className="pt-4 text-sm leading-relaxed whitespace-pre-line"
       >
         {tabs[active].body}
       </div>
