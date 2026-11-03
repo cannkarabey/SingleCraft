@@ -13,7 +13,9 @@
     "signIn": "Giriş yap",
     "signOut": "Çıkış yap",
     "account": "Hesap",
-    "settings": "Ayarlar"
+    "settings": "Ayarlar",
+    "pricing": "Fiyatlandırma",
+    "openApp": "Uygulamayı aç"
   },
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
@@ -484,5 +486,14 @@
     "sent": "Teşekkürler, aldık.",
     "limit": "Bugünlük sınır doldu.",
     "error": "Gönderilemedi."
+  },
+  "footer": {
+    "tagline": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
+    "label": "Alt bilgi",
+    "product": "Ürün",
+    "resources": "Kaynaklar",
+    "legal": "Yasal",
+    "legalSoon": "Gizlilik ve kullanım şartları hazırlanıyor.",
+    "copyright": "© {year} SignalCraft"
   }
 }

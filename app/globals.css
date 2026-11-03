@@ -113,3 +113,20 @@
     scroll-behavior: auto !important;
   }
 }
+
+/* Marketing nav: the bottom border fades in once the page scrolls (where supported). */
+@keyframes nav-border-in {
+  to {
+    border-bottom-color: var(--sc-border);
+  }
+}
+.nav-scroll-border {
+  border-bottom: 1px solid transparent;
+}
+@supports (animation-timeline: scroll()) {
+  .nav-scroll-border {
+    animation: nav-border-in linear both;
+    animation-timeline: scroll();
+    animation-range: 0 64px;
+  }
+}

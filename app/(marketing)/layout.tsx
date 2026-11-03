@@ -1,10 +1,12 @@
-import { TopNav } from "@/components/shell/TopNav";
+import { Footer } from "@/components/marketing/Footer";
+import { MarketingNav } from "@/components/marketing/MarketingNav";
 
 export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
-      <TopNav />
+      <MarketingNav />
       {children}
+      <Footer />
     </>
   );
 }

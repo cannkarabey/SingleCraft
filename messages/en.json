@@ -13,7 +13,9 @@
     "signIn": "Sign in",
     "signOut": "Sign out",
     "account": "Account",
-    "settings": "Settings"
+    "settings": "Settings",
+    "pricing": "Pricing",
+    "openApp": "Open app"
   },
   "hero": {
     "title": "The daily signal radar for tech content creators.",
@@ -484,5 +486,14 @@
     "sent": "Thanks, we got it.",
     "limit": "Daily limit reached.",
     "error": "Could not send."
+  },
+  "footer": {
+    "tagline": "The daily signal radar for tech content creators.",
+    "label": "Footer",
+    "product": "Product",
+    "resources": "Resources",
+    "legal": "Legal",
+    "legalSoon": "Privacy and terms are in preparation.",
+    "copyright": "© {year} SignalCraft"
   }
 }

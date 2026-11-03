@@ -58,6 +58,14 @@ test.describe("app shell", () => {
     });
   }
 
+  test("marketing footer lists product links", async ({ page }) => {
+    await page.goto("/");
+    const footer = page.getByRole("contentinfo");
+    for (const name of ["Discover", "Radar", "Studio", "Fiyatlandırma"]) {
+      await expect(footer.getByRole("link", { name })).toBeVisible();
+    }
+  });
+
   test("no horizontal scroll at 375px", async ({ page }) => {
     await page.setViewportSize({ width: 375, height: 800 });
     for (const path of ["/", "/discover"]) {
