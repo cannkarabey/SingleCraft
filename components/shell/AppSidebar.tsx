@@ -22,15 +22,13 @@ async function SidebarBody() {
     label: t(key),
   });
 
-  // Guests (anonymous sessions) can use Studio but are not members.
+  // Guests (anonymous sessions) can use Radar and Studio but are not members.
   const member = Boolean(user && !user.anonymous);
-  const modules = member
-    ? [
-        item("discover", "/discover"),
-        item("radar", "/radar"),
-        item("studio", "/studio"),
-      ]
-    : [item("discover", "/discover"), item("studio", "/studio")];
+  const modules = [
+    item("discover", "/discover"),
+    item("radar", "/radar"),
+    item("studio", "/studio"),
+  ];
   const account = member
     ? [
         item("settings", "/settings"),

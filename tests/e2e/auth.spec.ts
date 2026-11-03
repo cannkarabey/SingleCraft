@@ -5,8 +5,8 @@ test.describe("auth", () => {
   test("protected pages send signed-out visitors to login", async ({
     page,
   }) => {
-    await page.goto("/radar");
-    await expect(page).toHaveURL(/\/login\?next=%2Fradar/);
+    await page.goto("/settings");
+    await expect(page).toHaveURL(/\/login\?next=%2Fsettings/);
     await expect(
       page.getByRole("heading", { level: 1, name: "Giriş yap" }),
     ).toBeVisible();
@@ -72,8 +72,8 @@ test.describe("auth", () => {
   test("guest session cannot reach member-only pages", async ({ page }) => {
     await page.goto("/studio");
     await expect(page).toHaveURL(/\/studio$/);
-    await page.goto("/radar");
-    await expect(page).toHaveURL(/\/login\?next=%2Fradar/);
+    await page.goto("/settings");
+    await expect(page).toHaveURL(/\/login\?next=%2Fsettings/);
   });
 
   test("callback without a code returns to login with an error", async ({

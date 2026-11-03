@@ -89,7 +89,7 @@ export default async function DiscoverPage({
                   key={story.id}
                   story={story}
                   now={now}
-                  signedIn={Boolean(user && !user.anonymous)}
+                  signedIn={Boolean(user)}
                 />
               ))}
               {/* Keyed by filters: a new filter set must not keep pages loaded for the old one. */}

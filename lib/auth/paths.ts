@@ -1,7 +1,7 @@
 /** Where member-only areas live; the proxy redirects visitors and guests to /login. */
-const PROTECTED_PREFIXES = ["/radar", "/onboarding", "/settings", "/admin"];
+const PROTECTED_PREFIXES = ["/settings", "/admin"];
 /** Open to everyone: visitors without a session get a guest (anonymous) one. */
-const GUEST_PREFIXES = ["/studio"];
+const GUEST_PREFIXES = ["/radar", "/onboarding", "/studio"];
 
 const under = (pathname: string, prefixes: string[]) =>
   prefixes.some(

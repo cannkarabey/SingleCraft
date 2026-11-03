@@ -31,14 +31,9 @@ describe("safeNextPath (no open redirects)", () => {
 });
 
 describe("isProtectedPath", () => {
-  test.each([
-    "/radar",
-    "/radar/settings",
-    "/onboarding",
-    "/settings/account",
-    "/admin",
-  ])("%s needs a member account", (path) =>
-    expect(isProtectedPath(path)).toBe(true),
+  test.each(["/settings", "/settings/account", "/admin"])(
+    "%s needs a member account",
+    (path) => expect(isProtectedPath(path)).toBe(true),
   );
   test.each([
     "/",
@@ -47,6 +42,9 @@ describe("isProtectedPath", () => {
     "/login",
     "/auth/callback",
     "/radarx",
+    "/radar",
+    "/radar/settings",
+    "/onboarding",
     "/studio",
     "/studio/new",
   ])("%s is not member-only", (path) =>
@@ -55,11 +53,12 @@ describe("isProtectedPath", () => {
 });
 
 describe("isGuestPath", () => {
-  test.each(["/studio", "/studio/new", "/studio/abc"])(
+  test.each(["/radar", "/onboarding", "/studio", "/studio/new", "/studio/abc"])(
     "%s opens with a guest session",
     (path) => expect(isGuestPath(path)).toBe(true),
   );
-  test.each(["/radar", "/discover", "/studiox", "/"])("%s does not", (path) =>
-    expect(isGuestPath(path)).toBe(false),
+  test.each(["/settings", "/discover", "/studiox", "/"])(
+    "%s does not",
+    (path) => expect(isGuestPath(path)).toBe(false),
   );
 });

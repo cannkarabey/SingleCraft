@@ -8,14 +8,12 @@ import {
 } from "./support/radar-seed";
 
 test.describe("app shell (sidebar)", () => {
-  test("signed out: Discover, Studio and sign-in (no Radar)", async ({
-    page,
-  }) => {
+  test("signed out: Discover, Radar, Studio and sign-in", async ({ page }) => {
     await page.goto("/discover");
     const nav = page.getByRole("navigation", { name: "Uygulama" });
     await expect(nav.getByRole("link", { name: "Discover" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Giriş yap" })).toBeVisible();
-    await expect(nav.getByRole("link", { name: "Radar" })).toHaveCount(0);
+    await expect(nav.getByRole("link", { name: "Radar" })).toBeVisible();
     await expect(nav.getByRole("link", { name: "Studio" })).toBeVisible();
   });
 

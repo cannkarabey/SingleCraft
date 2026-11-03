@@ -45,13 +45,12 @@ test.describe("app shell", () => {
     );
   });
 
-  // Radar needs an account; Studio is open to everyone (guest session).
-  test("/radar asks signed-out visitors to sign in", async ({ page }) => {
+  // Radar and Studio are open to everyone (guest session); settings need an account.
+  test("/radar opens for visitors without an account", async ({ page }) => {
     await page.goto("/radar");
-    await expect(page).toHaveURL(/\/login\?next=%2Fradar/);
-    await expect(page.getByRole("heading", { level: 1 })).toHaveText(
-      "Giriş yap",
-    );
+    await expect(page).toHaveURL(/\/onboarding$/);
+    await page.goto("/settings");
+    await expect(page).toHaveURL(/\/login\?next=%2Fsettings/);
   });
 
   test("/studio opens for visitors without an account", async ({ page }) => {
