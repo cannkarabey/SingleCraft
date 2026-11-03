@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { getTranslations } from "next-intl/server";
 import { z } from "zod";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { NewBriefForm } from "@/components/studio/NewBriefForm";
 import type { ControlsInput } from "@/lib/studio/controls";
 import { TONES } from "@/lib/radar/niches";
@@ -49,11 +50,15 @@ export default async function NewBriefPage({
   };
 
   return (
-    <main className="mx-auto w-full max-w-xl flex-1 space-y-6 px-4 py-10">
-      <p className="text-muted-foreground text-sm">{t("newTitle")}</p>
-      <h1 className="text-2xl font-semibold tracking-tight">{row.title}</h1>
-      {row.summary && <p className="text-muted-foreground">{row.summary}</p>}
-      <NewBriefForm storyId={row.id} defaults={defaults} />
+    <main className="flex flex-1 flex-col">
+      <PageHeader title={row.title ?? ""} />
+      <div className="mx-auto w-full max-w-xl space-y-6 p-6">
+        <p className="text-text-tertiary font-mono text-xs tracking-wider uppercase">
+          {t("newTitle")}
+        </p>
+        {row.summary && <p className="text-muted-foreground">{row.summary}</p>}
+        <NewBriefForm storyId={row.id} defaults={defaults} />
+      </div>
     </main>
   );
 }

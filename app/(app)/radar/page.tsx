@@ -1,6 +1,8 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import { getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/shell/PageHeader";
+import { Button } from "@/components/ui/button";
 import { RadarRow } from "@/components/radar/RadarRow";
 import { currentUser } from "@/lib/auth/session";
 import { getRadar, type RadarRow as Row } from "@/lib/radar/feed";
@@ -53,94 +55,124 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
     { key: "gaps", rows: radar.gaps },
   ];
 
+  const dot = { high: "bg-signal", early: "bg-warning", gaps: "bg-brand" };
+
   return (
-    <main className="mx-auto w-full max-w-4xl flex-1 space-y-8 px-4 py-8">
-      <div className="flex flex-wrap items-center justify-between gap-3">
-        <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-        <Link
-          href={`/radar/settings?niche=${niche.id}`}
-          className="text-muted-foreground hover:text-foreground text-sm"
-        >
-          {t("settings")}
-        </Link>
-      </div>
-
-      {niches.length > 1 && (
-        <nav aria-label={t("niches")} className="flex flex-wrap gap-1.5">
-          {niches.map((n) => (
-            <Link
-              key={n.id}
-              href={`/radar?niche=${n.id}`}
-              aria-current={n.id === niche.id ? "page" : undefined}
-              className={cn(
-                "rounded-md border px-2.5 py-1 text-sm",
-                n.id === niche.id
-                  ? "bg-surface-2"
-                  : "text-muted-foreground hover:text-foreground",
-              )}
-            >
-              {n.name}
+    <main className="flex flex-1 flex-col">
+      <PageHeader
+        title={t("title")}
+        actions={
+          <Button asChild size="sm" variant="ghost">
+            <Link href={`/radar/settings?niche=${niche.id}`}>
+              {t("settings")}
             </Link>
-          ))}
-        </nav>
-      )}
+          </Button>
+        }
+      >
+        {niches.length > 1 && (
+          <nav aria-label={t("niches")} className="flex flex-wrap gap-1">
+            {niches.map((n) => (
+              <Link
+                key={n.id}
+                href={`/radar?niche=${n.id}`}
+                aria-current={n.id === niche.id ? "page" : undefined}
+                className={cn(
+                  "flex h-7 items-center rounded-md border px-2.5 text-[13px] transition-colors duration-150",
+                  n.id === niche.id
+                    ? "border-border-strong bg-surface-3 text-foreground"
+                    : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",
+                )}
+              >
+                {n.name}
+              </Link>
+            ))}
+          </nav>
+        )}
+      </PageHeader>
 
-      {sections.map(({ key, rows }) => (
+      <div className="mx-auto w-full max-w-5xl flex-1 space-y-4 p-4">
+        {sections.map(({ key, rows }) => (
+          <section
+            key={key}
+            aria-labelledby={`radar-${key}`}
+            className="overflow-hidden rounded-lg border"
+          >
+            <div className="bg-surface-2 flex h-9 items-center gap-2 px-4">
+              <span
+                aria-hidden
+                className={cn("size-2 rounded-full", dot[key])}
+              />
+              <h2 id={`radar-${key}`} className="text-[13px] font-medium">
+                {t(`sections.${key}.title`)}
+              </h2>
+              <span
+                data-testid="group-count"
+                className="text-text-tertiary font-mono text-xs"
+              >
+                {rows.length}
+              </span>
+              <p className="text-text-tertiary ml-auto hidden truncate text-xs md:block">
+                {t(`sections.${key}.hint`)}
+              </p>
+            </div>
+            {rows.length === 0 ? (
+              <p className="text-text-tertiary border-t px-4 py-3 text-[13px]">
+                {t("emptySection")}
+              </p>
+            ) : (
+              rows.map((row, i) => (
+                <RadarRow
+                  nicheId={niche.id}
+                  key={row.locked ? `locked-${key}-${i}` : row.story_id}
+                  row={row}
+                  trend={row.locked ? [] : (trends.get(row.story_id) ?? [])}
+                />
+              ))
+            )}
+          </section>
+        ))}
+
         <section
-          key={key}
-          aria-labelledby={`radar-${key}`}
-          className="space-y-3"
+          aria-labelledby="radar-saved"
+          className="overflow-hidden rounded-lg border"
         >
-          <h2 id={`radar-${key}`} className="text-lg font-semibold">
-            {t(`sections.${key}.title`)}
-          </h2>
-          <p className="text-muted-foreground text-sm">
-            {t(`sections.${key}.hint`)}
-          </p>
-          {rows.length === 0 ? (
-            <p className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
-              {t("emptySection")}
+          <div className="bg-surface-2 flex h-9 items-center gap-2 px-4">
+            <span
+              aria-hidden
+              className="bg-muted-foreground/50 size-2 rounded-full"
+            />
+            <h2 id="radar-saved" className="text-[13px] font-medium">
+              {t("sections.saved.title")}
+            </h2>
+            <span className="text-text-tertiary font-mono text-xs">
+              {radar.saved.length}
+            </span>
+          </div>
+          {radar.saved.length === 0 ? (
+            <p className="text-text-tertiary border-t px-4 py-3 text-[13px]">
+              {t("sections.saved.empty")}
             </p>
           ) : (
-            rows.map((row, i) => (
-              <RadarRow
-                nicheId={niche.id}
-                key={row.locked ? `locked-${key}-${i}` : row.story_id}
-                row={row}
-                trend={row.locked ? [] : (trends.get(row.story_id) ?? [])}
-              />
-            ))
+            <ul>
+              {radar.saved.map((story) => (
+                <li key={story.id} className="border-t px-4 py-2.5">
+                  <Link
+                    href={`/discover/${story.slug ?? story.id}`}
+                    className="line-clamp-1 text-[14px] font-medium hover:underline"
+                  >
+                    {story.title}
+                  </Link>
+                  {story.summary && (
+                    <p className="text-muted-foreground mt-0.5 line-clamp-2 text-[13px]">
+                      {story.summary}
+                    </p>
+                  )}
+                </li>
+              ))}
+            </ul>
           )}
         </section>
-      ))}
-      <section aria-labelledby="radar-saved" className="space-y-3">
-        <h2 id="radar-saved" className="text-lg font-semibold">
-          {t("sections.saved.title")}
-        </h2>
-        {radar.saved.length === 0 ? (
-          <p className="text-muted-foreground rounded-lg border border-dashed p-4 text-sm">
-            {t("sections.saved.empty")}
-          </p>
-        ) : (
-          <ul className="divide-y rounded-lg border">
-            {radar.saved.map((story) => (
-              <li key={story.id} className="p-3">
-                <Link
-                  href={`/discover/${story.slug ?? story.id}`}
-                  className="font-medium hover:underline"
-                >
-                  {story.title}
-                </Link>
-                {story.summary && (
-                  <p className="text-muted-foreground mt-1 text-sm">
-                    {story.summary}
-                  </p>
-                )}
-              </li>
-            ))}
-          </ul>
-        )}
-      </section>
+      </div>
     </main>
   );
 }

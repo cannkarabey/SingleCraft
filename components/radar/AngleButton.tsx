@@ -55,7 +55,7 @@ export function AngleButton({
 
   if (angle) {
     return (
-      <p className="border-signal/30 bg-signal/5 rounded-md border p-3 text-sm">
+      <p className="border-brand/30 bg-brand/5 rounded-md border p-3 text-[13px]">
         <span className="font-medium">{t("label")}</span> {angle}
       </p>
     );

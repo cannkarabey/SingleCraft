@@ -97,6 +97,45 @@ test.describe("radar", () => {
     }
   });
 
+  test("bucket groups show their row counts", async ({ page }) => {
+    const seed = await seedRadarStories([
+      { topic: "css", title: "One", velocity: 100, engagement: 90 },
+      { topic: "css", title: "Two", velocity: 99, engagement: 90 },
+      {
+        topic: "css",
+        title: "Three early",
+        velocity: 10,
+        engagement: 10,
+        early: true,
+      },
+    ]);
+    try {
+      const email = await signIn(page, "/discover");
+      const userId = await nicheFor(email, {
+        name: "Web",
+        keywords: [seed.tag, "css"],
+      });
+      await setPlan(userId, "creator");
+      await page.goto("/radar");
+      for (const name of [
+        "Yüksek sinyal",
+        "Erken sinyal",
+        "İçerik boşlukları",
+      ]) {
+        const group = page.getByRole("region", { name });
+        const rows = await group.getByRole("article").count();
+        await expect(group.getByTestId("group-count")).toHaveText(String(rows));
+      }
+      await expect(
+        page
+          .getByRole("region", { name: "Yüksek sinyal" })
+          .getByTestId("group-count"),
+      ).not.toHaveText("0");
+    } finally {
+      await seed.cleanup();
+    }
+  });
+
   test("Discover 'Radar'a ekle' saves for signed-in users", async ({
     page,
   }) => {

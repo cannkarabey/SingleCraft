@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { getLocale, getTranslations } from "next-intl/server";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { relativeTime } from "@/lib/discover/format";
 import { listBriefs } from "@/lib/studio/briefs";
 import { createClient } from "@/lib/supabase/server";
@@ -20,55 +21,75 @@ export default async function StudioPage({
   ]);
   const now = new Date();
 
+  const dot: Record<string, string> = {
+    queued: "bg-warning",
+    generating: "bg-warning animate-pulse",
+    ready: "bg-signal",
+    failed: "bg-danger",
+  };
+
   return (
-    <main className="mx-auto w-full max-w-3xl flex-1 space-y-6 px-4 py-8">
-      <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-      <nav aria-label={t("filters.label")} className="flex gap-1.5">
-        {FILTERS.map((f) => (
-          <Link
-            key={f ?? "all"}
-            href={f ? `/studio?status=${f}` : "/studio"}
-            aria-current={f === filter ? "page" : undefined}
-            className={cn(
-              "rounded-md border px-2.5 py-1 text-sm",
-              f === filter
-                ? "bg-surface-2"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {t(`filters.${f ?? "all"}`)}
-          </Link>
-        ))}
-      </nav>
-      {briefs.length === 0 ? (
-        <p className="bg-card text-muted-foreground rounded-lg border p-6">
-          {t("empty")}
-        </p>
-      ) : (
-        <ul className="divide-y rounded-lg border">
-          {briefs.map((b) => (
-            <li
-              key={b.id}
-              className="flex flex-wrap items-center justify-between gap-2 p-3"
+    <main className="flex flex-1 flex-col">
+      <PageHeader title={t("title")}>
+        <nav aria-label={t("filters.label")} className="flex gap-1">
+          {FILTERS.map((f) => (
+            <Link
+              key={f ?? "all"}
+              href={f ? `/studio?status=${f}` : "/studio"}
+              aria-current={f === filter ? "page" : undefined}
+              className={cn(
+                "flex h-7 items-center rounded-md border px-2.5 text-[13px] transition-colors duration-150",
+                f === filter
+                  ? "border-border-strong bg-surface-3 text-foreground"
+                  : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",
+              )}
             >
-              <Link
-                href={`/studio/${b.id}`}
-                className="font-medium hover:underline"
-              >
-                {b.stories?.title ?? b.id}
-              </Link>
-              <span className="text-muted-foreground font-mono text-xs">
-                {t(
-                  `controls.platforms.${b.platform}` as "controls.platforms.x",
-                )}{" "}
-                ·{" "}
-                {b.published_at ? t("list.published") : t(`status.${b.status}`)}{" "}
-                · {relativeTime(b.created_at, now, locale)}
-              </span>
-            </li>
+              {t(`filters.${f ?? "all"}`)}
+            </Link>
           ))}
-        </ul>
-      )}
+        </nav>
+      </PageHeader>
+      <div className="p-4">
+        {briefs.length === 0 ? (
+          <p className="text-muted-foreground rounded-lg border p-6">
+            {t("empty")}
+          </p>
+        ) : (
+          <ul className="divide-y overflow-hidden rounded-lg border">
+            {briefs.map((b) => (
+              <li
+                key={b.id}
+                className="hover:bg-surface-2/50 flex items-center gap-3 px-4 py-2.5 transition-colors duration-150"
+              >
+                <span
+                  aria-hidden
+                  className={cn(
+                    "size-2 shrink-0 rounded-full",
+                    b.published_at ? "bg-brand" : (dot[b.status] ?? "bg-muted"),
+                  )}
+                />
+                <Link
+                  href={`/studio/${b.id}`}
+                  className="line-clamp-1 min-w-0 flex-1 text-[14px] font-medium hover:underline"
+                >
+                  {b.stories?.title ?? b.id}
+                </Link>
+                <span className="bg-surface-2 text-muted-foreground hidden shrink-0 rounded-md border px-1.5 py-0.5 font-mono text-xs sm:inline">
+                  {t(
+                    `controls.platforms.${b.platform}` as "controls.platforms.x",
+                  )}
+                </span>
+                <span className="text-text-tertiary shrink-0 font-mono text-xs">
+                  {b.published_at
+                    ? t("list.published")
+                    : t(`status.${b.status}`)}{" "}
+                  · {relativeTime(b.created_at, now, locale)}
+                </span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </main>
   );
 }

@@ -2,6 +2,7 @@
 
 import { useTranslations } from "next-intl";
 import { useCallback, useEffect, useRef, useState, useTransition } from "react";
+import { PageHeader } from "@/components/shell/PageHeader";
 import { Button } from "@/components/ui/button";
 import type { BriefDetail } from "@/lib/studio/briefs";
 import type { ControlsInput } from "@/lib/studio/controls";
@@ -28,7 +29,7 @@ const POLL_MS = 3000;
 const SAFE_URL = /^https?:\/\//i;
 
 const area =
-  "w-full rounded-md border bg-surface-1 p-2 text-sm leading-relaxed focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
+  "w-full rounded-md border border-transparent bg-surface-2 p-3 text-[13px] leading-relaxed focus-visible:border-border-strong focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 function controlsOf(b: BriefDetail): ControlsInput {
   return {
@@ -215,289 +216,311 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
           : "";
 
   return (
-    <main className="mx-auto grid w-full max-w-6xl flex-1 gap-6 px-4 py-8 lg:grid-cols-[1fr_18rem]">
-      <div className="min-w-0 space-y-6">
-        <div className="space-y-1">
-          <h1 className="text-2xl font-semibold tracking-tight">
-            {brief.stories?.title}
-          </h1>
+    <main className="flex flex-1 flex-col">
+      <PageHeader
+        title={brief.stories?.title ?? ""}
+        actions={
           <p
             role="status"
-            className="text-muted-foreground min-h-5 font-mono text-xs"
+            className="text-text-tertiary min-h-5 font-mono text-xs"
           >
             {statusText}
           </p>
-          {brief.status === "failed" && (
-            <p className="text-danger text-sm">{t("status.failed")}</p>
+        }
+      />
+      <div className="grid flex-1 lg:grid-cols-[minmax(0,1fr)_20rem]">
+        <div className="min-w-0 space-y-6 p-4 sm:p-6">
+          {(brief.status === "failed" || error) && (
+            <div className="space-y-1">
+              {brief.status === "failed" && (
+                <p className="text-danger text-sm">{t("status.failed")}</p>
+              )}
+              {error && (
+                <p role="alert" className="text-danger text-sm">
+                  {error}
+                </p>
+              )}
+            </div>
           )}
-          {error && (
-            <p role="alert" className="text-danger text-sm">
-              {error}
-            </p>
+
+          {ready && content && (
+            <>
+              <fieldset className="space-y-2">
+                <legend className="text-[13px] font-medium">
+                  {t("editor.hooks")}
+                </legend>
+                {content.hooks.map((h, i) => (
+                  <label key={i} className="flex items-start gap-2 text-[13px]">
+                    <input
+                      type="radio"
+                      name="hook"
+                      checked={hook === i}
+                      onChange={() => chooseHook(i)}
+                      className="mt-1"
+                    />
+                    <span>{h}</span>
+                  </label>
+                ))}
+              </fieldset>
+
+              <section className="space-y-2">
+                <h2 className="text-[13px] font-medium">
+                  {t("editor.titles")}
+                </h2>
+                <ul className="text-muted-foreground list-disc pl-5 text-[13px]">
+                  {content.titles.map((title) => (
+                    <li key={title}>{title}</li>
+                  ))}
+                </ul>
+              </section>
+
+              <section className="space-y-3">
+                <div
+                  role="tablist"
+                  className="flex flex-wrap gap-1 border-b pb-1"
+                >
+                  {TABS.map((key) => (
+                    <button
+                      key={key}
+                      role="tab"
+                      type="button"
+                      aria-selected={tab === key}
+                      onClick={() => setTab(key)}
+                      className={cn(
+                        "rounded-md px-3 py-1.5 text-[13px] transition-colors duration-150",
+                        tab === key
+                          ? "bg-surface-3 text-foreground"
+                          : "text-muted-foreground hover:text-foreground",
+                      )}
+                    >
+                      {t(`editor.tabs.${key}`)}
+                    </button>
+                  ))}
+                </div>
+                <div role="tabpanel" className="space-y-3">
+                  {tab === "x" &&
+                    content.x_thread.map((tweet, i) => {
+                      const length = tweetLength(tweet);
+                      return (
+                        <label key={i} className="block space-y-1 text-sm">
+                          <span className="sr-only">
+                            {t("editor.tweet", { n: i + 1 })}
+                          </span>
+                          <textarea
+                            aria-label={t("editor.tweet", { n: i + 1 })}
+                            className={cn(area, "min-h-20")}
+                            value={tweet}
+                            onChange={(e) =>
+                              change({
+                                x_thread: content.x_thread.map((tw, j) =>
+                                  j === i ? e.target.value : tw,
+                                ),
+                              })
+                            }
+                          />
+                          <span
+                            className={cn(
+                              "block text-right font-mono text-xs",
+                              length > 280
+                                ? "text-danger"
+                                : "text-muted-foreground",
+                            )}
+                          >
+                            {length}/280
+                          </span>
+                        </label>
+                      );
+                    })}
+                  {tab === "linkedin" && (
+                    <textarea
+                      aria-label={t("editor.linkedin")}
+                      className={cn(area, "min-h-56")}
+                      value={content.linkedin_post}
+                      onChange={(e) =>
+                        change({ linkedin_post: e.target.value })
+                      }
+                    />
+                  )}
+                  {tab === "shorts" && (
+                    <>
+                      <textarea
+                        aria-label={t("editor.shortsHooks")}
+                        className={cn(area, "min-h-24")}
+                        value={content.shorts_hooks.join("\n")}
+                        onChange={(e) =>
+                          change({ shorts_hooks: e.target.value.split("\n") })
+                        }
+                      />
+                      <textarea
+                        aria-label={t("editor.shortsScript")}
+                        className={cn(area, "min-h-40")}
+                        value={[
+                          content.shorts_script.hook,
+                          ...content.shorts_script.beats,
+                          content.shorts_script.cta,
+                        ].join("\n")}
+                        onChange={(e) => {
+                          const lines = e.target.value.split("\n");
+                          change({
+                            shorts_script: {
+                              ...content.shorts_script,
+                              hook: lines[0] ?? "",
+                              beats: lines.slice(1, -1),
+                              cta:
+                                lines.length > 1 ? lines[lines.length - 1] : "",
+                            },
+                          });
+                        }}
+                      />
+                    </>
+                  )}
+                  {tab === "newsletter" && (
+                    <textarea
+                      aria-label={t("editor.newsletter")}
+                      className={cn(area, "min-h-40")}
+                      value={content.newsletter_section}
+                      onChange={(e) =>
+                        change({ newsletter_section: e.target.value })
+                      }
+                    />
+                  )}
+                  {tab === "blog" && (
+                    <textarea
+                      aria-label={t("editor.blog")}
+                      className={cn(area, "min-h-80 font-mono")}
+                      value={content.blog_draft}
+                      onChange={(e) => change({ blog_draft: e.target.value })}
+                    />
+                  )}
+                </div>
+                <div className="flex gap-2">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => void persist(edited, hook)}
+                  >
+                    {t("editor.save")}
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={async () => {
+                      await navigator.clipboard?.writeText(tabText());
+                      setCopied(true);
+                      setTimeout(() => setCopied(false), 1500);
+                    }}
+                  >
+                    {copied ? t("editor.copied") : t("editor.copy")}
+                  </Button>
+                </div>
+              </section>
+
+              <section className="space-y-2">
+                <h2 className="text-[13px] font-medium">
+                  {t("editor.sources")}
+                </h2>
+                <ul className="space-y-1 text-[13px]">
+                  {content.sources.map((s) => (
+                    <li key={s.url}>
+                      {SAFE_URL.test(s.url) ? (
+                        <a
+                          href={s.url}
+                          target="_blank"
+                          rel="noopener noreferrer nofollow"
+                          className="hover:underline"
+                        >
+                          {s.title}
+                        </a>
+                      ) : (
+                        s.title
+                      )}{" "}
+                      <span className="text-muted-foreground font-mono text-xs">
+                        · {s.source}
+                      </span>
+                    </li>
+                  ))}
+                </ul>
+                <p className="text-muted-foreground text-xs">
+                  <span className="font-medium">{t("editor.disclosure")}:</span>{" "}
+                  {content.ai_disclosure}
+                </p>
+              </section>
+            </>
           )}
         </div>
 
-        {ready && content && (
-          <>
-            <fieldset className="space-y-2">
-              <legend className="font-semibold">{t("editor.hooks")}</legend>
-              {content.hooks.map((h, i) => (
-                <label key={i} className="flex items-start gap-2 text-sm">
-                  <input
-                    type="radio"
-                    name="hook"
-                    checked={hook === i}
-                    onChange={() => chooseHook(i)}
-                    className="mt-1"
-                  />
-                  <span>{h}</span>
-                </label>
-              ))}
-            </fieldset>
+        <aside className="space-y-6 border-t p-4 lg:border-t-0 lg:border-l">
+          <section className="space-y-3">
+            <h2 className="text-[13px] font-medium">{t("controls.title")}</h2>
+            <ControlFields value={controls} onChange={setControls} />
+            <Button
+              className="w-full"
+              variant="outline"
+              onClick={regenerate}
+              disabled={pending || !ready}
+            >
+              {t("controls.regenerate")}
+            </Button>
+          </section>
 
-            <section className="space-y-2">
-              <h2 className="font-semibold">{t("editor.titles")}</h2>
-              <ul className="text-muted-foreground list-disc pl-5 text-sm">
-                {content.titles.map((title) => (
-                  <li key={title}>{title}</li>
-                ))}
-              </ul>
-            </section>
-
-            <section className="space-y-3">
-              <div
-                role="tablist"
-                className="flex flex-wrap gap-1 border-b pb-1"
-              >
-                {TABS.map((key) => (
-                  <button
-                    key={key}
-                    role="tab"
-                    type="button"
-                    aria-selected={tab === key}
-                    onClick={() => setTab(key)}
-                    className={cn(
-                      "rounded px-3 py-1.5 text-sm",
-                      tab === key
-                        ? "bg-surface-2 text-foreground"
-                        : "text-muted-foreground hover:text-foreground",
-                    )}
-                  >
-                    {t(`editor.tabs.${key}`)}
-                  </button>
-                ))}
-              </div>
-              <div role="tabpanel" className="space-y-3">
-                {tab === "x" &&
-                  content.x_thread.map((tweet, i) => {
-                    const length = tweetLength(tweet);
-                    return (
-                      <label key={i} className="block space-y-1 text-sm">
-                        <span className="sr-only">
-                          {t("editor.tweet", { n: i + 1 })}
-                        </span>
-                        <textarea
-                          aria-label={t("editor.tweet", { n: i + 1 })}
-                          className={cn(area, "min-h-20")}
-                          value={tweet}
-                          onChange={(e) =>
-                            change({
-                              x_thread: content.x_thread.map((tw, j) =>
-                                j === i ? e.target.value : tw,
-                              ),
-                            })
-                          }
-                        />
-                        <span
-                          className={cn(
-                            "block text-right font-mono text-xs",
-                            length > 280
-                              ? "text-danger"
-                              : "text-muted-foreground",
-                          )}
-                        >
-                          {length}/280
-                        </span>
-                      </label>
-                    );
-                  })}
-                {tab === "linkedin" && (
-                  <textarea
-                    aria-label={t("editor.linkedin")}
-                    className={cn(area, "min-h-56")}
-                    value={content.linkedin_post}
-                    onChange={(e) => change({ linkedin_post: e.target.value })}
-                  />
-                )}
-                {tab === "shorts" && (
-                  <>
-                    <textarea
-                      aria-label={t("editor.shortsHooks")}
-                      className={cn(area, "min-h-24")}
-                      value={content.shorts_hooks.join("\n")}
-                      onChange={(e) =>
-                        change({ shorts_hooks: e.target.value.split("\n") })
-                      }
-                    />
-                    <textarea
-                      aria-label={t("editor.shortsScript")}
-                      className={cn(area, "min-h-40")}
-                      value={[
-                        content.shorts_script.hook,
-                        ...content.shorts_script.beats,
-                        content.shorts_script.cta,
-                      ].join("\n")}
-                      onChange={(e) => {
-                        const lines = e.target.value.split("\n");
-                        change({
-                          shorts_script: {
-                            ...content.shorts_script,
-                            hook: lines[0] ?? "",
-                            beats: lines.slice(1, -1),
-                            cta:
-                              lines.length > 1 ? lines[lines.length - 1] : "",
-                          },
-                        });
-                      }}
-                    />
-                  </>
-                )}
-                {tab === "newsletter" && (
-                  <textarea
-                    aria-label={t("editor.newsletter")}
-                    className={cn(area, "min-h-40")}
-                    value={content.newsletter_section}
-                    onChange={(e) =>
-                      change({ newsletter_section: e.target.value })
-                    }
-                  />
-                )}
-                {tab === "blog" && (
-                  <textarea
-                    aria-label={t("editor.blog")}
-                    className={cn(area, "min-h-80 font-mono")}
-                    value={content.blog_draft}
-                    onChange={(e) => change({ blog_draft: e.target.value })}
-                  />
-                )}
-              </div>
-              <div className="flex gap-2">
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={() => void persist(edited, hook)}
-                >
-                  {t("editor.save")}
-                </Button>
-                <Button
-                  size="sm"
-                  variant="outline"
-                  onClick={async () => {
-                    await navigator.clipboard?.writeText(tabText());
-                    setCopied(true);
-                    setTimeout(() => setCopied(false), 1500);
-                  }}
-                >
-                  {copied ? t("editor.copied") : t("editor.copy")}
-                </Button>
-              </div>
-            </section>
-
-            <section className="space-y-2">
-              <h2 className="font-semibold">{t("editor.sources")}</h2>
-              <ul className="space-y-1 text-sm">
-                {content.sources.map((s) => (
-                  <li key={s.url}>
-                    {SAFE_URL.test(s.url) ? (
-                      <a
-                        href={s.url}
-                        target="_blank"
-                        rel="noopener noreferrer nofollow"
-                        className="hover:underline"
-                      >
-                        {s.title}
-                      </a>
-                    ) : (
-                      s.title
-                    )}{" "}
-                    <span className="text-muted-foreground font-mono text-xs">
-                      · {s.source}
+          {ready && (
+            <section className="space-y-3 border-t pt-6">
+              {brief.published_at ? (
+                <p className="text-signal text-[13px]">{t("publish.done")}</p>
+              ) : (
+                <>
+                  <label className="block space-y-1 text-[13px]">
+                    <span className="text-muted-foreground">
+                      {t("publish.url")}
                     </span>
+                    <input
+                      type="url"
+                      maxLength={500}
+                      value={publishUrl}
+                      onChange={(e) => setPublishUrl(e.target.value)}
+                      className="bg-surface-2 h-8 w-full rounded-md border px-2 text-[13px]"
+                    />
+                  </label>
+                  <Button
+                    className="w-full"
+                    onClick={publish}
+                    disabled={pending}
+                  >
+                    {t("publish.cta")}
+                  </Button>
+                </>
+              )}
+            </section>
+          )}
+
+          {brief.versions.length > 1 && (
+            <section className="space-y-2 border-t pt-6">
+              <h2 className="text-[13px] font-medium">
+                {t("editor.versions")}
+              </h2>
+              <ul className="space-y-1 text-[13px]">
+                {brief.versions.map((v) => (
+                  <li
+                    key={v.id}
+                    className="flex items-center justify-between gap-2"
+                  >
+                    <span className="font-mono text-xs">
+                      {new Date(v.created_at).toLocaleString()}
+                    </span>
+                    <Button
+                      size="sm"
+                      variant="ghost"
+                      onClick={() => restore(v.output as BriefOutput)}
+                    >
+                      {t("editor.restore")}
+                    </Button>
                   </li>
                 ))}
               </ul>
-              <p className="text-muted-foreground text-xs">
-                <span className="font-medium">{t("editor.disclosure")}:</span>{" "}
-                {content.ai_disclosure}
-              </p>
             </section>
-          </>
-        )}
+          )}
+        </aside>
       </div>
-
-      <aside className="space-y-6">
-        <section className="bg-card space-y-3 rounded-lg border p-4">
-          <h2 className="font-semibold">{t("controls.title")}</h2>
-          <ControlFields value={controls} onChange={setControls} />
-          <Button
-            className="w-full"
-            variant="outline"
-            onClick={regenerate}
-            disabled={pending || !ready}
-          >
-            {t("controls.regenerate")}
-          </Button>
-        </section>
-
-        {ready && (
-          <section className="bg-card space-y-3 rounded-lg border p-4">
-            {brief.published_at ? (
-              <p className="text-signal text-sm">{t("publish.done")}</p>
-            ) : (
-              <>
-                <label className="block space-y-1 text-sm">
-                  <span>{t("publish.url")}</span>
-                  <input
-                    type="url"
-                    maxLength={500}
-                    value={publishUrl}
-                    onChange={(e) => setPublishUrl(e.target.value)}
-                    className="bg-surface-1 h-9 w-full rounded-md border px-2 text-sm"
-                  />
-                </label>
-                <Button className="w-full" onClick={publish} disabled={pending}>
-                  {t("publish.cta")}
-                </Button>
-              </>
-            )}
-          </section>
-        )}
-
-        {brief.versions.length > 1 && (
-          <section className="bg-card space-y-2 rounded-lg border p-4">
-            <h2 className="font-semibold">{t("editor.versions")}</h2>
-            <ul className="space-y-1 text-sm">
-              {brief.versions.map((v) => (
-                <li
-                  key={v.id}
-                  className="flex items-center justify-between gap-2"
-                >
-                  <span className="font-mono text-xs">
-                    {new Date(v.created_at).toLocaleString()}
-                  </span>
-                  <Button
-                    size="sm"
-                    variant="ghost"
-                    onClick={() => restore(v.output as BriefOutput)}
-                  >
-                    {t("editor.restore")}
-                  </Button>
-                </li>
-              ))}
-            </ul>
-          </section>
-        )}
-      </aside>
     </main>
   );
 }

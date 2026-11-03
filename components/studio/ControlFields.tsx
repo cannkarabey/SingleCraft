@@ -10,7 +10,7 @@ import {
 } from "@/lib/studio/controls";
 
 const field =
-  "h-9 w-full rounded-md border bg-surface-1 px-2 text-sm focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
+  "h-8 w-full rounded-md border bg-surface-2 px-2 text-[13px] focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 /** Platform / format / tone / audience / length / own take (plan §8.2 control panel). */
 export function ControlFields({
@@ -27,8 +27,8 @@ export function ControlFields({
 
   return (
     <div className="space-y-3">
-      <label className="block space-y-1 text-sm">
-        <span>{t("platform")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("platform")}</span>
         <select
           className={field}
           value={value.platform}
@@ -43,8 +43,8 @@ export function ControlFields({
           ))}
         </select>
       </label>
-      <label className="block space-y-1 text-sm">
-        <span>{t("format")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("format")}</span>
         <select
           className={field}
           value={value.format}
@@ -59,8 +59,8 @@ export function ControlFields({
           ))}
         </select>
       </label>
-      <label className="block space-y-1 text-sm">
-        <span>{t("tone")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("tone")}</span>
         <select
           className={field}
           value={value.tone}
@@ -73,8 +73,8 @@ export function ControlFields({
           ))}
         </select>
       </label>
-      <label className="block space-y-1 text-sm">
-        <span>{t("audience")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("audience")}</span>
         <input
           className={field}
           maxLength={100}
@@ -82,8 +82,8 @@ export function ControlFields({
           onChange={(e) => set("audience", e.target.value)}
         />
       </label>
-      <label className="block space-y-1 text-sm">
-        <span>{t("length")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("length")}</span>
         <select
           className={field}
           value={value.length ?? "medium"}
@@ -98,10 +98,10 @@ export function ControlFields({
           ))}
         </select>
       </label>
-      <label className="block space-y-1 text-sm">
-        <span>{t("userTake")}</span>
+      <label className="block space-y-1 text-[13px]">
+        <span className="text-muted-foreground">{t("userTake")}</span>
         <textarea
-          className="bg-surface-1 focus-visible:ring-ring min-h-20 w-full rounded-md border p-2 text-sm focus-visible:ring-2 focus-visible:outline-none"
+          className="bg-surface-2 focus-visible:ring-ring min-h-20 w-full rounded-md border p-2 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
           maxLength={1000}
           value={value.user_take ?? ""}
           onChange={(e) => set("user_take", e.target.value)}

@@ -107,8 +107,8 @@ export function NicheForm({
 
       {visible("topic") && (
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold">{t("topic.title")}</legend>
-          <label className="block space-y-1.5 text-sm">
+          <legend className="text-[15px] font-[590]">{t("topic.title")}</legend>
+          <label className="block space-y-1.5 text-[13px]">
             <span>{t("topic.name")}</span>
             <input
               required
@@ -116,7 +116,7 @@ export function NicheForm({
               value={values.name}
               onChange={(e) => set("name", e.target.value)}
               placeholder={t("topic.namePlaceholder")}
-              className="bg-surface-1 focus-visible:ring-ring h-9 w-full rounded-md border px-3 focus-visible:ring-2 focus-visible:outline-none"
+              className="bg-surface-2 focus-visible:ring-ring h-8 w-full rounded-md border px-3 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
             />
           </label>
           <TermInput
@@ -132,7 +132,7 @@ export function NicheForm({
 
       {visible("platforms") && (
         <fieldset className="space-y-3">
-          <legend className="text-lg font-semibold">
+          <legend className="text-[15px] font-[590]">
             {t("platforms.title")}
           </legend>
           <div className="flex flex-wrap gap-3">
@@ -159,7 +159,7 @@ export function NicheForm({
 
       {visible("voice") && (
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold">{t("voice.title")}</legend>
+          <legend className="text-[15px] font-[590]">{t("voice.title")}</legend>
           <div
             className="flex gap-4"
             role="radiogroup"
@@ -177,12 +177,12 @@ export function NicheForm({
               </label>
             ))}
           </div>
-          <label className="block space-y-1.5 text-sm">
+          <label className="block space-y-1.5 text-[13px]">
             <span>{t("voice.tone")}</span>
             <select
               value={values.tone}
               onChange={(e) => set("tone", e.target.value as Values["tone"])}
-              className="bg-surface-1 h-9 w-full rounded-md border px-2"
+              className="bg-surface-2 h-8 w-full rounded-md border px-2 text-[13px]"
             >
               {TONES.map((tone) => (
                 <option key={tone} value={tone}>
@@ -196,7 +196,7 @@ export function NicheForm({
 
       {visible("filters") && (
         <fieldset className="space-y-4">
-          <legend className="text-lg font-semibold">
+          <legend className="text-[15px] font-[590]">
             {t("filters.title")}
           </legend>
           <TermInput

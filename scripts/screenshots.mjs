@@ -54,7 +54,8 @@ try {
     const context = await browser.newContext({ viewport, locale: "tr-TR" });
     const page = await context.newPage();
     if (auth) {
-      const email = `shot-${randomUUID().slice(0, 8)}@test.dev`;
+      const email =
+        process.env.SHOT_EMAIL ?? `shot-${randomUUID().slice(0, 8)}@test.dev`;
       await page.goto(`${BASE}/login`);
       await page.getByLabel(/E-posta|Email/).fill(email);
       await page
