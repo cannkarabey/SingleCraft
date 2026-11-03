@@ -63,7 +63,7 @@ export async function PricingTable({
       {plans.map(({ plan, cta }) => (
         <article
           key={plan}
-          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_24px_64px_-24px_rgba(255,255,255,0.168)] ${plan === "creator" ? "border-border-strong" : ""}`}
+          className={`surface-gradient bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_24px_64px_-24px_rgba(255,255,255,0.168)] ${plan === "creator" ? "border-border-strong" : ""}`}
         >
           {plan === "creator" && (
             <span

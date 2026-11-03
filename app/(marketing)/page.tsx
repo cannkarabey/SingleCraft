@@ -36,6 +36,10 @@ function Section({
       aria-labelledby={`${id}-title`}
       className={`space-y-10 py-20 sm:py-28 ${className ?? ""}`}
     >
+      <div
+        aria-hidden
+        className="mb-10 h-px bg-gradient-to-r from-transparent via-white/35 to-transparent"
+      />
       <Reveal className="space-y-3">
         <p className="text-brand-text font-mono text-xs tracking-wider uppercase">
           {label}
@@ -118,9 +122,9 @@ export default async function Home() {
         aria-hidden
         className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[720px] overflow-hidden"
       >
-        <div className="animate-drift absolute -top-40 left-[8%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.106),transparent)] blur-2xl" />
+        <div className="animate-drift absolute -top-40 left-[8%] h-[420px] w-[520px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.2),transparent)] blur-2xl" />
         <div
-          className="animate-drift absolute top-10 right-[4%] h-[380px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.05),transparent)] blur-2xl"
+          className="animate-drift absolute top-10 right-[4%] h-[380px] w-[480px] rounded-full bg-[radial-gradient(closest-side,rgba(255,255,255,0.1),transparent)] blur-2xl"
           style={{ animationDelay: "-7s" }}
         />
       </div>
@@ -286,7 +290,7 @@ export default async function Home() {
           {faqs.map((key) => (
             <details
               key={key}
-              className="group bg-surface-1 hover:bg-surface-2/60 p-5 transition-colors duration-200"
+              className="group surface-gradient bg-surface-1 hover:bg-surface-2/60 p-5 transition-colors duration-200"
             >
               <summary className="cursor-pointer font-medium">
                 {t(`landing.faq.${key}.q`)}
@@ -304,7 +308,7 @@ export default async function Home() {
           id="cta"
           aria-labelledby="cta-title"
           role="region"
-          className="group relative overflow-hidden rounded-2xl border px-6 py-20 text-center transition-colors duration-500 hover:border-white/20 sm:py-28"
+          className="group relative overflow-hidden rounded-2xl border bg-gradient-to-b from-white/[0.1] via-white/[0.03] to-transparent px-6 py-20 text-center transition-colors duration-500 hover:border-white/20 sm:py-28"
         >
           <div
             aria-hidden

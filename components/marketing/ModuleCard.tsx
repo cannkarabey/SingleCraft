@@ -51,7 +51,7 @@ export function ModuleCard({
       href={href}
       onPointerMove={move}
       onPointerLeave={leave}
-      className="group bg-surface-1 relative block [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] rounded-xl border p-3 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-white/20 hover:shadow-[0_24px_80px_-24px_rgba(255,255,255,0.196)]"
+      className="group surface-gradient bg-surface-1 relative block [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] rounded-xl border p-3 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-white/20 hover:shadow-[0_24px_80px_-24px_rgba(255,255,255,0.196)]"
     >
       <span
         aria-hidden
