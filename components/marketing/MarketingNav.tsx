@@ -4,54 +4,53 @@ import { getTranslations } from "next-intl/server";
 import { LanguageSwitcher } from "@/components/shell/LanguageSwitcher";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth/session";
-
-const LINKS = [
-  { href: "/discover", key: "discover" },
-  { href: "/radar", key: "radar" },
-  { href: "/studio", key: "studio" },
-  { href: "/pricing", key: "pricing" },
-] as const;
+import { NavLinks } from "./NavLinks";
 
 /** Top bar of the marketing pages: logo, module links, sign-in and the main CTA. */
 export async function MarketingNav() {
   const [t, user] = await Promise.all([getTranslations("nav"), currentUser()]);
+  const links = (["discover", "radar", "studio", "pricing"] as const).map(
+    (key) => ({
+      href: key === "pricing" ? "/pricing" : `/${key}`,
+      label: t(key),
+    }),
+  );
   return (
-    <header className="nav-scroll-border bg-canvas/80 sticky top-0 z-40 backdrop-blur-md">
+    <header className="nav-scroll-border bg-canvas/70 sticky top-0 z-40 backdrop-blur-xl">
       <nav
         aria-label="SignalCraft"
-        className="mx-auto flex h-16 w-full max-w-[1200px] items-center gap-6 px-6"
+        className="mx-auto flex h-16 w-full max-w-[1200px] items-center gap-4 px-6"
       >
         <Link
           href="/"
-          className="flex items-center gap-2 text-[15px] font-[590] tracking-tight"
+          className="group mr-2 flex items-center gap-2.5 text-base font-[590] tracking-tight"
         >
-          <Radio aria-hidden className="text-brand size-4" />
+          <span className="bg-brand/15 ring-brand/30 group-hover:bg-brand/25 grid size-8 place-items-center rounded-lg ring-1 transition-all duration-300 group-hover:scale-110 group-hover:rotate-12">
+            <Radio aria-hidden className="text-brand-text size-4" />
+          </span>
           SignalCraft
         </Link>
-        <ul className="hidden items-center gap-1 md:flex">
-          {LINKS.map(({ href, key }) => (
-            <li key={key}>
-              <Link
-                href={href}
-                className="text-muted-foreground hover:text-foreground rounded-md px-2.5 py-1.5 text-[13px] transition-colors duration-150"
-              >
-                {t(key)}
-              </Link>
-            </li>
-          ))}
-        </ul>
+        <NavLinks links={links} />
         <div className="ml-auto flex items-center gap-2">
           <LanguageSwitcher />
           {user ? (
-            <Button asChild size="sm">
+            <Button asChild variant="brand" className="h-9 px-4 text-sm">
               <Link href="/discover">{t("openApp")}</Link>
             </Button>
           ) : (
             <>
-              <Button asChild size="sm" variant="ghost">
+              <Button
+                asChild
+                variant="ghost"
+                className="h-9 rounded-full px-4 text-sm"
+              >
                 <Link href="/login">{t("signIn")}</Link>
               </Button>
-              <Button asChild size="sm" className="hidden sm:inline-flex">
+              <Button
+                asChild
+                variant="brand"
+                className="hidden h-9 rounded-full px-4 text-sm sm:inline-flex"
+              >
                 <Link href="/login?next=%2Fonboarding">{t("cta")}</Link>
               </Button>
             </>

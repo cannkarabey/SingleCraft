@@ -25,7 +25,9 @@
     "subtitle": "Discover rising AI and developer topics, see opportunities for your niche, and produce publish-ready content in minutes.",
     "primaryCta": "Start free",
     "secondaryCta": "See live Discover",
-    "badge": "New: personal angles in Radar →"
+    "badge": "New: personal angles in Radar →",
+    "chipHigh": "High signal",
+    "chipBrief": "Brief ready"
   },
   "discover": {
     "title": "Today · AI & developer signals",
@@ -256,7 +258,9 @@
       "studio": {
         "title": "Studio",
         "body": "How do I turn it into content? Hooks, threads, posts and scripts you can edit."
-      }
+      },
+      "open": "Open",
+      "imageAlt": "Screenshot of the {name} page"
     },
     "problem": {
       "title": "Finding ideas, verifying trends and adapting for every platform each take separate time.",
@@ -270,6 +274,13 @@
         "cluster": "Cluster into stories",
         "score": "Score the signal",
         "brief": "Write the brief"
+      },
+      "details": {
+        "fetch": "HN, GitHub, Product Hunt, arXiv, Reddit and RSS sources are scanned continuously.",
+        "dedupe": "Copies of the same news are dropped with SimHash and noise is filtered out.",
+        "cluster": "Items that mean the same thing are grouped into one story with embeddings.",
+        "score": "Every story gets a signal score from velocity, engagement, diversity and trust.",
+        "brief": "Hooks, threads and posts tuned to your niche, with their sources."
       }
     },
     "example": {
@@ -321,6 +332,15 @@
     "cta": {
       "title": "Catch the signal today.",
       "body": "Start free; upgrade when Radar and Studio are part of your routine."
+    },
+    "demo": {
+      "note": "Radar and Studio panels show sample data.",
+      "radarAngle": "Agent SDKs usually make you bolt tracing on later: your angle is a 60-second demo of how this cuts debugging time.",
+      "hook1": "Still debugging your agents the hard way?",
+      "hook2": "One SDK instead of three libraries: tracing now ships in the box.",
+      "hook3": "This is the most talked-about thing in agents this week.",
+      "published": "Published",
+      "hooksLabel": "Hook options"
     }
   },
   "auth": {

@@ -17,7 +17,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={t("language")}
-      className="flex font-mono text-xs"
+      className="bg-surface-2/80 flex h-9 items-center gap-0.5 rounded-full border p-0.5 text-[13px] font-medium"
     >
       {LOCALES.map((locale) => (
         <button
@@ -32,9 +32,9 @@ export function LanguageSwitcher() {
             })
           }
           className={cn(
-            "rounded px-1.5 py-1 transition-colors duration-150",
+            "h-full rounded-full px-3 transition-all duration-200",
             locale === current
-              ? "text-foreground"
+              ? "text-foreground bg-white/15 shadow-sm"
               : "text-muted-foreground hover:text-foreground",
           )}
         >

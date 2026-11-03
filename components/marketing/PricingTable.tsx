@@ -47,7 +47,7 @@ export async function PricingTable({
     {
       plan: "creator",
       cta: (
-        <Button asChild size="lg" className="mt-8">
+        <Button asChild size="lg" variant="brand" className="mt-8">
           <Link
             href={signedIn ? "/settings#billing" : "/login?next=%2Fsettings"}
           >
@@ -63,7 +63,7 @@ export async function PricingTable({
       {plans.map(({ plan, cta }) => (
         <article
           key={plan}
-          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 ${plan === "creator" ? "border-border-strong" : ""}`}
+          className={`bg-surface-1 relative flex flex-col overflow-hidden rounded-xl border p-6 transition-all duration-300 hover:-translate-y-1 hover:border-white/25 hover:shadow-[0_24px_64px_-24px_rgba(94,106,210,0.6)] ${plan === "creator" ? "border-border-strong" : ""}`}
         >
           {plan === "creator" && (
             <span

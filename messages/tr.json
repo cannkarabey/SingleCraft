@@ -25,7 +25,9 @@
     "subtitle": "Yükselen AI ve geliştirici konularını keşfet, nişine göre fırsatları gör, dakikalar içinde yayınlanabilir içerik üret.",
     "primaryCta": "Ücretsiz başla",
     "secondaryCta": "Canlı Discover'ı gör",
-    "badge": "Yeni: Radar'da kişisel açılar →"
+    "badge": "Yeni: Radar'da kişisel açılar →",
+    "chipHigh": "Yüksek sinyal",
+    "chipBrief": "Brief hazır"
   },
   "discover": {
     "title": "Bugün · AI ve geliştirici sinyalleri",
@@ -256,7 +258,9 @@
       "studio": {
         "title": "Studio",
         "body": "Bunu nasıl içerik yaparım? Düzenlenebilir hook, thread, post ve script."
-      }
+      },
+      "open": "Aç",
+      "imageAlt": "{name} sayfasının ekran görüntüsü"
     },
     "problem": {
       "title": "Fikir bulmak, trendi doğrulamak ve her platforma uyarlamak ayrı ayrı zaman alıyor.",
@@ -270,6 +274,13 @@
         "cluster": "Story'lere kümele",
         "score": "Sinyali skorla",
         "brief": "Brief'i yaz"
+      },
+      "details": {
+        "fetch": "HN, GitHub, Product Hunt, arXiv, Reddit ve RSS kaynakları sürekli taranır.",
+        "dedupe": "Aynı haberin kopyaları SimHash ile elenir, gürültü filtrelenir.",
+        "cluster": "Anlamca yakın içerikler embedding ile tek story'de toplanır.",
+        "score": "Hız, etkileşim, çeşitlilik ve güvenle her story'ye bir sinyal skoru verilir.",
+        "brief": "Nişine uygun hook, thread ve postlar kaynaklarıyla birlikte hazırlanır."
       }
     },
     "example": {
@@ -321,6 +332,15 @@
     "cta": {
       "title": "Sinyali bugün yakala.",
       "body": "Ücretsiz başla; Radar ve Studio rutinin olunca yükselt."
+    },
+    "demo": {
+      "note": "Radar ve Studio panelleri örnek veriyle gösterilir.",
+      "radarAngle": "Ajan SDK'ları genelde tracing'i sonradan ekletiyor: senin açın, bunun debug süresini nasıl kısalttığını 60 saniyelik bir demoyla göstermek.",
+      "hook1": "Ajanlarını hâlâ zor yoldan mı debug ediyorsun?",
+      "hook2": "Üç kütüphane yerine tek SDK: tracing artık kutudan çıkıyor.",
+      "hook3": "Bu hafta agent dünyasında en çok konuşulan şey tam olarak bu.",
+      "published": "Yayınlandı",
+      "hooksLabel": "Hook seçenekleri"
     }
   },
   "auth": {
