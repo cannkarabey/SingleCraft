@@ -1,5 +1,6 @@
 "use client";
 
+import { MessageSquare } from "lucide-react";
 import { useTranslations } from "next-intl";
 import { useId, useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
@@ -35,9 +36,9 @@ export function FeedbackWidget() {
         <section
           role="dialog"
           aria-labelledby={`${id}-title`}
-          className="bg-card w-[min(20rem,calc(100vw-2rem))] space-y-3 rounded-lg border p-4 shadow-lg"
+          className="bg-surface-2 border-border-strong w-[min(20rem,calc(100vw-2rem))] space-y-3 rounded-xl border p-4 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)]"
         >
-          <h2 id={`${id}-title`} className="text-sm font-semibold">
+          <h2 id={`${id}-title`} className="text-[13px] font-medium">
             {t("title")}
           </h2>
           <form
@@ -58,7 +59,7 @@ export function FeedbackWidget() {
               value={message}
               placeholder={t("placeholder")}
               onChange={(e) => setMessage(e.target.value)}
-              className="bg-surface-1 w-full rounded-md border p-2 text-sm"
+              className="bg-surface-1 w-full rounded-md border p-2 text-[13px]"
             />
             <div className="flex items-center justify-between gap-2">
               <p
@@ -90,10 +91,12 @@ export function FeedbackWidget() {
       )}
       <Button
         size="sm"
-        variant="outline"
+        variant="secondary"
         aria-expanded={open}
         onClick={() => setOpen((v) => !v)}
+        className="shadow-lg"
       >
+        <MessageSquare aria-hidden />
         {t("open")}
       </Button>
     </div>

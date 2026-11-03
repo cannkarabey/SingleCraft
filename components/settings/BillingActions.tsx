@@ -49,7 +49,7 @@ export function BillingActions({ paid }: { paid: boolean }) {
         </Button>
       )}
       {error && (
-        <p role="alert" className="text-danger text-sm">
+        <p role="alert" className="text-danger text-[13px]">
           {error}
         </p>
       )}

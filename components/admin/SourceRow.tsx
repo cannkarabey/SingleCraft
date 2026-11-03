@@ -72,7 +72,7 @@ export function SourceRow({ source }: { source: Source }) {
             step={0.01}
             value={trust}
             onChange={(e) => setTrust(e.target.value)}
-            className="bg-surface-1 h-8 w-20 rounded-md border px-2 font-mono text-sm"
+            className="bg-surface-2 h-7 w-20 rounded-md border px-2 font-mono text-[13px]"
           />
           <Button type="submit" size="sm" variant="outline" disabled={pending}>
             {t("save")}

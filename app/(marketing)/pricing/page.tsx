@@ -13,10 +13,18 @@ export default async function PricingPage() {
     currentUser(),
   ]);
   return (
-    <main className="mx-auto w-full max-w-6xl flex-1 space-y-8 px-4 py-12">
-      <div className="space-y-2">
-        <h1 className="text-3xl font-semibold tracking-tight">{t("title")}</h1>
-        <p className="text-muted-foreground">{t("subtitle")}</p>
+    <main className="relative mx-auto w-full max-w-[1200px] flex-1 space-y-12 overflow-x-clip px-6 py-20 sm:py-28">
+      <div
+        aria-hidden
+        className="pointer-events-none absolute inset-x-0 top-0 -z-10 h-[420px] bg-[radial-gradient(ellipse_at_top,rgba(94,106,210,0.16),transparent_65%)]"
+      />
+      <div className="space-y-4">
+        <h1 className="text-4xl leading-[1.1] font-[590] tracking-[-0.03em] sm:text-6xl">
+          {t("title")}
+        </h1>
+        <p className="text-muted-foreground max-w-xl text-lg">
+          {t("subtitle")}
+        </p>
       </div>
       <PricingTable signedIn={Boolean(user)} />
     </main>

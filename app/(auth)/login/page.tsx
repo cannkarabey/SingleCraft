@@ -21,14 +21,16 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
   const t = await getTranslations("auth");
 
   return (
-    <main className="mx-auto flex w-full max-w-sm flex-1 flex-col justify-center gap-6 px-4 py-16">
-      <h1 className="text-2xl font-semibold tracking-tight">{t("title")}</h1>
-      <p className="text-muted-foreground">{t("subtitle")}</p>
+    <main className="bg-surface-1 w-full max-w-sm space-y-6 rounded-xl border p-6">
+      <div className="space-y-1.5">
+        <h1 className="text-xl font-[590] tracking-tight">{t("title")}</h1>
+        <p className="text-muted-foreground text-[13px]">{t("subtitle")}</p>
+      </div>
 
       {sent && (
         <p
           role="status"
-          className="border-signal/40 bg-signal/10 rounded-md border p-3 text-sm"
+          className="border-signal/40 bg-signal/10 rounded-md border p-3 text-[13px]"
         >
           {t("sent")}
         </p>
@@ -36,7 +38,7 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
       {error && (
         <p
           role="alert"
-          className="border-danger/40 bg-danger/10 rounded-md border p-3 text-sm"
+          className="border-danger/40 bg-danger/10 rounded-md border p-3 text-[13px]"
         >
           {t(
             error === "email"
@@ -50,30 +52,35 @@ export default async function LoginPage({ searchParams }: PageProps<"/login">) {
 
       <form action={sendMagicLink} className="space-y-3">
         <input type="hidden" name="next" value={next} />
-        <label className="block space-y-1.5 text-sm">
-          <span>{t("email")}</span>
+        <label className="block space-y-1.5 text-[13px]">
+          <span className="text-muted-foreground">{t("email")}</span>
           <input
             type="email"
             name="email"
             required
             autoComplete="email"
             maxLength={254}
-            className="bg-surface-1 focus-visible:ring-ring h-10 w-full rounded-md border px-3 focus-visible:ring-2 focus-visible:outline-none"
+            className="bg-surface-2 focus-visible:ring-ring h-9 w-full rounded-md border px-3 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
           />
         </label>
-        <Button type="submit" className="w-full">
+        <Button type="submit" size="lg" className="w-full">
           {t("sendLink")}
         </Button>
       </form>
 
       {enabledProviders().length > 0 && (
         <div className="space-y-2">
-          <p className="text-muted-foreground text-center text-xs">{t("or")}</p>
+          <p className="text-text-tertiary text-center text-xs">{t("or")}</p>
           {enabledProviders().map((provider) => (
             <form key={provider} action={signInWithProvider}>
               <input type="hidden" name="next" value={next} />
               <input type="hidden" name="provider" value={provider} />
-              <Button type="submit" variant="outline" className="w-full">
+              <Button
+                type="submit"
+                variant="secondary"
+                size="lg"
+                className="w-full"
+              >
                 {t(`providers.${provider}`)}
               </Button>
             </form>
