@@ -31,6 +31,7 @@ const serverSchema = publicSchema.extend({
   LLM_DAILY_BUDGET_USD: z.coerce.number().nonnegative().default(1),
   STORY_BUILD_TOP_N: z.coerce.number().int().positive().default(30),
   STORY_BUILD_DAILY_LIMIT: z.coerce.number().int().nonnegative().default(40),
+  EMBED_MAX_ITEMS_PER_RUN: z.coerce.number().int().positive().default(500),
   GITHUB_TOKEN: optionalString,
   PRODUCTHUNT_TOKEN: optionalString,
   RESEND_API_KEY: optionalString,

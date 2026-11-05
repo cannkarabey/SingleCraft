@@ -1,0 +1,82 @@
+{
+  "note": "Measured with gemini-embedding-001 (768 dims) on 240 real items, 2026-11-05. 'join' pairs must be at or above DEDUPE.clusterThreshold, 'apart' pairs below it; 'apart-missed' are real same-event pairs we knowingly give up to avoid merging unrelated items.",
+  "pairs": [
+    {
+      "expect": "join",
+      "similarity": 0.913,
+      "a": "ICLR 2027 Reviews Discussion [D]",
+      "b": "ICLR 2027 review results [D]",
+      "why": "same Reddit event"
+    },
+    {
+      "expect": "join",
+      "similarity": 0.901,
+      "a": "Open source AI is booming. Hugging Face explains who benefits",
+      "b": "Building on open source AI? Hugging Face's policy chief …",
+      "why": "same interview, two posts"
+    },
+    {
+      "expect": "join",
+      "similarity": 0.879,
+      "a": "Claude can now analyze your spending with its new Personal Finance tool (TechCrunch)",
+      "b": "Claude AI can plug directly into your bank account (The Verge)",
+      "why": "same launch, two outlets"
+    },
+    {
+      "expect": "join",
+      "similarity": 0.833,
+      "a": "Alpine Linux Security Advisory: OpenSSH-server password authentication bypass",
+      "b": "OpenSSH 10.6p2 Critical workaround for alpine without PAM",
+      "why": "advisory and its release, Hacker News"
+    },
+    {
+      "expect": "apart",
+      "similarity": 0.81,
+      "a": "Qwen 3.8 27B on my laptop can interpret model weights",
+      "b": "Sparks of Weight-Space Programming: LLMs can natively read weights",
+      "why": "related topic, different items"
+    },
+    {
+      "expect": "apart",
+      "similarity": 0.8,
+      "a": "datasette-agent 0.5a0",
+      "b": "datasette-llm 0.1a9",
+      "why": "different packages of one author"
+    },
+    {
+      "expect": "apart",
+      "similarity": 0.8,
+      "a": "Setting a new standard for responsible AI infrastructure (OpenAI)",
+      "b": "Introducing the Grid Protectors Program (OpenAI)",
+      "why": "different announcements, one company"
+    },
+    {
+      "expect": "apart",
+      "similarity": 0.781,
+      "a": "Agents aren't humans (but they kinda are) (Cloudflare)",
+      "b": "See the agents, set the terms (Cloudflare)",
+      "why": "different posts, one company"
+    },
+    {
+      "expect": "apart",
+      "similarity": 0.768,
+      "a": "[D] Self-Promotion Thread (r/MachineLearning)",
+      "b": "[D] Monthly Who's Hiring and Who wants to be Hired?",
+      "why": "recurring threads"
+    },
+    {
+      "expect": "apart-missed",
+      "similarity": 0.774,
+      "a": "Almost no one uses AI agents to book their Uber (TechCrunch)",
+      "b": "Basically no one is using AI agents for their DoorDash (Ars Technica)",
+      "why": "genuine same story, accepted loss of recall"
+    },
+    {
+      "expect": "apart-missed",
+      "similarity": 0.762,
+      "a": "DuckDuckGo pitches itself to schools (TechCrunch)",
+      "b": "Google will let schools skip AI tools (Ars Technica)",
+      "why": "genuine same story, accepted loss of recall"
+    }
+  ]
+}

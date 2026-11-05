@@ -19,9 +19,11 @@ export function pipelineDeps() {
 /** Embedding function that records its token usage (job "embed"). */
 export function embedDeps() {
   const base = pipelineDeps();
+  const maxItems = serverEnv().EMBED_MAX_ITEMS_PER_RUN;
   const { model, id } = getEmbeddingModel();
   return {
     ...base,
+    maxItems,
     embed: async (texts: string[]) => {
       let tokens = 0;
       const vectors = await embedTexts(texts, {

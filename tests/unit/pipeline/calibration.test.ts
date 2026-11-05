@@ -1,5 +1,6 @@
 import { describe, expect, test } from "vitest";
 import golden from "@/tests/fixtures/calibration/near-duplicates.json";
+import embeddingPairs from "@/tests/fixtures/calibration/embedding-pairs.json";
 import { DEDUPE } from "@/lib/pipeline/config";
 import { hammingDistance, simhash } from "@/lib/pipeline/simhash";
 
@@ -27,7 +28,13 @@ describe("near-duplicate calibration", () => {
     expect(minDifferent - maxSame).toBeGreaterThanOrEqual(10);
   });
 
-  test("cluster threshold stays at the spec's 0.85 (no embedding golden set yet)", () => {
-    expect(DEDUPE.clusterThreshold).toBe(0.85);
+  // Real embedding similarities measured on live data (see the fixture's note): a threshold
+  // change must keep every labelled pair on its side or consciously update the evidence.
+  describe("cluster threshold vs measured embedding similarities", () => {
+    test.each(embeddingPairs.pairs)("$expect $similarity: $a", (pair) => {
+      if (pair.expect === "join")
+        expect(pair.similarity).toBeGreaterThanOrEqual(DEDUPE.clusterThreshold);
+      else expect(pair.similarity).toBeLessThan(DEDUPE.clusterThreshold);
+    });
   });
 });

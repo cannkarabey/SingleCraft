@@ -1,3 +1,4 @@
+import { serverEnv } from "@/lib/env";
 import { adminRunEvent } from "@/lib/admin/jobs";
 import { inngest } from "@/inngest/client";
 import { embedDeps, pipelineDeps, storyBuildDeps } from "@/inngest/deps";
@@ -13,8 +14,8 @@ const DAY_MS = 24 * 60 * 60 * 1000;
 const ARCHIVE_AFTER_MS = 7 * DAY_MS;
 /** trend_scores history kept for sparklines (review I6: unbounded growth). */
 const TREND_RETENTION_MS = 14 * DAY_MS;
-/** Must match clusterItems' per-run cap: a full batch means more backlog may be waiting. */
-const CLUSTER_BATCH = 500;
+/** A run that hit EMBED_MAX_ITEMS_PER_RUN may have more backlog waiting. */
+const FREE_TIER_EMBED_LIMIT = 100;
 
 const onFailure =
   (fn: string) =>
@@ -37,8 +38,12 @@ export const clusterItemsFn = inngest.createFunction(
   },
   async ({ step }) => {
     const startedAt = await step.run("start", () => new Date().toISOString());
+    const maxItems = serverEnv().EMBED_MAX_ITEMS_PER_RUN;
     const stats = await step.run("cluster", () => clusterItems(embedDeps()));
-    if (stats.embedded >= CLUSTER_BATCH) {
+    if (stats.embedded >= maxItems) {
+      // Free-tier embedding quota is per minute: let it refill before the next batch.
+      if (maxItems <= FREE_TIER_EMBED_LIMIT)
+        await step.sleep("embed-quota", "65s");
       await step.sendEvent("continue-backlog", {
         name: "items/processed",
         data: {},

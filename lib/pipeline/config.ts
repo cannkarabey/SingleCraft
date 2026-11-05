@@ -16,8 +16,14 @@ export const DEDUPE = {
    * 5, while separate stories sit at 28+. 6 keeps a wide margin on both sides.
    */
   nearDuplicateDistance: 6,
-  /** Cosine similarity for joining a story cluster. */
-  clusterThreshold: 0.85,
+  /**
+   * Cosine similarity for joining a story cluster. Spec start value was 0.85; measured on
+   * 240 real items with gemini-embedding-001 (768 dims): genuine same-event pairs sit at
+   * 0.76–0.88, unrelated same-topic pairs reach 0.81. At 0.85 real matches such as an
+   * advisory and its follow-up (0.83) were missed; 0.82 keeps every pair above it a real
+   * match. See tests/fixtures/calibration/embedding-pairs.json.
+   */
+  clusterThreshold: 0.82,
   /** How long a cluster stays open for new members. */
   clusterWindowMs: 72 * HOUR_MS,
 } as const;
