@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { signIn } from "./support/auth";
-import { nicheFor, setPlan } from "./support/radar-seed";
+import { nicheFor } from "./support/radar-seed";
 import { completeBrief, seedStudioStory } from "./support/studio-seed";
 
 test.describe("studio", () => {
@@ -10,10 +10,7 @@ test.describe("studio", () => {
     const seed = await seedStudioStory();
     try {
       const email = await signIn(page, "/discover");
-      await setPlan(
-        await nicheFor(email, { name: "Agents", keywords: ["agents"] }),
-        "creator",
-      );
+      await nicheFor(email, { name: "Agents", keywords: ["agents"] });
 
       await page.goto(`/studio/new?story=${seed.story.id}`);
       await expect(page.getByRole("heading", { level: 1 })).toHaveText(

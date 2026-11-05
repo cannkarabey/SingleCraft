@@ -205,43 +205,17 @@ isOneToOne: false
                   ]
                 },"profiles": {
                   Row: {
-                    "alerts_enabled": boolean,"created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"plan": string,"signup_captured_at": string | null,"timezone": string
+                    "alerts_enabled": boolean,"created_at": string,"digest_enabled": boolean,"digest_hour": number,"id": string,"is_admin": boolean,"locale": string,"name": string | null,"onboarded_at": string | null,"signup_captured_at": string | null,"timezone": string
                   }
                   ComputedFields: never
                   Insert: {
-                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"signup_captured_at"?: string | null,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id": string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"signup_captured_at"?: string | null,"timezone"?: string
                   }
                   Update: {
-                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"plan"?: string,"signup_captured_at"?: string | null,"timezone"?: string
+                    "alerts_enabled"?: boolean,"created_at"?: string,"digest_enabled"?: boolean,"digest_hour"?: number,"id"?: string,"is_admin"?: boolean,"locale"?: string,"name"?: string | null,"onboarded_at"?: string | null,"signup_captured_at"?: string | null,"timezone"?: string
                   }
                   Relationships: [
                     
-                  ]
-                },"radar_reveals": {
-                  Row: {
-                    "created_at": string,"day": string,"story_id": string,"user_id": string
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "created_at"?: string,"day": string,"story_id": string,"user_id": string
-                  }
-                  Update: {
-                    "created_at"?: string,"day"?: string,"story_id"?: string,"user_id"?: string
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "radar_reveals_story_id_fkey"
-      columns: ["story_id"]
-isOneToOne: false
-      referencedRelation: "stories"
-      referencedColumns: ["id"]
-    },{
-      foreignKeyName: "radar_reveals_user_id_fkey"
-      columns: ["user_id"]
-isOneToOne: false
-      referencedRelation: "profiles"
-      referencedColumns: ["id"]
-    }
                   ]
                 },"raw_items": {
                   Row: {
@@ -346,26 +320,6 @@ isOneToOne: false
       columns: ["story_id"]
 isOneToOne: false
       referencedRelation: "stories"
-      referencedColumns: ["id"]
-    }
-                  ]
-                },"subscriptions": {
-                  Row: {
-                    "created_at": string,"current_period_end": string | null,"ends_at": string | null,"id": string,"plan": string,"provider": string,"provider_customer_id": string | null,"provider_subscription_id": string | null,"provider_updated_at": string | null,"renews_at": string | null,"status": string,"user_id": string,"variant_id": string | null
-                  }
-                  ComputedFields: never
-                  Insert: {
-                    "created_at"?: string,"current_period_end"?: string | null,"ends_at"?: string | null,"id"?: string,"plan": string,"provider": string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"provider_updated_at"?: string | null,"renews_at"?: string | null,"status": string,"user_id": string,"variant_id"?: string | null
-                  }
-                  Update: {
-                    "created_at"?: string,"current_period_end"?: string | null,"ends_at"?: string | null,"id"?: string,"plan"?: string,"provider"?: string,"provider_customer_id"?: string | null,"provider_subscription_id"?: string | null,"provider_updated_at"?: string | null,"renews_at"?: string | null,"status"?: string,"user_id"?: string,"variant_id"?: string | null
-                  }
-                  Relationships: [
-                    {
-      foreignKeyName: "subscriptions_user_id_fkey"
-      columns: ["user_id"]
-isOneToOne: false
-      referencedRelation: "profiles"
       referencedColumns: ["id"]
     }
                   ]
@@ -486,9 +440,6 @@ isOneToOne: false
 "apply_story_scores":
 { Args: { "p_scores": Json }; Returns: number
                            },
-"apply_subscription":
-{ Args: { "p_customer_id": string,"p_ends_at": string,"p_now": string,"p_plan": string,"p_renews_at": string,"p_status": string,"p_subscription_id": string,"p_updated_at": string,"p_user": string,"p_variant_id": string }; Returns: string
-                           },
 "archive_stale_stories":
 { Args: { "p_cutoff": string }; Returns: number
                            },
@@ -538,12 +489,6 @@ isOneToOne: false
         isOneToOne: false
         isSetofReturn: true
       } },
-"entitled_plan":
-{ Args: { "p_now": string,"p_user": string }; Returns: string
-                           },
-"expire_subscriptions":
-{ Args: { "p_now": string }; Returns: number
-                           },
 "find_duplicate":
 { Args: { "p_item_id": number,"p_max_distance": number,"p_since": string }; Returns: {
               "duplicate_of": number,"kind": string

@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
@@ -65,12 +64,7 @@ export function NewBriefForm({
       <ControlFields value={controls} onChange={setControls} />
       {error && (
         <p role="alert" className="text-danger text-sm">
-          {t(`errors.${error}`)}{" "}
-          {error === "limit" && (
-            <Link href="/pricing" className="underline">
-              {t("upgrade")}
-            </Link>
-          )}
+          {t(`errors.${error}`)}
         </p>
       )}
       <Button type="submit" disabled={pending || cooling}>

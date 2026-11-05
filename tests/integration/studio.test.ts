@@ -5,6 +5,7 @@ import {
   requestBrief,
   requestRegenerate,
 } from "@/lib/studio/generate";
+import { LIMITS } from "@/lib/limits";
 import { publishBrief, saveEdits } from "@/lib/studio/briefs";
 import { createNiche } from "@/lib/radar/niches";
 import { cleanup as cleanupSources, db, makeItem, makeSource } from "./helpers";
@@ -105,8 +106,8 @@ afterAll(async () => {
   await cleanupSources(created);
 });
 
-async function user(plan: "free" | "creator" = "free") {
-  const u = await makeUser(plan);
+async function user() {
+  const u = await makeUser();
   cleanups.push(u.remove);
   const niche = await createNiche({
     admin: db,
@@ -140,7 +141,6 @@ describe("requestBrief", () => {
       userDb: u.client,
       admin: db,
       userId: u.id,
-      plan: "free",
       storyId,
       controls,
       send: async (e) => void events.push(e),
@@ -170,7 +170,6 @@ describe("requestBrief", () => {
         userDb: u.client,
         admin: db,
         userId: u.id,
-        plan: "free",
         storyId: pendingStoryId,
         controls,
         send: noop,
@@ -178,20 +177,19 @@ describe("requestBrief", () => {
     ).toEqual({ status: "not_found" });
   });
 
-  test("free plan: the 3rd brief of the day hits the limit", async () => {
+  test("the 6th brief of the day hits the limit", async () => {
     const u = await user();
     const ask = () =>
       requestBrief({
         userDb: u.client,
         admin: db,
         userId: u.id,
-        plan: "free",
         storyId,
         controls,
         send: noop,
       });
-    expect((await ask()).status).toBe("queued");
-    expect((await ask()).status).toBe("queued");
+    for (let i = 0; i < LIMITS.briefsPerDay!; i++)
+      expect((await ask()).status).toBe("queued");
     expect(await ask()).toEqual({ status: "limit" });
   });
 
@@ -202,7 +200,6 @@ describe("requestBrief", () => {
         userDb: u.client,
         admin: db,
         userId: u.id,
-        plan: "free",
         storyId,
         controls,
         send: async () => {
@@ -232,7 +229,6 @@ describe("generateBrief", () => {
       userDb: u.client,
       admin: db,
       userId: u.id,
-      plan: "free",
       storyId,
       controls,
       send: noop,
@@ -276,7 +272,6 @@ describe("generateBrief", () => {
       userDb: u.client,
       admin: db,
       userId: u.id,
-      plan: "free",
       storyId,
       controls,
       send: noop,
@@ -307,13 +302,12 @@ describe("generateBrief", () => {
 
 describe("editing, publishing, regenerating", () => {
   test("owner saves edits and publishes; others cannot", async () => {
-    const owner = await user("creator");
-    const other = await user("creator");
+    const owner = await user();
+    const other = await user();
     const queued = await requestBrief({
       userDb: owner.client,
       admin: db,
       userId: owner.id,
-      plan: "creator",
       storyId,
       controls,
       send: noop,
@@ -363,12 +357,11 @@ describe("editing, publishing, regenerating", () => {
   });
 
   test("regenerate queues a new generation, counts against the limit, and adds a version", async () => {
-    const u = await user("creator");
+    const u = await user();
     const queued = await requestBrief({
       userDb: u.client,
       admin: db,
       userId: u.id,
-      plan: "creator",
       storyId,
       controls,
       send: noop,
@@ -387,7 +380,6 @@ describe("editing, publishing, regenerating", () => {
       userDb: u.client,
       admin: db,
       userId: u.id,
-      plan: "creator",
       briefId: queued.briefId,
       controls: { ...controls, tone: "fun" },
       send: noop,

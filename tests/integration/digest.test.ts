@@ -50,10 +50,9 @@ function outbox() {
 }
 
 async function user(
-  plan: "free" | "creator",
   opts: { digest?: boolean; alerts?: boolean; threshold?: number } = {},
 ) {
-  const u = await makeUser(plan);
+  const u = await makeUser();
   cleanups.push(u.remove);
   await db
     .from("profiles")
@@ -82,8 +81,8 @@ const to = (box: ReturnType<typeof outbox>, email: string) =>
   box.sent.filter((m) => m.to === email);
 
 describe("sendDigests", () => {
-  test("a creator gets one digest at their hour, with top stories and one-click unsubscribe", async () => {
-    const u = await user("creator");
+  test("a user gets one digest at their hour, with top stories and one-click unsubscribe", async () => {
+    const u = await user();
     const box = outbox();
     await sendDigests({ db, now: new Date(), send: box.send, appUrl });
     const mine = to(box, u.email);
@@ -101,17 +100,15 @@ describe("sendDigests", () => {
     expect(to(again, u.email)).toHaveLength(0);
   });
 
-  test("free plan and disabled digests get nothing", async () => {
-    const free = await user("free");
-    const off = await user("creator", { digest: false });
+  test("disabled digests get nothing", async () => {
+    const off = await user({ digest: false });
     const box = outbox();
     await sendDigests({ db, now: new Date(), send: box.send, appUrl });
-    expect(to(box, free.email)).toHaveLength(0);
     expect(to(box, off.email)).toHaveLength(0);
   });
 
   test("yesterday's unpublished brief gets a 'did you publish it?' link", async () => {
-    const u = await user("creator");
+    const u = await user();
     const yesterday = new Date(Date.now() - 24 * 3600_000).toISOString();
     const { data: brief } = await db
       .from("briefs")
@@ -132,7 +129,7 @@ describe("sendDigests", () => {
   });
 
   test("a failed send releases the claim so the next run retries", async () => {
-    const u = await user("creator");
+    const u = await user();
     await sendDigests({
       db,
       now: new Date(),
@@ -150,7 +147,7 @@ describe("sendDigests", () => {
 
 describe("checkAlerts", () => {
   test("alerts once per story, at most 3 a day", async () => {
-    const u = await user("free", { threshold: 50 });
+    const u = await user({ threshold: 50 });
     const box = outbox();
     await checkAlerts({ db, now: new Date(), send: box.send, appUrl });
     const first = to(box, u.email);
@@ -163,8 +160,8 @@ describe("checkAlerts", () => {
   });
 
   test("below the threshold or with alerts off, nothing is sent", async () => {
-    const high = await user("creator", { threshold: 100 });
-    const off = await user("creator", { threshold: 50, alerts: false });
+    const high = await user({ threshold: 100 });
+    const off = await user({ threshold: 50, alerts: false });
     const box = outbox();
     await checkAlerts({ db, now: new Date(), send: box.send, appUrl });
     expect(to(box, high.email)).toHaveLength(0);

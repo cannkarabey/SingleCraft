@@ -13,7 +13,6 @@ test.describe("landing", () => {
       "Fikir bulmak, trendi doğrulamak ve her platforma uyarlamak ayrı ayrı zaman alıyor.",
       "Nasıl çalışır",
       "Örnek çıktı",
-      "Fiyatlandırma",
       "SSS",
       "Sinyali bugün yakala.",
     ]);
@@ -29,7 +28,10 @@ test.describe("landing", () => {
     }
     const cta = page.getByRole("region", { name: "Sinyali bugün yakala." });
     await expect(
-      cta.getByRole("link", { name: "Ücretsiz başla" }),
+      cta.getByRole("link", { name: "Keşfetmeye başla" }),
+    ).toHaveAttribute("href", "/discover");
+    await expect(
+      cta.getByRole("link", { name: "Hesap oluştur" }),
     ).toHaveAttribute("href", "/signup?next=%2Fonboarding");
   });
 
@@ -55,14 +57,12 @@ test.describe("landing", () => {
     ).toHaveAttribute("aria-selected", "true");
   });
 
-  test("pricing shows Free and Creator, Pro coming soon", async ({ page }) => {
+  test("the app is free: no pricing page, section or link anywhere", async ({
+    page,
+  }) => {
     await page.goto("/");
-    const pricing = page.getByRole("region", { name: "Fiyatlandırma" });
-    await expect(pricing.getByRole("heading", { name: "Free" })).toBeVisible();
-    await expect(
-      pricing.getByRole("heading", { name: "Creator" }),
-    ).toBeVisible();
-    await expect(pricing.getByText("Yakında")).toBeVisible();
+    await expect(page.getByText(/Fiyatlandırma|Ücretsiz başla/)).toHaveCount(0);
+    expect((await page.goto("/pricing"))?.status()).toBe(404);
   });
 
   test("FAQ answers expand", async ({ page }) => {
@@ -79,7 +79,6 @@ test.describe("landing", () => {
     await expect(
       page.getByRole("heading", { name: "Live from Discover" }),
     ).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Pricing" })).toBeVisible();
   });
 
   test("embedded platform: sidebar switches Discover, Radar and Studio", async ({

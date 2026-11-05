@@ -20,16 +20,10 @@ export async function POST(
   if (!controls.success) return invalid(controls.error.issues);
 
   const db = await createClient();
-  const { data: profile } = await db
-    .from("profiles")
-    .select("plan")
-    .eq("id", user.id)
-    .single();
   const result = await requestRegenerate({
     userDb: db,
     admin: createAdminClient(),
     userId: user.id,
-    plan: profile?.plan ?? null,
     briefId: id.data,
     controls: controls.data,
     send: (event) => inngest.send(event),

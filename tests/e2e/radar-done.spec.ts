@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 import { signIn } from "./support/auth";
-import { nicheFor, seedRadarStories, setPlan } from "./support/radar-seed";
+import { nicheFor, seedRadarStories } from "./support/radar-seed";
 
 // IMPLEMENTATION_PLAN §9 Faz 5 "Bitti" criteria.
 test("different niches see different Radar orders; hidden and excluded stories never show", async ({
@@ -38,21 +38,15 @@ test("different niches see different Radar orders; hidden and excluded stories n
     const web = await webCtx.newPage();
     const agentsEmail = await signIn(agents, "/discover");
     const webEmail = await signIn(web, "/discover");
-    await setPlan(
-      await nicheFor(agentsEmail, {
-        name: "AI agents",
-        keywords: [seed.tag, "agents"],
-        excluded_keywords: ["blockchain"],
-      }),
-      "creator",
-    );
-    await setPlan(
-      await nicheFor(webEmail, {
-        name: "Web frontend",
-        keywords: [seed.tag, "css"],
-      }),
-      "creator",
-    );
+    await nicheFor(agentsEmail, {
+      name: "AI agents",
+      keywords: [seed.tag, "agents"],
+      excluded_keywords: ["blockchain"],
+    });
+    await nicheFor(webEmail, {
+      name: "Web frontend",
+      keywords: [seed.tag, "css"],
+    });
 
     await agents.goto("/radar");
     await web.goto("/radar");

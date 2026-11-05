@@ -1,11 +1,9 @@
 import { expect, test } from "@playwright/test";
 import { signIn } from "./support/auth";
-import { nicheFor, seedRadarStories, setPlan } from "./support/radar-seed";
+import { nicheFor, seedRadarStories } from "./support/radar-seed";
 
 test.describe("radar", () => {
-  test("shows sections, locks rows past the free limit, saves and hides", async ({
-    page,
-  }) => {
+  test("shows sections, saves and hides", async ({ page }) => {
     const seed = await seedRadarStories([
       { topic: "agents", title: "Alpha", velocity: 100, engagement: 90 },
       { topic: "agents", title: "Bravo", velocity: 99, engagement: 90 },
@@ -48,13 +46,6 @@ test.describe("radar", () => {
         alpha.getByRole("link", { name: "Brief oluştur" }),
       ).toHaveAttribute("href", `/studio/new?story=${seed.stories[0].id}`);
 
-      // Free plan: rows after the third are locked and carry no story text.
-      await expect(page.getByText("Kilitli sinyal")).toHaveCount(2);
-      await expect(page.getByText(seed.stories[4].title)).toHaveCount(0);
-      await expect(
-        page.getByRole("link", { name: "Yükselt" }).first(),
-      ).toBeVisible();
-
       await alpha.getByRole("button", { name: "Kaydet" }).click();
       await expect(
         alpha.getByRole("button", { name: "Kaydedildi" }),
@@ -74,7 +65,7 @@ test.describe("radar", () => {
     }
   });
 
-  test("creator plan sees every row", async ({ page }) => {
+  test("every matching row is open", async ({ page }) => {
     const seed = await seedRadarStories([
       { topic: "css", title: "One", velocity: 100, engagement: 90 },
       { topic: "css", title: "Two", velocity: 99, engagement: 90 },
@@ -83,15 +74,13 @@ test.describe("radar", () => {
     ]);
     try {
       const email = await signIn(page, "/discover");
-      const userId = await nicheFor(email, {
+      await nicheFor(email, {
         name: "Web",
         keywords: [seed.tag, "css"],
       });
-      await setPlan(userId, "creator");
       await page.goto("/radar");
       for (const story of seed.stories)
         await expect(page.getByText(story.title)).toBeVisible();
-      await expect(page.getByText("Kilitli sinyal")).toHaveCount(0);
     } finally {
       await seed.cleanup();
     }
@@ -111,11 +100,10 @@ test.describe("radar", () => {
     ]);
     try {
       const email = await signIn(page, "/discover");
-      const userId = await nicheFor(email, {
+      await nicheFor(email, {
         name: "Web",
         keywords: [seed.tag, "css"],
       });
-      await setPlan(userId, "creator");
       await page.goto("/radar");
       for (const name of [
         "Yüksek sinyal",

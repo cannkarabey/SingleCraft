@@ -4,7 +4,7 @@ import type { Database } from "@/lib/supabase/types";
 import { db } from "./helpers";
 
 /** A real auth user and a client signed in as them (RLS applies). */
-export async function makeUser(plan: "free" | "creator" | "pro" = "free") {
+export async function makeUser() {
   const email = `it-${randomUUID().slice(0, 8)}@test.dev`;
   const password = `pw-${randomUUID()}`;
   const { data, error } = await db.auth.admin.createUser({
@@ -14,7 +14,6 @@ export async function makeUser(plan: "free" | "creator" | "pro" = "free") {
   });
   if (error) throw error;
   const id = data.user.id;
-  if (plan !== "free") await db.from("profiles").update({ plan }).eq("id", id);
 
   const client = createClient<Database>(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,

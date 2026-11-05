@@ -103,7 +103,7 @@ test.describe("app shell", () => {
   test("marketing footer lists product links", async ({ page }) => {
     await page.goto("/");
     const footer = page.getByRole("contentinfo");
-    for (const name of ["Discover", "Radar", "Studio", "Fiyatlandırma"]) {
+    for (const name of ["Discover", "Radar", "Studio"]) {
       await expect(footer.getByRole("link", { name })).toBeVisible();
     }
   });

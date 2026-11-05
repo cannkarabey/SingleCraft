@@ -1,13 +1,11 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { limitsFor } from "@/lib/billing/limits";
 import type { Database } from "@/lib/supabase/types";
 
 type Db = SupabaseClient<Database>;
 export type RadarStory =
   Database["public"]["Functions"]["radar_feed"]["Returns"][number];
 export type Bucket = "high" | "early" | "gap";
-export type RadarRow =
-  (RadarStory & { locked: false }) | { locked: true; bucket: Bucket };
+export type RadarRow = RadarStory;
 export type SavedStory = {
   id: string;
   slug: string | null;
@@ -20,7 +18,6 @@ export type Radar = {
   early: RadarRow[];
   gaps: RadarRow[];
   saved: SavedStory[];
-  lockedCount: number;
 };
 
 const SECTIONS: Bucket[] = ["high", "early", "gap"];
@@ -34,80 +31,31 @@ function check<T>(result: {
   return (result.data ?? []) as NonNullable<T>;
 }
 
-const today = () => new Date().toISOString().slice(0, 10);
-
 /**
  * The user's Radar for one niche (plan §5.6). radar_feed is service-role only (review C1),
- * so `userId` must come from the verified session. The plan's row allowance (plan §1 #19,
- * "3 Radar signals a day") is a per-day reveal budget kept in radar_reveals: rows already
- * revealed today stay open, new ones open while budget remains, the rest are locked and
- * carry only their bucket.
+ * so `userId` must come from the verified session.
  */
 export async function getRadar({
   admin,
   userId,
   nicheId,
-  plan,
 }: {
   admin: Db;
   userId: string;
   nicheId: string;
-  plan: string | null;
 }): Promise<Radar> {
   const [feed, saved] = await Promise.all([
     admin.rpc("radar_feed", { p_niche: nicheId, p_user: userId }).then(check),
     savedStories(admin, userId),
   ]);
-  const ordered = SECTIONS.flatMap((bucket) =>
+  const rows = SECTIONS.flatMap((bucket) =>
     feed.filter((row) => row.bucket === bucket),
   );
-  const limit = limitsFor(plan).radarRows;
-
-  let open: Set<string>;
-  if (limit === null) {
-    open = new Set(ordered.map((r) => r.story_id));
-  } else {
-    const day = today();
-    const revealed = new Set(
-      check(
-        await admin
-          .from("radar_reveals")
-          .select("story_id")
-          .eq("user_id", userId)
-          .eq("day", day),
-      ).map((r) => r.story_id),
-    );
-    let budget = limit - revealed.size;
-    const fresh: string[] = [];
-    for (const row of ordered) {
-      if (revealed.has(row.story_id) || budget <= 0) continue;
-      fresh.push(row.story_id);
-      budget--;
-    }
-    if (fresh.length) {
-      check(
-        await admin.from("radar_reveals").upsert(
-          fresh.map((story_id) => ({ user_id: userId, day, story_id })),
-          { onConflict: "user_id,day,story_id", ignoreDuplicates: true },
-        ),
-      );
-    }
-    open = new Set([...revealed, ...fresh]);
-  }
-
-  let lockedCount = 0;
-  const rows: RadarRow[] = ordered.map((row) => {
-    if (open.has(row.story_id)) return { ...row, locked: false };
-    lockedCount++;
-    return { locked: true, bucket: row.bucket as Bucket };
-  });
-
   return {
     high: rows.filter((r) => r.bucket === "high"),
     early: rows.filter((r) => r.bucket === "early"),
     gaps: rows.filter((r) => r.bucket === "gap"),
     saved,
-    lockedCount,
   };
 }
 

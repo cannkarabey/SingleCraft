@@ -7,7 +7,6 @@ export const ADMIN_JOBS = [
   "build-stories",
   "archive-stories",
   "send-digest",
-  "billing-reconcile",
 ] as const;
 
 export type AdminJob = (typeof ADMIN_JOBS)[number];

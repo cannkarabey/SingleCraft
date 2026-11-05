@@ -15,10 +15,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
   const user = await currentUser();
   if (!user) redirect("/login?next=%2Fradar");
   const db = await createClient();
-  const [niches, { data: profile }] = await Promise.all([
-    listNiches(db),
-    db.from("profiles").select("plan").eq("id", user.id).single(),
-  ]);
+  const niches = await listNiches(db);
   if (niches.length === 0) redirect("/onboarding");
 
   const wanted = (await searchParams).niche;
@@ -29,14 +26,13 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
       admin: createAdminClient(),
       userId: user.id,
       nicheId: niche.id,
-      plan: profile?.plan ?? null,
     }),
   ]);
 
   // Sparkline data for visible rows (trend_scores is public for published stories).
-  const openIds = [...radar.high, ...radar.early, ...radar.gaps]
-    .filter((r): r is Extract<Row, { locked: false }> => !r.locked)
-    .map((r) => r.story_id);
+  const openIds = [...radar.high, ...radar.early, ...radar.gaps].map(
+    (r) => r.story_id,
+  );
   const { data: trendRows } = openIds.length
     ? await db
         .from("trend_scores")
@@ -120,12 +116,12 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
                 {t("emptySection")}
               </p>
             ) : (
-              rows.map((row, i) => (
+              rows.map((row) => (
                 <RadarRow
                   nicheId={niche.id}
-                  key={row.locked ? `locked-${key}-${i}` : row.story_id}
+                  key={row.story_id}
                   row={row}
-                  trend={row.locked ? [] : (trends.get(row.story_id) ?? [])}
+                  trend={trends.get(row.story_id) ?? []}
                 />
               ))
             )}

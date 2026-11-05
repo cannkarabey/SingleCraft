@@ -1,5 +1,5 @@
 begin;
-select plan(7);
+select plan(5);
 
 insert into auth.users (id, email) values ('f9000000-0000-0000-0000-00000000000a', 'r@test.dev');
 insert into public.niches (id, user_id, name, keywords, excluded_keywords, tracked_channels) values
@@ -34,10 +34,6 @@ insert into public.user_signals (user_id, story_id, action) values
 select throws_ok($$insert into public.user_signals (user_id, story_id, action) values
   ('f9000000-0000-0000-0000-00000000000a', 'f9300000-0000-0000-0000-000000000001', 'save')$$, '23505', null,
   'duplicate signals are rejected');
-
--- Review I2: per-day reveal ledger, server-only
-select has_table('public', 'radar_reveals', 'radar_reveals exists');
-select ok(not has_table_privilege('authenticated', 'public.radar_reveals', 'select'), 'clients cannot read radar_reveals');
 
 select * from finish();
 rollback;

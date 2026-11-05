@@ -84,10 +84,6 @@ export async function nicheFor(
   return userId;
 }
 
-export async function setPlan(userId: string, plan: "free" | "creator") {
-  await admin().from("profiles").update({ plan }).eq("id", userId);
-}
-
 /** Pages through auth users until the email is found (listUsers caps a page at 1000). */
 export async function userIdByEmail(email: string): Promise<string> {
   const db = admin();

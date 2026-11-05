@@ -2,7 +2,7 @@ import type { SupabaseClient } from "@supabase/supabase-js";
 import { generateText, Output } from "ai";
 import { callLlm, llmRetries, type LlmHandle } from "@/lib/llm/call";
 import { z } from "zod";
-import { limitsFor } from "@/lib/billing/limits";
+import { LIMITS } from "@/lib/limits";
 import { serverEnv } from "@/lib/env";
 import { assertBudget, recordUsage } from "@/lib/llm/budget";
 import type { Database } from "@/lib/supabase/types";
@@ -50,7 +50,6 @@ export async function requestAngle({
   userId,
   storyId,
   nicheId,
-  plan,
   send,
 }: {
   userDb: Db;
@@ -58,7 +57,6 @@ export async function requestAngle({
   userId: string;
   storyId: string;
   nicheId?: string;
-  plan: string | null;
   send: (event: AngleEvent) => Promise<unknown>;
 }): Promise<
   | { status: "ready"; angle: string }
@@ -74,7 +72,7 @@ export async function requestAngle({
   const { data: allowed, error } = await admin.rpc("increment_usage", {
     p_user: userId,
     p_kind: "personal_angle",
-    p_limit: limitsFor(plan).anglesPerDay as number,
+    p_limit: LIMITS.anglesPerDay as number,
   });
   if (error) throw new Error(error.message);
   if (!allowed) return { status: "limit" };

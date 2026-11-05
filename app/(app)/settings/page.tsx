@@ -1,5 +1,4 @@
-import { getLocale, getTranslations } from "next-intl/server";
-import { BillingActions } from "@/components/settings/BillingActions";
+import { getTranslations } from "next-intl/server";
 import { PageHeader } from "@/components/shell/PageHeader";
 import { Button } from "@/components/ui/button";
 import { currentUser } from "@/lib/auth/session";
@@ -19,25 +18,15 @@ export default async function SettingsPage({
 }: PageProps<"/settings">) {
   const user = await currentUser();
   const db = await createClient();
-  const [{ data: profile }, { data: subscription }, params, t, tb, locale] =
-    await Promise.all([
-      db
-        .from("profiles")
-        .select("digest_enabled, digest_hour, timezone, alerts_enabled, plan")
-        .eq("id", user!.id)
-        .single(),
-      db
-        .from("subscriptions")
-        .select("status, ends_at")
-        .order("created_at", { ascending: false })
-        .limit(1)
-        .maybeSingle(),
-      searchParams,
-      getTranslations("settings"),
-      getTranslations("billing"),
-      getLocale(),
-    ]);
-  const plan = profile?.plan ?? "free";
+  const [{ data: profile }, params, t] = await Promise.all([
+    db
+      .from("profiles")
+      .select("digest_enabled, digest_hour, timezone, alerts_enabled")
+      .eq("id", user!.id)
+      .single(),
+    searchParams,
+    getTranslations("settings"),
+  ]);
 
   return (
     <main className="flex flex-1 flex-col">
@@ -53,39 +42,6 @@ export default async function SettingsPage({
             {t("error")}
           </p>
         )}
-        <section
-          id="billing"
-          aria-labelledby="billing-title"
-          className="space-y-3"
-        >
-          <h2 id="billing-title" className={legend}>
-            {tb("title")}
-          </h2>
-          <div className="bg-surface-1 space-y-3 rounded-lg border p-4">
-            {params.billing === "success" && (
-              <p role="status" className="text-signal text-[13px]">
-                {tb("success")}
-              </p>
-            )}
-            <p className="text-[13px]">
-              {tb("current", {
-                plan:
-                  plan === "free" ? "Free" : plan === "pro" ? "Pro" : "Creator",
-              })}
-            </p>
-            {subscription?.status === "cancelled" && subscription.ends_at && (
-              <p className="text-muted-foreground text-[13px]">
-                {tb("cancelling", {
-                  date: new Date(subscription.ends_at).toLocaleDateString(
-                    locale,
-                  ),
-                })}
-              </p>
-            )}
-            <BillingActions paid={plan !== "free"} />
-          </div>
-        </section>
-
         <form action={saveEmailSettings} className="space-y-10">
           <fieldset className="space-y-3">
             <legend className={legend}>{t("digest.title")}</legend>

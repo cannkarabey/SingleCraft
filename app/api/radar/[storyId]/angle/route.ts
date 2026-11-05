@@ -39,18 +39,12 @@ export async function POST(request: Request, { params }: Ctx) {
   if (!storyId.success) return notFound();
 
   const db = await createClient();
-  const { data: profile } = await db
-    .from("profiles")
-    .select("plan")
-    .eq("id", user.id)
-    .single();
   const result = await requestAngle({
     userDb: db,
     admin: createAdminClient(),
     userId: user.id,
     storyId: storyId.data,
     nicheId: nicheParam(request),
-    plan: profile?.plan ?? null,
     send: (event) => inngest.send(event),
   });
 

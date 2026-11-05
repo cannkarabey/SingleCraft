@@ -11,7 +11,6 @@ describe("proxy matcher", () => {
     "/api/categories",
     "/api/trending",
     "/api/email/webhook",
-    "/api/billing/webhook",
   ])("skips public API %s", (path) => {
     expect(
       unstable_doesMiddlewareMatch({ config, url: `http://localhost${path}` }),

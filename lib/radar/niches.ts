@@ -1,6 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
-import { limitsFor } from "@/lib/billing/limits";
+import { LIMITS } from "@/lib/limits";
 import type { Database } from "@/lib/supabase/types";
 
 type Db = SupabaseClient<Database>;
@@ -71,7 +71,7 @@ function normalize(input: NicheInput) {
 }
 
 /**
- * Creates a niche with the service-role client after the plan's niche limit is checked
+ * Creates a niche with the service-role client after the niche limit is checked
  * (clients cannot insert niches directly, Faz 1 ruling). Marks the user onboarded.
  */
 export async function createNiche({
@@ -88,11 +88,7 @@ export async function createNiche({
 > {
   const [{ data: profile, error: profileError }, { count, error: countError }] =
     await Promise.all([
-      admin
-        .from("profiles")
-        .select("plan, onboarded_at")
-        .eq("id", userId)
-        .single(),
+      admin.from("profiles").select("onboarded_at").eq("id", userId).single(),
       admin
         .from("niches")
         .select("*", { count: "exact", head: true })
@@ -100,8 +96,7 @@ export async function createNiche({
     ]);
   if (profileError) throw new Error(profileError.message);
   if (countError) throw new Error(countError.message);
-  if ((count ?? 0) >= limitsFor(profile.plan).niches)
-    return { ok: false, error: "limit" };
+  if ((count ?? 0) >= LIMITS.niches) return { ok: false, error: "limit" };
 
   const { data: niche, error } = await admin
     .from("niches")

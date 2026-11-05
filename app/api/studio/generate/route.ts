@@ -15,17 +15,11 @@ export async function POST(request: Request) {
   if (!parsed.success) return invalid(parsed.error.issues);
 
   const db = await createClient();
-  const { data: profile } = await db
-    .from("profiles")
-    .select("plan")
-    .eq("id", user.id)
-    .single();
   const { storyId, ...controls } = parsed.data;
   const result = await requestBrief({
     userDb: db,
     admin: createAdminClient(),
     userId: user.id,
-    plan: profile?.plan ?? null,
     storyId,
     controls,
     send: (event) => inngest.send(event),

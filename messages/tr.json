@@ -8,13 +8,11 @@
     "radar": "Radar",
     "studio": "Studio",
     "search": "Ara",
-    "cta": "Ücretsiz başla",
     "language": "Dil",
     "signIn": "Giriş yap",
     "signOut": "Çıkış yap",
     "account": "Hesap",
     "settings": "Ayarlar",
-    "pricing": "Fiyatlandırma",
     "openApp": "Uygulamayı aç",
     "app": "Uygulama",
     "menu": "Menü",
@@ -24,8 +22,8 @@
   "hero": {
     "title": "Teknoloji içerik üreticileri için günlük sinyal radarı.",
     "subtitle": "Yükselen AI ve geliştirici konularını keşfet, nişine göre fırsatları gör, dakikalar içinde yayınlanabilir içerik üret.",
-    "primaryCta": "Ücretsiz başla",
-    "secondaryCta": "Canlı Discover'ı gör",
+    "primaryCta": "Keşfetmeye başla",
+    "secondaryCta": "Hesap oluştur",
     "badge": "Yeni: Radar'da kişisel açılar →",
     "chipHigh": "Yüksek sinyal",
     "chipBrief": "Brief hazır"
@@ -101,8 +99,6 @@
     "save": "Kaydet",
     "saved": "Kaydedildi",
     "hide": "Gizle",
-    "locked": "Kilitli sinyal",
-    "upgrade": "Yükselt",
     "emptySection": "Bu niş için henüz bir şey yok.",
     "sections": {
       "high": {
@@ -219,8 +215,7 @@
     "list": {
       "published": "Yayınlandı",
       "draft": "Taslak"
-    },
-    "upgrade": "Yükselt"
+    }
   },
   "story": {
     "back": "Discover'a dön",
@@ -297,9 +292,6 @@
       "linkedin": "Agent araçları sadeleşti. Yeni SDK, ekiplerin genelde kendisi yazdığı iki şeyi — tracing ve tool use — varsayılan olarak getiriyor. Production'da agent çalıştırıyorsan bu hafta göz atmaya değer.",
       "shorts": "\"AI agent'larını zor yoldan debug ediyordun. Bu yeni SDK bunu tek satırda çözüyor.\""
     },
-    "pricing": {
-      "title": "Fiyatlandırma"
-    },
     "faq": {
       "title": "SSS",
       "accuracy": {
@@ -328,7 +320,6 @@
       "problem": "Sorun",
       "pipeline": "Akış",
       "example": "Çıktı",
-      "pricing": "Fiyat",
       "faq": "Sorular"
     },
     "cta": {
@@ -464,34 +455,6 @@
       "alerts": "Artık alarm e-postası almayacaksın.",
       "manage": "E-posta ayarlarını yönet"
     }
-  },
-  "pricing": {
-    "title": "Fiyatlandırma",
-    "subtitle": "Ücretsiz başla. Radar ve Studio rutinin olunca yükselt.",
-    "perMonth": "/ay",
-    "soon": "Yakında",
-    "freeCta": "Ücretsiz başla",
-    "upgradeCta": "Creator'a geç",
-    "features": {
-      "discover": "Tam Discover",
-      "radarRows": "Günde {count} Radar sinyali",
-      "radarUnlimited": "Sınırsız Radar sinyali",
-      "niches": "{count} niş",
-      "briefs": "Günde {count} Studio brief'i",
-      "briefsUnlimited": "Sınırsız Studio brief'i",
-      "angles": "Günde {count} kişisel açı",
-      "digest": "Günlük özet e-postası"
-    }
-  },
-  "billing": {
-    "title": "Plan ve ödeme",
-    "current": "Mevcut plan: {plan}",
-    "upgrade": "Creator'a geç",
-    "manage": "Aboneliği yönet",
-    "unavailable": "Ödemeler şu an kullanılamıyor.",
-    "error": "Bir şeyler ters gitti. Tekrar dene.",
-    "success": "Ödemen alındı. Planın birkaç saniye içinde güncellenecek.",
-    "cancelling": "Aboneliğin {date} tarihinde bitiyor; sonra Free plana geçeceksin."
   },
   "admin": {
     "title": "Admin",

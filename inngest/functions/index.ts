@@ -1,4 +1,3 @@
-import { billingReconcile } from "./billing";
 import { checkAlertsFn, sendDigest } from "./email";
 import { fetchSources } from "./fetch-sources";
 import { processItemsFn } from "./process-items";
@@ -25,5 +24,4 @@ export const functions = [
   studioGenerate,
   sendDigest,
   checkAlertsFn,
-  billingReconcile,
 ];

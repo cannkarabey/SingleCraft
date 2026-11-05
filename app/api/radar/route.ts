@@ -18,10 +18,7 @@ export async function GET(request: Request) {
   if (!query.success) return invalid(query.error.issues);
 
   const db = await createClient();
-  const [niches, { data: profile }] = await Promise.all([
-    listNiches(db),
-    db.from("profiles").select("plan").eq("id", user.id).single(),
-  ]);
+  const niches = await listNiches(db);
   const niche =
     niches.find((n) => n.id === query.data.niche) ??
     (query.data.niche ? undefined : niches[0]);
@@ -31,7 +28,6 @@ export async function GET(request: Request) {
     admin: createAdminClient(),
     userId: user.id,
     nicheId: niche.id,
-    plan: profile?.plan ?? null,
   });
   return NextResponse.json(
     { niche: { id: niche.id, name: niche.name }, ...radar },

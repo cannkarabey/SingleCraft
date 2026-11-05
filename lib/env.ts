@@ -37,11 +37,6 @@ const serverSchema = publicSchema.extend({
   RESEND_API_KEY: optionalString,
   EMAIL_FROM: optionalString,
   RESEND_WEBHOOK_SECRET: optionalString,
-  LEMONSQUEEZY_API_KEY: optionalString,
-  LEMONSQUEEZY_STORE_ID: optionalString,
-  LEMONSQUEEZY_WEBHOOK_SECRET: optionalString,
-  LEMONSQUEEZY_CREATOR_VARIANT_ID: optionalString,
-  LEMONSQUEEZY_PRO_VARIANT_ID: optionalString,
   SENTRY_DSN: optionalString,
   NEXT_PUBLIC_SENTRY_DSN: optionalString,
 });

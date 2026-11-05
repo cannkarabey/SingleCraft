@@ -13,12 +13,10 @@ const pill =
 export async function MarketingNav() {
   const [t, user] = await Promise.all([getTranslations("nav"), currentUser()]);
   const member = user && !user.anonymous;
-  const links = (["discover", "radar", "studio", "pricing"] as const).map(
-    (key) => ({
-      href: key === "pricing" ? "/pricing" : `/${key}`,
-      label: t(key),
-    }),
-  );
+  const links = (["discover", "radar", "studio"] as const).map((key) => ({
+    href: `/${key}`,
+    label: t(key),
+  }));
   return (
     <header className="nav-scroll-border bg-canvas/70 sticky top-0 z-40 backdrop-blur-xl">
       <nav

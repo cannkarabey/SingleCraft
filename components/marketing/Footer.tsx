@@ -18,7 +18,6 @@ export async function Footer() {
         { href: "/discover", text: nav("discover") },
         { href: "/radar", text: nav("radar") },
         { href: "/studio", text: nav("studio") },
-        { href: "/pricing", text: nav("pricing") },
       ],
     },
     {

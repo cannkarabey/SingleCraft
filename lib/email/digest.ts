@@ -1,6 +1,5 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
 import { capture } from "@/lib/analytics/server";
-import { limitsFor } from "@/lib/billing/limits";
 import type { DigestStory } from "@/emails/DailyDigest";
 import type { Database } from "@/lib/supabase/types";
 import { claimEmail, confirmEmail, releaseEmail } from "./claims";
@@ -72,8 +71,8 @@ async function publishCheck(db: Db, userId: string, now: Date) {
 }
 
 /**
- * send-digest (plan §7): every user whose local hour is their digest hour, on a plan with
- * the digest, gets one email per local day. Claimed in email_log before sending.
+ * send-digest (plan §7): every user whose local hour is their digest hour gets one email
+ * per local day. Claimed in email_log before sending.
  */
 export async function sendDigests(deps: {
   db: Db;
@@ -87,23 +86,7 @@ export async function sendDigests(deps: {
   });
   if (error) throw new Error(error.message);
 
-  const plans = new Map<string, string>();
-  if (due.length) {
-    const { data: profiles } = await deps.db
-      .from("profiles")
-      .select("id, plan")
-      .in(
-        "id",
-        due.map((d) => d.user_id),
-      );
-    for (const p of profiles ?? []) plans.set(p.id, p.plan);
-  }
-
   for (const user of due) {
-    if (!limitsFor(plans.get(user.user_id)).digest) {
-      result.skipped++;
-      continue;
-    }
     const claim = await claimEmail(deps.db, {
       user_id: user.user_id,
       kind: "digest",

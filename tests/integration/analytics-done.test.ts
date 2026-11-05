@@ -31,7 +31,7 @@ let storyId: string;
 
 beforeAll(async () => {
   process.env.RESEND_WEBHOOK_SECRET = `whsec_${key.toString("base64")}`;
-  user = await makeUser("creator");
+  user = await makeUser();
   session = user.client;
   const { data } = await db
     .from("stories")

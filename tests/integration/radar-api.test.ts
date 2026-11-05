@@ -36,8 +36,8 @@ afterAll(async () => {
   for (const c of cleanups) await c();
 });
 
-async function userWithNiche(plan: "free" | "creator") {
-  const u = await makeUser(plan);
+async function userWithNiche() {
+  const u = await makeUser();
   cleanups.push(u.remove);
   const created = await createNiche({
     admin: db,
@@ -55,49 +55,29 @@ const rows = (r: Awaited<ReturnType<typeof getRadar>>) => [
 ];
 
 describe("getRadar", () => {
-  test("free plan: first 3 rows open, the rest locked without content", async () => {
-    const u = await userWithNiche("free");
+  test("every matching story is returned, none locked", async () => {
+    const u = await userWithNiche();
     const radar = await getRadar({
       admin: db,
       userId: u.id,
       nicheId: u.nicheId,
-      plan: "free",
     });
-    const all = rows(radar);
-    expect(all.length).toBeGreaterThanOrEqual(6);
-    expect(all.slice(0, 3).every((r) => !r.locked && r.title)).toBe(true);
-    const locked = all.slice(3);
-    expect(locked.every((r) => r.locked)).toBe(true);
-    for (const row of locked) {
-      expect(Object.keys(row).sort()).toEqual(["bucket", "locked"]);
-    }
-    expect(radar.lockedCount).toBe(locked.length);
-  });
-
-  test("creator plan sees everything", async () => {
-    const u = await userWithNiche("creator");
-    const radar = await getRadar({
-      admin: db,
-      userId: u.id,
-      nicheId: u.nicheId,
-      plan: "creator",
-    });
-    expect(rows(radar).every((r) => !r.locked)).toBe(true);
-    expect(radar.lockedCount).toBe(0);
+    expect(rows(radar).length).toBeGreaterThanOrEqual(6);
+    expect(rows(radar).every((r) => r.title)).toBe(true);
   });
 
   test("another user's niche is rejected", async () => {
-    const a = await userWithNiche("free");
-    const b = await userWithNiche("free");
+    const a = await userWithNiche();
+    const b = await userWithNiche();
     await expect(
-      getRadar({ admin: db, userId: b.id, nicheId: a.nicheId, plan: "free" }),
+      getRadar({ admin: db, userId: b.id, nicheId: a.nicheId }),
     ).rejects.toThrow();
   });
 });
 
 describe("recordSignal", () => {
   test("hide removes the story from Radar for good; save marks it", async () => {
-    const u = await userWithNiche("creator");
+    const u = await userWithNiche();
     await recordSignal(u.client, {
       userId: u.id,
       storyId: storyIds[0],
@@ -113,75 +93,19 @@ describe("recordSignal", () => {
         admin: db,
         userId: u.id,
         nicheId: u.nicheId,
-        plan: "creator",
       }),
     );
-    const ids = all.map((r) => (r.locked ? null : r.story_id));
+    const ids = all.map((r) => r.story_id);
     expect(ids).not.toContain(storyIds[0]);
-    expect(
-      all.find((r) => !r.locked && r.story_id === storyIds[1]),
-    ).toMatchObject({ saved: true });
+    expect(all.find((r) => r.story_id === storyIds[1])).toMatchObject({
+      saved: true,
+    });
   });
 });
 
 describe("review fixes", () => {
-  test("free rows are a daily allowance: hiding opened rows does not open new ones (I2)", async () => {
-    const u = await userWithNiche("free");
-    const first = rows(
-      await getRadar({
-        admin: db,
-        userId: u.id,
-        nicheId: u.nicheId,
-        plan: "free",
-      }),
-    );
-    const opened = first.filter((r) => !r.locked);
-    expect(opened).toHaveLength(3);
-    for (const r of opened) {
-      if (!r.locked)
-        await recordSignal(u.client, {
-          userId: u.id,
-          storyId: r.story_id,
-          action: "hide",
-        });
-    }
-    const after = rows(
-      await getRadar({
-        admin: db,
-        userId: u.id,
-        nicheId: u.nicheId,
-        plan: "free",
-      }),
-    );
-    expect(after.filter((r) => !r.locked)).toHaveLength(0);
-    expect(after.length).toBeGreaterThan(0);
-  });
-
-  test("already revealed rows stay open on reload", async () => {
-    const u = await userWithNiche("free");
-    const ids = (r: Awaited<ReturnType<typeof getRadar>>) =>
-      rows(r).flatMap((x) => (x.locked ? [] : [x.story_id]));
-    const a = ids(
-      await getRadar({
-        admin: db,
-        userId: u.id,
-        nicheId: u.nicheId,
-        plan: "free",
-      }),
-    );
-    const b = ids(
-      await getRadar({
-        admin: db,
-        userId: u.id,
-        nicheId: u.nicheId,
-        plan: "free",
-      }),
-    );
-    expect(b.sort()).toEqual(a.sort());
-  });
-
   test("saving twice keeps one signal (I9)", async () => {
-    const u = await userWithNiche("creator");
+    const u = await userWithNiche();
     await recordSignal(u.client, {
       userId: u.id,
       storyId: storyIds[2],
@@ -201,7 +125,7 @@ describe("review fixes", () => {
   });
 
   test("saved stories appear in a Saved section even without niche fit (I6)", async () => {
-    const u = await userWithNiche("creator");
+    const u = await userWithNiche();
     const { data: offNiche } = await db
       .from("stories")
       .insert({
@@ -221,7 +145,6 @@ describe("review fixes", () => {
       admin: db,
       userId: u.id,
       nicheId: u.nicheId,
-      plan: "creator",
     });
     expect(radar.saved.map((s) => s.id)).toContain(offNiche!.id);
   });

@@ -7,7 +7,6 @@ import { LiveDemo } from "@/components/marketing/LiveDemo";
 import { LogoMarquee } from "@/components/marketing/LogoMarquee";
 import { ModuleCard } from "@/components/marketing/ModuleCard";
 import { PipelineSteps } from "@/components/marketing/PipelineSteps";
-import { PricingTable } from "@/components/marketing/PricingTable";
 import { Reveal } from "@/components/marketing/Reveal";
 import { currentUser } from "@/lib/auth/session";
 import { StoryCard } from "@/components/story/StoryCard";
@@ -155,18 +154,20 @@ export default async function Home() {
             style={{ animationDelay: "280ms" }}
           >
             <Button asChild size="lg" variant="brand" className="rounded-full">
-              <Link href={member ? "/discover" : "/signup?next=%2Fonboarding"}>
-                {t("hero.primaryCta")}
-              </Link>
+              <Link href="/discover">{t("hero.primaryCta")}</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="rounded-full"
-            >
-              <Link href="/discover">{t("hero.secondaryCta")}</Link>
-            </Button>
+            {!member && (
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full"
+              >
+                <Link href="/signup?next=%2Fonboarding">
+                  {t("hero.secondaryCta")}
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
         <HeroChips high={t("hero.chipHigh")} brief={t("hero.chipBrief")} />
@@ -274,14 +275,6 @@ export default async function Home() {
       </Section>
 
       <Section
-        id="pricing"
-        label={t("landing.labels.pricing")}
-        title={t("landing.pricing.title")}
-      >
-        <PricingTable signedIn={member} headingLevel={3} />
-      </Section>
-
-      <Section
         id="faq"
         label={t("landing.labels.faq")}
         title={t("landing.faq.title")}
@@ -325,18 +318,20 @@ export default async function Home() {
           </p>
           <div className="relative mt-8 flex flex-wrap justify-center gap-3">
             <Button asChild size="lg" variant="brand" className="rounded-full">
-              <Link href={member ? "/discover" : "/signup?next=%2Fonboarding"}>
-                {t("hero.primaryCta")}
-              </Link>
+              <Link href="/discover">{t("hero.primaryCta")}</Link>
             </Button>
-            <Button
-              asChild
-              size="lg"
-              variant="outline"
-              className="rounded-full"
-            >
-              <Link href="/discover">{t("hero.secondaryCta")}</Link>
-            </Button>
+            {!member && (
+              <Button
+                asChild
+                size="lg"
+                variant="outline"
+                className="rounded-full"
+              >
+                <Link href="/signup?next=%2Fonboarding">
+                  {t("hero.secondaryCta")}
+                </Link>
+              </Button>
+            )}
           </div>
         </div>
       </Reveal>

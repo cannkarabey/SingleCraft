@@ -13,8 +13,8 @@ afterAll(async () => {
   for (const c of cleanups) await c();
 });
 
-async function user(plan?: "free" | "creator") {
-  const u = await makeUser(plan);
+async function user() {
+  const u = await makeUser();
   cleanups.push(u.remove);
   return u;
 }
@@ -67,26 +67,16 @@ describe("createNiche", () => {
     expect(profile!.onboarded_at).not.toBeNull();
   });
 
-  test("free plan allows one niche", async () => {
+  test("an account may have three niches, not four", async () => {
     const u = await user();
-    expect((await createNiche({ admin: db, userId: u.id, input })).ok).toBe(
-      true,
-    );
-    expect(await createNiche({ admin: db, userId: u.id, input })).toEqual({
-      ok: false,
-      error: "limit",
-    });
-  });
-
-  test("creator plan allows three", async () => {
-    const u = await user("creator");
     for (let i = 0; i < 3; i++)
       expect((await createNiche({ admin: db, userId: u.id, input })).ok).toBe(
         true,
       );
-    expect((await createNiche({ admin: db, userId: u.id, input })).ok).toBe(
-      false,
-    );
+    expect(await createNiche({ admin: db, userId: u.id, input })).toEqual({
+      ok: false,
+      error: "limit",
+    });
   });
 });
 

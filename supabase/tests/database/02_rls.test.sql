@@ -1,5 +1,5 @@
 begin;
-select plan(23);
+select plan(21);
 
 -- Fixtures (as postgres, bypassing RLS)
 insert into auth.users (id, email) values
@@ -22,8 +22,6 @@ insert into public.briefs (id, user_id, story_id, platform, format, tone) values
 select is((select count(*)::int from public.profiles where id in
   ('00000000-0000-0000-0000-00000000000a','00000000-0000-0000-0000-00000000000b')), 2,
   'auth.users insert creates profiles');
-select is((select plan from public.profiles where id = '00000000-0000-0000-0000-00000000000a'), 'free',
-  'new profile is on free plan');
 
 -- Anonymous visitor
 set local role anon;
@@ -51,8 +49,6 @@ select is_empty($$select 1 from public.niches where user_id = '00000000-0000-000
   'A cannot see B''s niches');
 select is_empty($$update public.niches set name = 'hacked'
   where id = '30000000-0000-0000-0000-00000000000b' returning 1$$, 'A cannot update B''s niche');
-select throws_ok($$update public.profiles set plan = 'pro'
-  where id = '00000000-0000-0000-0000-00000000000a'$$, '42501', null, 'A cannot change own plan');
 select throws_ok($$update public.profiles set is_admin = true
   where id = '00000000-0000-0000-0000-00000000000a'$$, '42501', null, 'A cannot make self admin');
 select lives_ok($$update public.profiles set name = 'Ayşe'

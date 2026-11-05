@@ -17,28 +17,6 @@ export async function RadarRow({
   nicheId: string;
 }) {
   const t = await getTranslations("radar");
-  if (row.locked) {
-    return (
-      <div
-        className="relative overflow-hidden border-t"
-        aria-label={t("locked")}
-      >
-        <div aria-hidden className="space-y-2 px-4 py-3 blur-sm select-none">
-          <div className="bg-surface-3 h-3.5 w-3/4 rounded" />
-          <div className="bg-surface-3 h-3 w-1/2 rounded" />
-        </div>
-        <div className="bg-surface-1/60 absolute inset-0 flex items-center justify-between gap-3 px-4">
-          <span className="text-muted-foreground text-[13px]">
-            {t("locked")}
-          </span>
-          <Button asChild size="xs" variant="outline">
-            <Link href="/pricing">{t("upgrade")}</Link>
-          </Button>
-        </div>
-      </div>
-    );
-  }
-
   return (
     <article className="hover:bg-surface-2/40 space-y-1.5 border-t px-4 py-3 transition-colors duration-150">
       <div className="flex items-start gap-3">

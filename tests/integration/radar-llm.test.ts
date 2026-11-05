@@ -1,3 +1,4 @@
+import { LIMITS } from "@/lib/limits";
 import { afterAll, beforeAll, describe, expect, test } from "vitest";
 import { MockLanguageModelV4 } from "ai/test";
 import {
@@ -33,7 +34,7 @@ afterAll(async () => {
 });
 
 async function userWithNiche() {
-  const u = await makeUser("free");
+  const u = await makeUser();
   cleanups.push(u.remove);
   const created = await createNiche({
     admin: db,
@@ -75,7 +76,6 @@ describe("personal angle", () => {
       admin: db,
       userId: u.id,
       storyId,
-      plan: "free",
       send,
     });
     expect(first).toEqual({ status: "queued" });
@@ -103,7 +103,6 @@ describe("personal angle", () => {
       admin: db,
       userId: u.id,
       storyId,
-      plan: "free",
       send,
     });
     expect(again).toEqual({
@@ -119,14 +118,13 @@ describe("personal angle", () => {
       user_id: u.id,
       day: new Date().toISOString().slice(0, 10),
       kind: "personal_angle",
-      count: 5,
+      count: LIMITS.anglesPerDay!,
     });
     const result = await requestAngle({
       userDb: u.client,
       admin: db,
       userId: u.id,
       storyId,
-      plan: "free",
       send: async () => {},
     });
     expect(result).toEqual({ status: "limit" });
@@ -139,7 +137,6 @@ describe("personal angle", () => {
       admin: db,
       userId: u.id,
       storyId,
-      plan: "free",
       send: async () => {},
     });
     await expect(
@@ -166,7 +163,6 @@ test("a failed enqueue gives the usage back", async () => {
       admin: db,
       userId: u.id,
       storyId,
-      plan: "free",
       send: async () => {
         throw new Error("inngest down");
       },

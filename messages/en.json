@@ -8,13 +8,11 @@
     "radar": "Radar",
     "studio": "Studio",
     "search": "Search",
-    "cta": "Start free",
     "language": "Language",
     "signIn": "Sign in",
     "signOut": "Sign out",
     "account": "Account",
     "settings": "Settings",
-    "pricing": "Pricing",
     "openApp": "Open app",
     "app": "App",
     "menu": "Menu",
@@ -24,8 +22,8 @@
   "hero": {
     "title": "The daily signal radar for tech content creators.",
     "subtitle": "Discover rising AI and developer topics, see opportunities for your niche, and produce publish-ready content in minutes.",
-    "primaryCta": "Start free",
-    "secondaryCta": "See live Discover",
+    "primaryCta": "Start exploring",
+    "secondaryCta": "Create an account",
     "badge": "New: personal angles in Radar →",
     "chipHigh": "High signal",
     "chipBrief": "Brief ready"
@@ -101,8 +99,6 @@
     "save": "Save",
     "saved": "Saved",
     "hide": "Hide",
-    "locked": "Locked signal",
-    "upgrade": "Upgrade",
     "emptySection": "Nothing here yet for this niche.",
     "sections": {
       "high": {
@@ -219,8 +215,7 @@
     "list": {
       "published": "Published",
       "draft": "Draft"
-    },
-    "upgrade": "Upgrade"
+    }
   },
   "story": {
     "back": "Back to Discover",
@@ -297,9 +292,6 @@
       "linkedin": "Agent tooling just got simpler. The new SDK ships tracing and tool use by default — the two things teams usually build themselves. If you run agents in production, this is worth a look this week.",
       "shorts": "\"You've been debugging AI agents the hard way. This new SDK fixes that in one line.\""
     },
-    "pricing": {
-      "title": "Pricing"
-    },
     "faq": {
       "title": "FAQ",
       "accuracy": {
@@ -328,7 +320,6 @@
       "problem": "Problem",
       "pipeline": "Pipeline",
       "example": "Output",
-      "pricing": "Pricing",
       "faq": "Questions"
     },
     "cta": {
@@ -464,34 +455,6 @@
       "alerts": "You will no longer receive alert emails.",
       "manage": "Manage email settings"
     }
-  },
-  "pricing": {
-    "title": "Pricing",
-    "subtitle": "Start free. Upgrade when Radar and Studio become part of your routine.",
-    "perMonth": "/month",
-    "soon": "Coming soon",
-    "freeCta": "Start free",
-    "upgradeCta": "Upgrade to Creator",
-    "features": {
-      "discover": "Full Discover",
-      "radarRows": "{count, plural, one {# Radar signal} other {# Radar signals}} a day",
-      "radarUnlimited": "Unlimited Radar signals",
-      "niches": "{count, plural, one {# niche} other {# niches}}",
-      "briefs": "{count, plural, one {# Studio brief} other {# Studio briefs}} a day",
-      "briefsUnlimited": "Unlimited Studio briefs",
-      "angles": "{count} personal angles a day",
-      "digest": "Daily digest email"
-    }
-  },
-  "billing": {
-    "title": "Plan and billing",
-    "current": "Current plan: {plan}",
-    "upgrade": "Upgrade to Creator",
-    "manage": "Manage subscription",
-    "unavailable": "Payments are not available right now.",
-    "error": "Something went wrong. Please try again.",
-    "success": "Payment received. Your plan updates in a few seconds.",
-    "cancelling": "Your subscription ends on {date}; you then move to Free."
   },
   "admin": {
     "title": "Admin",

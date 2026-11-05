@@ -41,7 +41,7 @@ describe("Faz 7 done criteria", () => {
       .single();
     cleanups.push(async () => db.from("stories").delete().eq("id", story!.id));
 
-    const u = await makeUser("creator");
+    const u = await makeUser();
     cleanups.push(u.remove);
     const now = new Date();
     await db

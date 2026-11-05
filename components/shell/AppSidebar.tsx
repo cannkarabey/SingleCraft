@@ -52,7 +52,7 @@ async function SidebarBody() {
           <SidebarNav items={account} />
           {!member && (
             <Button asChild size="sm" className="w-full">
-              <Link href="/signup?next=%2Fonboarding">{t("cta")}</Link>
+              <Link href="/signup?next=%2Fonboarding">{t("signUp")}</Link>
             </Button>
           )}
         </div>

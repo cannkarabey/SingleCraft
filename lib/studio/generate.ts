@@ -3,7 +3,7 @@ import { generateText, Output } from "ai";
 import { callLlm, llmRetries, type LlmHandle } from "@/lib/llm/call";
 import type { z } from "zod";
 import { capture } from "@/lib/analytics/server";
-import { limitsFor } from "@/lib/billing/limits";
+import { LIMITS } from "@/lib/limits";
 import { serverEnv } from "@/lib/env";
 import { assertBudget, recordUsage } from "@/lib/llm/budget";
 import type { Database, Json } from "@/lib/supabase/types";
@@ -33,9 +33,9 @@ function check<T>(result: {
   return result.data as NonNullable<T>;
 }
 
-/** Counts one brief against the plan's daily limit (service role only, plan §1 #7). */
-async function takeBriefUnit(admin: Db, userId: string, plan: string | null) {
-  const limit = limitsFor(plan).briefsPerDay;
+/** Counts one brief against the daily limit (service role only, plan §1 #7). */
+async function takeBriefUnit(admin: Db, userId: string) {
+  const limit = LIMITS.briefsPerDay;
   return check(
     await admin.rpc("increment_usage", {
       p_user: userId,
@@ -71,7 +71,6 @@ export async function requestBrief({
   userDb,
   admin,
   userId,
-  plan,
   storyId,
   controls,
   send,
@@ -79,7 +78,6 @@ export async function requestBrief({
   userDb: Db;
   admin: Db;
   userId: string;
-  plan: string | null;
   storyId: string;
   controls: BriefControls;
   send: Send;
@@ -96,7 +94,7 @@ export async function requestBrief({
     .maybeSingle();
   if (!story) return { status: "not_found" };
 
-  if (!(await takeBriefUnit(admin, userId, plan))) return { status: "limit" };
+  if (!(await takeBriefUnit(admin, userId))) return { status: "limit" };
 
   const { data: niche } = await userDb
     .from("niches")
@@ -131,7 +129,6 @@ export async function requestRegenerate({
   userDb,
   admin,
   userId,
-  plan,
   briefId,
   controls,
   send,
@@ -139,7 +136,6 @@ export async function requestRegenerate({
   userDb: Db;
   admin: Db;
   userId: string;
-  plan: string | null;
   briefId: string;
   controls: BriefControls;
   send: Send;
@@ -154,7 +150,7 @@ export async function requestRegenerate({
     .eq("id", briefId)
     .maybeSingle();
   if (!own) return { status: "not_found" };
-  if (!(await takeBriefUnit(admin, userId, plan))) return { status: "limit" };
+  if (!(await takeBriefUnit(admin, userId))) return { status: "limit" };
 
   check(
     await admin
