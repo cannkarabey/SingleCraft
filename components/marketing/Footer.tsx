@@ -4,7 +4,7 @@ import { getTranslations } from "next-intl/server";
 
 const heading = "text-text-tertiary mb-4 text-xs font-medium";
 const link =
-  "text-muted-foreground hover:text-foreground text-[13px] transition-colors duration-150";
+  "text-muted-foreground hover:text-foreground text-[16.25px] transition-colors duration-150";
 
 export async function Footer() {
   const [t, nav] = await Promise.all([
@@ -39,11 +39,11 @@ export async function Footer() {
     <footer className="mt-24 border-t">
       <div className="mx-auto flex w-full max-w-[1200px] flex-col items-center gap-12 px-6 py-16 text-center">
         <div className="flex flex-col items-center gap-3">
-          <p className="flex items-center gap-2 text-[15px] font-[590] tracking-tight">
+          <p className="flex items-center gap-2 text-[18.75px] font-[590] tracking-tight">
             <Radio aria-hidden className="text-brand size-4" />
             SignalCraft
           </p>
-          <p className="text-muted-foreground max-w-xs text-[13px]">
+          <p className="text-muted-foreground max-w-xs text-[16.25px]">
             {t("tagline")}
           </p>
         </div>

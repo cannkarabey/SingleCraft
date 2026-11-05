@@ -35,7 +35,7 @@ export async function StoryCard({
           shape="dot"
           className="mt-[7px]"
         />
-        <Heading className="line-clamp-2 min-w-0 flex-1 text-[14px] leading-snug font-medium sm:line-clamp-1">
+        <Heading className="line-clamp-2 min-w-0 flex-1 text-[17.5px] leading-snug font-medium sm:line-clamp-1">
           <Link href={href} className="hover:underline">
             {story.title}
           </Link>
@@ -51,7 +51,7 @@ export async function StoryCard({
       </div>
       <div className="space-y-1.5 pl-5">
         {story.summary && (
-          <p className="text-muted-foreground line-clamp-2 text-[13px]">
+          <p className="text-muted-foreground line-clamp-2 text-[16.25px]">
             {story.summary}
           </p>
         )}
@@ -63,7 +63,7 @@ export async function StoryCard({
         </p>
         <PlatformSignals signals={story.signals} />
         {story.why_it_matters && (
-          <details className="group/why text-[13px]">
+          <details className="group/why text-[16.25px]">
             <summary className="text-muted-foreground hover:text-foreground cursor-pointer">
               {t("whyItMatters")}
             </summary>

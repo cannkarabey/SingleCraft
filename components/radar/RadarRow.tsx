@@ -20,7 +20,7 @@ export async function RadarRow({
   return (
     <article className="hover:bg-surface-2/40 space-y-1.5 border-t px-4 py-3 transition-colors duration-150">
       <div className="flex items-start gap-3">
-        <h3 className="line-clamp-2 min-w-0 flex-1 text-[14px] leading-snug font-medium sm:line-clamp-1">
+        <h3 className="line-clamp-2 min-w-0 flex-1 text-[17.5px] leading-snug font-medium sm:line-clamp-1">
           <Link
             href={`/discover/${row.slug ?? row.story_id}`}
             className="hover:underline"
@@ -41,7 +41,7 @@ export async function RadarRow({
         <Sparkline values={trend} label={t("trend")} width={96} height={20} />
       </div>
       {row.why_it_matters && (
-        <p className="text-muted-foreground text-[13px]">
+        <p className="text-muted-foreground text-[16.25px]">
           <span className="text-foreground font-medium">{t("why")}</span>{" "}
           {row.why_it_matters}
         </p>

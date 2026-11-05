@@ -27,7 +27,7 @@ export async function ScoreBreakdown({ scores }: { scores: Scores }) {
         return (
           <div
             key={label}
-            className="grid grid-cols-[6.5rem_1fr_2rem] items-center gap-3 text-[13px]"
+            className="grid grid-cols-[6.5rem_1fr_2rem] items-center gap-3 text-[16.25px]"
           >
             <dt className="text-muted-foreground">{label}</dt>
             <dd className="bg-surface-2 h-1.5 overflow-hidden rounded-full">

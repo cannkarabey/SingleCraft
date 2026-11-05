@@ -48,7 +48,7 @@ export function MobileSidebar({ children }: { children: React.ReactNode }) {
         </Button>
         <Link
           href="/"
-          className="flex items-center gap-2 text-[15px] font-[590] tracking-tight"
+          className="flex items-center gap-2 text-[18.75px] font-[590] tracking-tight"
         >
           <Radio aria-hidden className="text-brand size-4" />
           SignalCraft

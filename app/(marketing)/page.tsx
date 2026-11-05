@@ -60,7 +60,7 @@ function Section({
 /** Floating signal chips beside the hero copy; decorative only. */
 function HeroChips({ high, brief }: { high: string; brief: string }) {
   const chip =
-    "bg-surface-1/80 border-border-strong flex items-center gap-2.5 rounded-xl border px-4 py-3 text-[13px] shadow-[0_16px_48px_-16px_rgba(0,0,0,0.8)] backdrop-blur";
+    "bg-surface-1/80 border-border-strong flex items-center gap-2.5 rounded-xl border px-4 py-3 text-[16.25px] shadow-[0_16px_48px_-16px_rgba(0,0,0,0.8)] backdrop-blur";
   return (
     <div
       aria-hidden
@@ -132,7 +132,7 @@ export default async function Home() {
         <div>
           <Link
             href="/discover"
-            className="animate-rise bg-surface-2/80 text-muted-foreground hover:text-foreground hover:border-border-strong group mb-8 inline-flex h-8 items-center gap-2 rounded-full border px-3.5 text-[13px] backdrop-blur transition-all duration-300"
+            className="animate-rise bg-surface-2/80 text-muted-foreground hover:text-foreground hover:border-border-strong group mb-8 inline-flex h-10 items-center gap-2 rounded-full border px-3.5 text-[16.25px] backdrop-blur transition-all duration-300"
           >
             <span className="bg-signal animate-pulse-ring size-1.5 rounded-full" />
             {t("hero.badge")}

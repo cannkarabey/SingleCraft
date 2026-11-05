@@ -30,12 +30,12 @@ export async function SourceList({
               href={s.url}
               target="_blank"
               rel="noopener noreferrer nofollow"
-              className="text-[13px] font-medium break-words hover:underline"
+              className="text-[16.25px] font-medium break-words hover:underline"
             >
               {s.title}
             </a>
           ) : (
-            <span className="text-[13px] font-medium break-words">
+            <span className="text-[16.25px] font-medium break-words">
               {s.title}
             </span>
           )}

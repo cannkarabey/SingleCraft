@@ -8,10 +8,10 @@ import { createClient } from "@/lib/supabase/server";
 const HOURS = Array.from({ length: 24 }, (_, h) => h);
 const TIMEZONES = [...Intl.supportedValuesOf("timeZone"), "UTC"].sort();
 const field =
-  "h-8 w-44 shrink-0 rounded-md border bg-surface-2 px-2 text-[13px]";
-const row = "flex items-center justify-between gap-4 px-4 py-3 text-[13px]";
+  "h-10 w-56 shrink-0 rounded-md border bg-surface-2 px-2 text-[16.25px]";
+const row = "flex items-center justify-between gap-4 px-4 py-3 text-[16.25px]";
 const group = "divide-y overflow-hidden rounded-lg border bg-surface-1";
-const legend = "text-[15px] font-[590]";
+const legend = "text-[18.75px] font-[590]";
 
 export default async function SettingsPage({
   searchParams,
@@ -33,19 +33,19 @@ export default async function SettingsPage({
       <PageHeader title={t("title")} />
       <div className="mx-auto w-full max-w-2xl space-y-10 p-4 sm:p-8">
         {params.saved && (
-          <p role="status" className="text-signal text-[13px]">
+          <p role="status" className="text-signal text-[16.25px]">
             {t("saved")}
           </p>
         )}
         {params.error && (
-          <p role="alert" className="text-danger text-[13px]">
+          <p role="alert" className="text-danger text-[16.25px]">
             {t("error")}
           </p>
         )}
         <form action={saveEmailSettings} className="space-y-10">
           <fieldset className="space-y-3">
             <legend className={legend}>{t("digest.title")}</legend>
-            <p className="text-muted-foreground text-[13px]">
+            <p className="text-muted-foreground text-[16.25px]">
               {t("digest.hint")}
             </p>
             <div className={group}>
@@ -89,7 +89,7 @@ export default async function SettingsPage({
           </fieldset>
           <fieldset className="space-y-3">
             <legend className={legend}>{t("alerts.title")}</legend>
-            <p className="text-muted-foreground text-[13px]">
+            <p className="text-muted-foreground text-[16.25px]">
               {t("alerts.hint")}
             </p>
             <div className={group}>

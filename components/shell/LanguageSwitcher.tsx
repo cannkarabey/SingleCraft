@@ -17,7 +17,7 @@ export function LanguageSwitcher() {
     <div
       role="group"
       aria-label={t("language")}
-      className="bg-surface-2/80 flex h-9 items-center gap-0.5 rounded-full border p-0.5 text-[13px] font-medium"
+      className="bg-surface-2/80 flex h-11 items-center gap-0.5 rounded-full border p-0.5 text-[16.25px] font-medium"
     >
       {LOCALES.map((locale) => (
         <button

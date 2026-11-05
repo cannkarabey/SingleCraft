@@ -38,7 +38,7 @@ export default async function StudioPage({
               href={f ? `/studio?status=${f}` : "/studio"}
               aria-current={f === filter ? "page" : undefined}
               className={cn(
-                "flex h-7 items-center rounded-md border px-2.5 text-[13px] transition-colors duration-150",
+                "flex h-9 items-center rounded-md border px-2.5 text-[16.25px] transition-colors duration-150",
                 f === filter
                   ? "border-border-strong bg-surface-3 text-foreground"
                   : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",
@@ -70,7 +70,7 @@ export default async function StudioPage({
                 />
                 <Link
                   href={`/studio/${b.id}`}
-                  className="line-clamp-1 min-w-0 flex-1 text-[14px] font-medium hover:underline"
+                  className="line-clamp-1 min-w-0 flex-1 text-[17.5px] font-medium hover:underline"
                 >
                   {b.stories?.title ?? b.id}
                 </Link>

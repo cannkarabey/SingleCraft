@@ -40,7 +40,7 @@ async function SidebarBody() {
     <div className="flex h-full flex-col gap-4 p-2">
       <Link
         href="/"
-        className="hidden items-center gap-2 px-2 pt-1 text-[15px] font-[590] tracking-tight md:flex"
+        className="hidden items-center gap-2 px-2 pt-1 text-[18.75px] font-[590] tracking-tight md:flex"
       >
         <Radio aria-hidden className="text-brand size-4" />
         SignalCraft
@@ -83,7 +83,7 @@ async function SidebarBody() {
 export function AppSidebar() {
   return (
     <>
-      <aside className="bg-canvas sticky top-0 hidden h-screen w-60 shrink-0 md:block">
+      <aside className="bg-canvas sticky top-0 hidden h-screen w-72 shrink-0 md:block">
         <SidebarBody />
       </aside>
       <MobileSidebar>

@@ -84,7 +84,7 @@ export function PipelineSteps({
                 </span>
                 <span
                   className={cn(
-                    "text-muted-foreground mt-2 block text-[13px] leading-relaxed transition-all duration-500",
+                    "text-muted-foreground mt-2 block text-[16.25px] leading-relaxed transition-all duration-500",
                     on ? "opacity-100" : "opacity-70",
                   )}
                 >

@@ -73,7 +73,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
                 href={`/radar?niche=${n.id}`}
                 aria-current={n.id === niche.id ? "page" : undefined}
                 className={cn(
-                  "flex h-7 items-center rounded-md border px-2.5 text-[13px] transition-colors duration-150",
+                  "flex h-9 items-center rounded-md border px-2.5 text-[16.25px] transition-colors duration-150",
                   n.id === niche.id
                     ? "border-border-strong bg-surface-3 text-foreground"
                     : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",
@@ -98,7 +98,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
                 aria-hidden
                 className={cn("size-2 rounded-full", dot[key])}
               />
-              <h2 id={`radar-${key}`} className="text-[13px] font-medium">
+              <h2 id={`radar-${key}`} className="text-[16.25px] font-medium">
                 {t(`sections.${key}.title`)}
               </h2>
               <span
@@ -112,7 +112,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
               </p>
             </div>
             {rows.length === 0 ? (
-              <p className="text-muted-foreground border-t px-4 py-3 text-[13px]">
+              <p className="text-muted-foreground border-t px-4 py-3 text-[16.25px]">
                 {t("emptySection")}
               </p>
             ) : (
@@ -137,7 +137,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
               aria-hidden
               className="bg-muted-foreground/50 size-2 rounded-full"
             />
-            <h2 id="radar-saved" className="text-[13px] font-medium">
+            <h2 id="radar-saved" className="text-[16.25px] font-medium">
               {t("sections.saved.title")}
             </h2>
             <span className="text-text-tertiary font-mono text-xs">
@@ -145,7 +145,7 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
             </span>
           </div>
           {radar.saved.length === 0 ? (
-            <p className="text-muted-foreground border-t px-4 py-3 text-[13px]">
+            <p className="text-muted-foreground border-t px-4 py-3 text-[16.25px]">
               {t("sections.saved.empty")}
             </p>
           ) : (
@@ -154,12 +154,12 @@ export default async function RadarPage({ searchParams }: PageProps<"/radar">) {
                 <li key={story.id} className="border-t px-4 py-2.5">
                   <Link
                     href={`/discover/${story.slug ?? story.id}`}
-                    className="line-clamp-1 text-[14px] font-medium hover:underline"
+                    className="line-clamp-1 text-[17.5px] font-medium hover:underline"
                   >
                     {story.title}
                   </Link>
                   {story.summary && (
-                    <p className="text-muted-foreground mt-0.5 line-clamp-2 text-[13px]">
+                    <p className="text-muted-foreground mt-0.5 line-clamp-2 text-[16.25px]">
                       {story.summary}
                     </p>
                   )}

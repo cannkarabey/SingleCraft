@@ -34,13 +34,13 @@ export async function AppFrame({
       <div className="flex">
         <div
           aria-hidden
-          className="bg-canvas/40 hidden w-44 shrink-0 space-y-0.5 border-r p-2 sm:block"
+          className="bg-canvas/40 hidden w-52 shrink-0 space-y-0.5 border-r p-2 sm:block"
         >
           {ITEMS.map(({ key, Icon }) => (
             <div
               key={key}
               className={cn(
-                "flex h-7 items-center gap-2 rounded-md px-2 text-[13px]",
+                "flex h-9 items-center gap-2 rounded-md px-2 text-[16.25px]",
                 key === active
                   ? "bg-surface-3 text-foreground"
                   : "text-muted-foreground",

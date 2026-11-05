@@ -12,7 +12,7 @@ export default async function UnsubscribedPage({
       <p className="text-muted-foreground">{t(list)}</p>
       <Link
         href="/settings"
-        className="text-muted-foreground hover:text-foreground text-[13px] underline"
+        className="text-muted-foreground hover:text-foreground text-[16.25px] underline"
       >
         {t("manage")}
       </Link>

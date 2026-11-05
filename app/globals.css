@@ -46,6 +46,16 @@
   --ring: var(--sc-brand);
   --radius: 0.5rem;
   color-scheme: dark;
+
+  /* Reading size: the UI text scale is 1.25x Tailwind's default (display sizes 4xl+ stay).
+     Set here, unlayered, because @theme overrides are not picked up by the Turbopack loader. */
+  --text-xs: 0.9375rem;
+  --text-sm: 1.09375rem;
+  --text-base: 1.25rem;
+  --text-lg: 1.40625rem;
+  --text-xl: 1.5625rem;
+  --text-2xl: 1.875rem;
+  --text-3xl: 2.34375rem;
 }
 
 @theme inline {
@@ -99,7 +109,7 @@
   }
   body {
     @apply bg-background text-foreground;
-    font-size: 14px;
+    font-size: 17.5px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;

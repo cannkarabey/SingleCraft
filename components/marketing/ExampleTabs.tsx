@@ -39,7 +39,7 @@ export function ExampleTabs({
             tabIndex={i === active ? 0 : -1}
             onClick={() => setActive(i)}
             className={cn(
-              "rounded-md px-3 py-1.5 text-[13px] transition-colors duration-150",
+              "rounded-md px-3 py-1.5 text-[16.25px] transition-colors duration-150",
               i === active
                 ? "bg-surface-3 text-foreground"
                 : "text-muted-foreground hover:text-foreground",

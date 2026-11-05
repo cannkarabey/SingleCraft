@@ -42,7 +42,7 @@ export function TermInput({
         {value.map((term) => (
           <li
             key={term}
-            className="bg-surface-3 flex items-center gap-1 rounded-md border px-2 py-0.5 text-[13px]"
+            className="bg-surface-3 flex items-center gap-1 rounded-md border px-2 py-0.5 text-[16.25px]"
           >
             {term}
             <button
@@ -69,7 +69,7 @@ export function TermInput({
           }
         }}
         onBlur={() => draft && add(draft)}
-        className="bg-surface-2 focus-visible:ring-ring h-8 w-full rounded-md border px-3 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
+        className="bg-surface-2 focus-visible:ring-ring h-10 w-full rounded-md border px-3 text-[16.25px] focus-visible:ring-2 focus-visible:outline-none"
       />
       {suggestions.length > 0 && (
         <div className="flex flex-wrap gap-1.5">

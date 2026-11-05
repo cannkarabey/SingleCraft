@@ -44,7 +44,9 @@ function Row({ hidden = false }: { hidden?: boolean }) {
 export function LogoMarquee({ label }: { label: string }) {
   return (
     <div className="space-y-8 border-y py-12">
-      <p className="text-muted-foreground text-center text-[13px]">{label}</p>
+      <p className="text-muted-foreground text-center text-[16.25px]">
+        {label}
+      </p>
       <div className="mask-fade-x group overflow-hidden">
         <div className="animate-marquee flex w-max group-hover:[animation-play-state:paused]">
           <Row />

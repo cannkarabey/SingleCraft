@@ -34,7 +34,7 @@ function RadarPanel() {
     <div className="space-y-3">
       {(Object.keys(RADAR_ROWS) as (keyof typeof RADAR_ROWS)[]).map((group) => (
         <div key={group} className="overflow-hidden rounded-lg border">
-          <div className="bg-surface-2 flex h-9 items-center gap-2 px-4 text-[13px] font-medium">
+          <div className="bg-surface-2 flex h-11 items-center gap-2 px-4 text-[16.25px] font-medium">
             <span
               aria-hidden
               className={cn("size-2 rounded-full", DOT[group])}
@@ -50,7 +50,7 @@ function RadarPanel() {
               className="hover:bg-surface-2/50 space-y-2 border-t px-4 py-3 transition-colors duration-200"
             >
               <div className="flex items-start gap-3">
-                <p className="min-w-0 flex-1 text-[14px] font-medium">
+                <p className="min-w-0 flex-1 text-[17.5px] font-medium">
                   {title}
                 </p>
                 <span className="text-signal font-mono text-xs">{score}</span>
@@ -59,12 +59,12 @@ function RadarPanel() {
                 type="button"
                 aria-expanded={open === title}
                 onClick={() => setOpen(open === title ? null : title)}
-                className="hover:border-border-strong hover:bg-surface-3 h-7 rounded-md border px-2.5 text-[13px] transition-all duration-200 active:scale-95"
+                className="hover:border-border-strong hover:bg-surface-3 h-9 rounded-md border px-2.5 text-[16.25px] transition-all duration-200 active:scale-95"
               >
                 {t("angle.cta")}
               </button>
               {open === title && (
-                <p className="animate-panel-in border-brand/30 bg-brand/5 rounded-md border p-3 text-[13px]">
+                <p className="animate-panel-in border-brand/30 bg-brand/5 rounded-md border p-3 text-[16.25px]">
                   <span className="font-medium">{t("angle.label")}</span>{" "}
                   {td("radarAngle")}
                 </p>
@@ -88,7 +88,7 @@ function StudioPanel() {
   return (
     <div className="grid gap-4 md:grid-cols-[1fr_1.2fr]">
       <div className="space-y-2">
-        <p className="text-[13px] font-medium">{td("hooksLabel")}</p>
+        <p className="text-[16.25px] font-medium">{td("hooksLabel")}</p>
         {hooks.map((h, i) => (
           <button
             key={h}
@@ -96,7 +96,7 @@ function StudioPanel() {
             aria-pressed={hook === i}
             onClick={() => setHook(i)}
             className={cn(
-              "flex w-full items-start gap-2 rounded-lg border p-3 text-left text-[13px] transition-all duration-200 active:scale-[0.99]",
+              "flex w-full items-start gap-2 rounded-lg border p-3 text-left text-[16.25px] transition-all duration-200 active:scale-[0.99]",
               hook === i
                 ? "border-brand/60 bg-brand/10"
                 : "hover:border-border-strong hover:bg-surface-2",
@@ -124,7 +124,7 @@ function StudioPanel() {
               aria-pressed={format === f}
               onClick={() => setFormat(f)}
               className={cn(
-                "rounded-md px-3 py-1.5 text-[13px] transition-colors duration-200",
+                "rounded-md px-3 py-1.5 text-[16.25px] transition-colors duration-200",
                 format === f
                   ? "bg-surface-3 text-foreground"
                   : "text-muted-foreground hover:text-foreground",
@@ -136,7 +136,7 @@ function StudioPanel() {
         </div>
         <p
           key={format}
-          className="animate-panel-in bg-surface-2 min-h-32 rounded-lg p-3 text-[13px] leading-relaxed whitespace-pre-line"
+          className="animate-panel-in bg-surface-2 min-h-32 rounded-lg p-3 text-[16.25px] leading-relaxed whitespace-pre-line"
         >
           {te(format)}
         </p>
@@ -145,7 +145,7 @@ function StudioPanel() {
           onClick={() => setPublished(true)}
           disabled={published}
           className={cn(
-            "h-8 w-full rounded-md text-[13px] font-medium transition-all duration-300 active:scale-[0.98]",
+            "h-10 w-full rounded-md text-[16.25px] font-medium transition-all duration-300 active:scale-[0.98]",
             published
               ? "bg-signal/15 text-signal"
               : "bg-primary text-primary-foreground hover:shadow-[0_0_24px_-6px_rgba(247,248,248,0.6)]",
@@ -208,7 +208,7 @@ export function LiveDemo({ discover }: { discover: React.ReactNode }) {
           role="tablist"
           aria-orientation="vertical"
           onKeyDown={onKeyDown}
-          className="bg-canvas/40 flex shrink-0 gap-1 overflow-x-auto border-b p-2 sm:w-48 sm:flex-col sm:border-r sm:border-b-0"
+          className="bg-canvas/40 flex shrink-0 gap-1 overflow-x-auto border-b p-2 sm:w-56 sm:flex-col sm:border-r sm:border-b-0"
         >
           {TABS.map(({ key, Icon }) => (
             <button
@@ -221,7 +221,7 @@ export function LiveDemo({ discover }: { discover: React.ReactNode }) {
               tabIndex={tab === key ? 0 : -1}
               onClick={() => setTab(key)}
               className={cn(
-                "flex h-8 items-center gap-2 rounded-md px-2.5 text-[13px] transition-all duration-200",
+                "flex h-10 items-center gap-2 rounded-md px-2.5 text-[16.25px] transition-all duration-200",
                 tab === key
                   ? "bg-surface-3 text-foreground shadow-sm"
                   : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",

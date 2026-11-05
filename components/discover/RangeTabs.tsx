@@ -18,7 +18,7 @@ export async function RangeTabs({ filters }: { filters: DiscoverFilters }) {
           href={discoverHref(filters, { range })}
           aria-current={filters.range === range ? "page" : undefined}
           className={cn(
-            "rounded-[5px] px-2.5 py-1 text-[13px] whitespace-nowrap transition-colors duration-150",
+            "rounded-[5px] px-2.5 py-1 text-[16.25px] whitespace-nowrap transition-colors duration-150",
             filters.range === range
               ? "bg-surface-3 text-foreground"
               : "text-muted-foreground hover:text-foreground",

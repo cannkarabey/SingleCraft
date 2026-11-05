@@ -25,7 +25,7 @@ function Section({
       aria-labelledby={`${id}-title`}
       className="bg-surface-1 space-y-3 rounded-lg border p-4"
     >
-      <h2 id={`${id}-title`} className="text-[13px] font-medium">
+      <h2 id={`${id}-title`} className="text-[16.25px] font-medium">
         {title}
       </h2>
       <div className="overflow-x-auto">{children}</div>

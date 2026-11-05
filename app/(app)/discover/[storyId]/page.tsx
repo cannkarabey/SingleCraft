@@ -71,7 +71,7 @@ export default async function StoryPage({
       <div className="flex h-12 items-center border-b px-4">
         <Link
           href="/discover"
-          className="text-muted-foreground hover:text-foreground text-[13px] transition-colors duration-150"
+          className="text-muted-foreground hover:text-foreground text-[16.25px] transition-colors duration-150"
         >
           ← {t("back")}
         </Link>
@@ -112,14 +112,16 @@ export default async function StoryPage({
 
           {story.why_it_matters && (
             <section className="space-y-2">
-              <h2 className="text-[13px] font-medium">{t("whyItMatters")}</h2>
+              <h2 className="text-[16.25px] font-medium">
+                {t("whyItMatters")}
+              </h2>
               <p className="text-muted-foreground">{story.why_it_matters}</p>
             </section>
           )}
 
           {angles.length > 0 && (
             <section className="space-y-2">
-              <h2 className="text-[13px] font-medium">{t("angles")}</h2>
+              <h2 className="text-[16.25px] font-medium">{t("angles")}</h2>
               <ul className="text-muted-foreground list-disc space-y-1 pl-5">
                 {angles.map((angle) => (
                   <li key={angle}>{angle}</li>
@@ -130,12 +132,12 @@ export default async function StoryPage({
 
           {entities.length > 0 && (
             <section className="space-y-2">
-              <h2 className="text-[13px] font-medium">{t("entities")}</h2>
+              <h2 className="text-[16.25px] font-medium">{t("entities")}</h2>
               <ul className="flex flex-wrap gap-1.5">
                 {entities.map((entity) => (
                   <li
                     key={entity}
-                    className="bg-surface-2 rounded-md border px-2 py-0.5 text-[13px]"
+                    className="bg-surface-2 rounded-md border px-2 py-0.5 text-[16.25px]"
                   >
                     {entity}
                   </li>
@@ -147,12 +149,12 @@ export default async function StoryPage({
 
         <aside className="min-w-0 space-y-8 border-t p-4 sm:p-6 lg:border-t-0 lg:border-l">
           <section className="space-y-3">
-            <h2 className="text-[13px] font-medium">{t("scores")}</h2>
+            <h2 className="text-[16.25px] font-medium">{t("scores")}</h2>
             <ScoreBreakdown scores={story} />
           </section>
           {story.trend.length > 1 && (
             <section className="space-y-3">
-              <h2 className="text-[13px] font-medium">{t("trend")}</h2>
+              <h2 className="text-[16.25px] font-medium">{t("trend")}</h2>
               <Sparkline
                 values={story.trend.map((p) => p.value)}
                 label={t("trend")}
@@ -160,7 +162,7 @@ export default async function StoryPage({
             </section>
           )}
           <section className="space-y-3">
-            <h2 className="text-[13px] font-medium">{t("sources")}</h2>
+            <h2 className="text-[16.25px] font-medium">{t("sources")}</h2>
             <SourceList sources={story.sources} now={now} />
           </section>
         </aside>

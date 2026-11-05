@@ -65,7 +65,10 @@ test.describe("auth", () => {
     await page.getByLabel("E-posta").fill(`nobody-${Date.now()}@test.dev`);
     await page.getByRole("button", { name: "Giriş linki gönder" }).click();
     await expect(page.locator("p[role=alert]")).toContainText("Önce kayıt ol");
-    await page.getByRole("link", { name: "Kayıt ol" }).click();
+    await page
+      .getByRole("main")
+      .getByRole("link", { name: "Kayıt ol" })
+      .click();
     await expect(page).toHaveURL(/\/signup/);
   });
 

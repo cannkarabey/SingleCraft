@@ -38,7 +38,7 @@ export function FeedbackWidget() {
           aria-labelledby={`${id}-title`}
           className="bg-surface-2 border-border-strong w-[min(20rem,calc(100vw-2rem))] space-y-3 rounded-xl border p-4 shadow-[0_16px_48px_-12px_rgba(0,0,0,0.8)]"
         >
-          <h2 id={`${id}-title`} className="text-[13px] font-medium">
+          <h2 id={`${id}-title`} className="text-[16.25px] font-medium">
             {t("title")}
           </h2>
           <form
@@ -59,7 +59,7 @@ export function FeedbackWidget() {
               value={message}
               placeholder={t("placeholder")}
               onChange={(e) => setMessage(e.target.value)}
-              className="bg-surface-1 w-full rounded-md border p-2 text-[13px]"
+              className="bg-surface-1 w-full rounded-md border p-2 text-[16.25px]"
             />
             <div className="flex items-center justify-between gap-2">
               <p

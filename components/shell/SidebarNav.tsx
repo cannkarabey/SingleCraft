@@ -43,7 +43,7 @@ export function SidebarNav({ items }: { items: SidebarItem[] }) {
               href={href}
               aria-current={active ? "page" : undefined}
               className={cn(
-                "flex h-7 items-center gap-2 rounded-md px-2 text-[13px] transition-colors duration-150",
+                "flex h-9 items-center gap-2 rounded-md px-2 text-[16.25px] transition-colors duration-150",
                 active
                   ? "bg-surface-3 text-foreground"
                   : "text-muted-foreground hover:bg-surface-2 hover:text-foreground",

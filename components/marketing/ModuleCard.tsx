@@ -78,7 +78,7 @@ export function ModuleCard({
         <p className="text-text-tertiary font-mono text-xs">{caption}</p>
         <div className="flex items-center justify-between gap-3">
           <h3 className="text-lg font-[590] tracking-tight">{title}</h3>
-          <span className="text-muted-foreground group-hover:text-foreground inline-flex items-center gap-1 text-[13px] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
+          <span className="text-muted-foreground group-hover:text-foreground inline-flex items-center gap-1 text-[16.25px] transition-all duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5">
             {open}
             <ArrowUpRight className="size-3.5" aria-hidden />
           </span>

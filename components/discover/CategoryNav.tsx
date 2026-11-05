@@ -34,7 +34,7 @@ export async function CategoryNav({
                 href={discoverHref(filters, { category: key })}
                 aria-current={active ? "page" : undefined}
                 className={cn(
-                  "flex h-7 items-center gap-1.5 rounded-md border px-2.5 text-[13px] transition-colors duration-150",
+                  "flex h-9 items-center gap-1.5 rounded-md border px-2.5 text-[16.25px] transition-colors duration-150",
                   active
                     ? "border-border-strong bg-surface-3 text-foreground"
                     : "text-muted-foreground hover:bg-surface-2 hover:text-foreground border-transparent",

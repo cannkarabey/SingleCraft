@@ -29,7 +29,7 @@ const POLL_MS = 3000;
 const SAFE_URL = /^https?:\/\//i;
 
 const area =
-  "w-full rounded-md border border-transparent bg-surface-2 p-3 text-[13px] leading-relaxed focus-visible:border-border-strong focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
+  "w-full rounded-md border border-transparent bg-surface-2 p-3 text-[16.25px] leading-relaxed focus-visible:border-border-strong focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none";
 
 function controlsOf(b: BriefDetail): ControlsInput {
   return {
@@ -252,11 +252,14 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
           {ready && content && (
             <>
               <fieldset className="space-y-2">
-                <legend className="text-[13px] font-medium">
+                <legend className="text-[16.25px] font-medium">
                   {t("editor.hooks")}
                 </legend>
                 {content.hooks.map((h, i) => (
-                  <label key={i} className="flex items-start gap-2 text-[13px]">
+                  <label
+                    key={i}
+                    className="flex items-start gap-2 text-[16.25px]"
+                  >
                     <input
                       type="radio"
                       name="hook"
@@ -270,10 +273,10 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
               </fieldset>
 
               <section className="space-y-2">
-                <h2 className="text-[13px] font-medium">
+                <h2 className="text-[16.25px] font-medium">
                   {t("editor.titles")}
                 </h2>
-                <ul className="text-muted-foreground list-disc pl-5 text-[13px]">
+                <ul className="text-muted-foreground list-disc pl-5 text-[16.25px]">
                   {content.titles.map((title) => (
                     <li key={title}>{title}</li>
                   ))}
@@ -293,7 +296,7 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
                       aria-selected={tab === key}
                       onClick={() => setTab(key)}
                       className={cn(
-                        "rounded-md px-3 py-1.5 text-[13px] transition-colors duration-150",
+                        "rounded-md px-3 py-1.5 text-[16.25px] transition-colors duration-150",
                         tab === key
                           ? "bg-surface-3 text-foreground"
                           : "text-muted-foreground hover:text-foreground",
@@ -422,10 +425,10 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
               </section>
 
               <section className="space-y-2">
-                <h2 className="text-[13px] font-medium">
+                <h2 className="text-[16.25px] font-medium">
                   {t("editor.sources")}
                 </h2>
-                <ul className="space-y-1 text-[13px]">
+                <ul className="space-y-1 text-[16.25px]">
                   {content.sources.map((s) => (
                     <li key={s.url}>
                       {SAFE_URL.test(s.url) ? (
@@ -457,7 +460,9 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
 
         <aside className="space-y-6 border-t p-4 lg:border-t-0 lg:border-l">
           <section className="space-y-3">
-            <h2 className="text-[13px] font-medium">{t("controls.title")}</h2>
+            <h2 className="text-[16.25px] font-medium">
+              {t("controls.title")}
+            </h2>
             <ControlFields value={controls} onChange={setControls} />
             <Button
               className="w-full"
@@ -472,10 +477,12 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
           {ready && (
             <section className="space-y-3 border-t pt-6">
               {brief.published_at ? (
-                <p className="text-signal text-[13px]">{t("publish.done")}</p>
+                <p className="text-signal text-[16.25px]">
+                  {t("publish.done")}
+                </p>
               ) : (
                 <>
-                  <label className="block space-y-1 text-[13px]">
+                  <label className="block space-y-1 text-[16.25px]">
                     <span className="text-muted-foreground">
                       {t("publish.url")}
                     </span>
@@ -484,7 +491,7 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
                       maxLength={500}
                       value={publishUrl}
                       onChange={(e) => setPublishUrl(e.target.value)}
-                      className="bg-surface-2 h-8 w-full rounded-md border px-2 text-[13px]"
+                      className="bg-surface-2 h-10 w-full rounded-md border px-2 text-[16.25px]"
                     />
                   </label>
                   <Button
@@ -501,10 +508,10 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
 
           {brief.versions.length > 1 && (
             <section className="space-y-2 border-t pt-6">
-              <h2 className="text-[13px] font-medium">
+              <h2 className="text-[16.25px] font-medium">
                 {t("editor.versions")}
               </h2>
-              <ul className="space-y-1 text-[13px]">
+              <ul className="space-y-1 text-[16.25px]">
                 {brief.versions.map((v) => (
                   <li
                     key={v.id}

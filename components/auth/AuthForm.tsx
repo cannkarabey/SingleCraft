@@ -48,7 +48,7 @@ export async function AuthForm({
         <h1 className="text-xl font-[590] tracking-tight">
           {t(`${p}title` as "title")}
         </h1>
-        <p className="text-muted-foreground text-[13px]">
+        <p className="text-muted-foreground text-[16.25px]">
           {t(`${p}subtitle` as "subtitle")}
         </p>
       </div>
@@ -56,7 +56,7 @@ export async function AuthForm({
       {sent && (
         <p
           role="status"
-          className="border-signal/40 bg-signal/10 rounded-md border p-3 text-[13px]"
+          className="border-signal/40 bg-signal/10 rounded-md border p-3 text-[16.25px]"
         >
           {t(`${p}sent` as "sent")}
           {localMailbox && (
@@ -78,7 +78,7 @@ export async function AuthForm({
       {error && (
         <p
           role="alert"
-          className="border-danger/40 bg-danger/10 rounded-md border p-3 text-[13px]"
+          className="border-danger/40 bg-danger/10 rounded-md border p-3 text-[16.25px]"
         >
           {t(errorKey)}
         </p>
@@ -87,7 +87,7 @@ export async function AuthForm({
       <form action={sendMagicLink} className="space-y-3">
         <input type="hidden" name="next" value={next} />
         <input type="hidden" name="mode" value={mode} />
-        <label className="block space-y-1.5 text-[13px]">
+        <label className="block space-y-1.5 text-[16.25px]">
           <span className="text-muted-foreground">{t("email")}</span>
           <input
             type="email"
@@ -95,7 +95,7 @@ export async function AuthForm({
             required
             autoComplete="email"
             maxLength={254}
-            className="bg-surface-2 focus-visible:ring-ring h-9 w-full rounded-md border px-3 text-[13px] focus-visible:ring-2 focus-visible:outline-none"
+            className="bg-surface-2 focus-visible:ring-ring h-11 w-full rounded-md border px-3 text-[16.25px] focus-visible:ring-2 focus-visible:outline-none"
           />
         </label>
         <Button type="submit" size="lg" className="w-full">
@@ -124,7 +124,7 @@ export async function AuthForm({
         </div>
       )}
 
-      <p className="text-muted-foreground text-center text-[13px]">
+      <p className="text-muted-foreground text-center text-[16.25px]">
         {t(`${p}switch` as "switch")}{" "}
         <Link
           href={`/${other}?next=${encodeURIComponent(next)}`}

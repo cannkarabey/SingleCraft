@@ -36,11 +36,11 @@ export async function MarketingNav() {
           <NavLinks links={links} />
           <LanguageSwitcher />
           {member ? (
-            <Button asChild variant="brand" className="h-9 px-4 text-sm">
+            <Button asChild variant="brand" className="h-11 px-4 text-sm">
               <Link href="/discover">{t("openApp")}</Link>
             </Button>
           ) : (
-            <div className="bg-surface-2/80 flex h-9 items-center gap-0.5 rounded-full border p-0.5 text-[13px] font-medium">
+            <div className="bg-surface-2/80 flex h-11 items-center gap-0.5 rounded-full border p-0.5 text-[16.25px] font-medium">
               <Link
                 href="/login"
                 className={`${pill} text-muted-foreground hover:text-foreground`}
