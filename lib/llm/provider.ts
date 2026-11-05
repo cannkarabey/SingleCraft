@@ -1,6 +1,7 @@
 import { anthropic } from "@ai-sdk/anthropic";
 import { google } from "@ai-sdk/google";
 import type { EmbeddingModel, LanguageModel } from "ai";
+import { GOOGLE_AUTO, GOOGLE_CHAIN } from "./models";
 
 export type Provider = "google" | "anthropic";
 export type LlmTask = "story" | "studio" | "angle";
@@ -47,8 +48,16 @@ export function storyPipelineConfigured(): boolean {
 export function getLanguageModel(task: LlmTask): {
   model: LanguageModel;
   id: string;
+  /** True for google:auto, the free-tier fallback chain (see ./call.ts). */
+  auto?: boolean;
 } {
   const spec = specFromEnv(TASK_ENV[task]);
+  if (spec === GOOGLE_AUTO)
+    return {
+      model: google(GOOGLE_CHAIN[0].id),
+      id: GOOGLE_AUTO,
+      auto: true,
+    };
   const { provider, model } = parseModelSpec(spec);
   return {
     model: provider === "google" ? google(model) : anthropic(model),

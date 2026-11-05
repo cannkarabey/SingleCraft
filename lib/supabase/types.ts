@@ -141,6 +141,20 @@ isOneToOne: false
       referencedColumns: ["id"]
     }
                   ]
+                },"llm_model_state": {
+                  Row: {
+                    "model": string,"reason": string,"unavailable_until": string,"updated_at": string
+                  }
+                  ComputedFields: never
+                  Insert: {
+                    "model": string,"reason": string,"unavailable_until": string,"updated_at"?: string
+                  }
+                  Update: {
+                    "model"?: string,"reason"?: string,"unavailable_until"?: string,"updated_at"?: string
+                  }
+                  Relationships: [
+                    
+                  ]
                 },"llm_usage": {
                   Row: {
                     "cost_usd": number | null,"created_at": string,"id": number,"job": string,"model": string,"tokens_in": number | null,"tokens_out": number | null

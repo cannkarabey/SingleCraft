@@ -1,5 +1,6 @@
 import type { SupabaseClient } from "@supabase/supabase-js";
-import { generateText, Output, type LanguageModel } from "ai";
+import { generateText, Output } from "ai";
+import { callLlm, llmRetries, type LlmHandle } from "@/lib/llm/call";
 import type { z } from "zod";
 import { capture } from "@/lib/analytics/server";
 import { limitsFor } from "@/lib/billing/limits";
@@ -176,6 +177,8 @@ export async function requestRegenerate({
 
 type Pack<S extends z.ZodType> = {
   output: z.infer<S>;
+  /** The model that answered (the chain may have moved on from the first). */
+  modelId: string;
   tokensIn: number;
   tokensOut: number;
 };
@@ -183,7 +186,7 @@ type Pack<S extends z.ZodType> = {
 export async function runPack<S extends z.ZodType>(
   deps: {
     db: Db;
-    llm: { model: LanguageModel; id: string };
+    llm: LlmHandle;
     /** Defaults to LLM_DAILY_BUDGET_USD. */
     budgetUsd?: number;
   },
@@ -197,22 +200,26 @@ export async function runPack<S extends z.ZodType>(
     deps.db,
     deps.budgetUsd ?? serverEnv().LLM_DAILY_BUDGET_USD,
   );
-  const { output, usage } = await generateText({
-    model: deps.llm.model,
-    output: Output.object({ schema }),
-    system,
-    prompt,
-    maxRetries: 1,
-    abortSignal: AbortSignal.timeout(LLM_TIMEOUT_MS),
-  });
+  const { value, modelId } = await callLlm(deps, (model) =>
+    generateText({
+      model,
+      output: Output.object({ schema }),
+      system,
+      prompt,
+      maxRetries: llmRetries(deps.llm),
+      abortSignal: AbortSignal.timeout(LLM_TIMEOUT_MS),
+    }),
+  );
+  const { output, usage } = value;
   await recordUsage(deps.db, {
     job: STUDIO_JOB,
-    model: deps.llm.id,
+    model: modelId,
     inputTokens: usage.inputTokens,
     outputTokens: usage.outputTokens,
   });
   return {
     output: output as z.infer<S>,
+    modelId,
     tokensIn: usage.inputTokens ?? 0,
     tokensOut: usage.outputTokens ?? 0,
   };
@@ -279,7 +286,7 @@ export async function loadBriefContext(db: Db, briefId: string) {
 export async function generateBrief(
   deps: {
     db: Db;
-    llm: { model: LanguageModel; id: string };
+    llm: LlmHandle;
     budgetUsd?: number;
   },
   briefId: string,
@@ -306,7 +313,7 @@ export async function generateBrief(
         sources,
         ai_disclosure: aiDisclosure(language),
       }),
-      model: deps.llm.id,
+      model: short.modelId,
       tokensIn: short.tokensIn + long.tokensIn,
       tokensOut: short.tokensOut + long.tokensOut,
     });

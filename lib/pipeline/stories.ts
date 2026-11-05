@@ -1,5 +1,7 @@
 import { DEDUPE } from "./config";
-import { generateText, Output, type LanguageModel } from "ai";
+import { callLlm, llmRetries, type LlmHandle } from "@/lib/llm/call";
+import { ModelsBusyError } from "@/lib/llm/fallback";
+import { generateText, Output } from "ai";
 import {
   assertBudget,
   BudgetExceededError,
@@ -329,7 +331,7 @@ const STORY_JOB = "story";
 
 export type BuildDeps = {
   db: Db;
-  llm: { model: LanguageModel; id: string };
+  llm: LlmHandle;
   now: Date;
   topN: number;
   dailyLimit: number;
@@ -449,22 +451,26 @@ async function generateStory(
   let lastError: unknown;
   for (let attempt = 0; attempt < 2; attempt++) {
     try {
-      const { output, usage } = await generateText({
-        model: deps.llm.model,
-        output: Output.object({ schema: StorySchema }),
-        system: STORY_SYSTEM,
-        prompt,
-        maxRetries: 1,
-        abortSignal: AbortSignal.timeout(LLM_TIMEOUT_MS),
-      });
+      const { value, modelId } = await callLlm(deps, (model) =>
+        generateText({
+          model,
+          output: Output.object({ schema: StorySchema }),
+          system: STORY_SYSTEM,
+          prompt,
+          maxRetries: llmRetries(deps.llm),
+          abortSignal: AbortSignal.timeout(LLM_TIMEOUT_MS),
+        }),
+      );
       await recordUsage(deps.db, {
         job: STORY_JOB,
-        model: deps.llm.id,
-        inputTokens: usage.inputTokens,
-        outputTokens: usage.outputTokens,
+        model: modelId,
+        inputTokens: value.usage.inputTokens,
+        outputTokens: value.usage.outputTokens,
       });
-      return output;
+      return value.output;
     } catch (error) {
+      // Nothing was called: not an attempt, and not this story's fault.
+      if (error instanceof ModelsBusyError) throw error;
       // Count the attempt against the daily cap even when no usage came back.
       await recordUsage(deps.db, { job: STORY_JOB, model: deps.llm.id });
       lastError = error;
@@ -541,7 +547,9 @@ export async function buildStory(
   let output: StoryOutput;
   try {
     output = await generateStory(deps, storyPrompt(sources));
-  } catch {
+  } catch (error) {
+    // Every model is resting: like an exhausted budget, stop and let the next run retry.
+    if (error instanceof ModelsBusyError) return "stopped";
     const failures = story.build_failures + 1;
     const patch =
       story.status === "published"

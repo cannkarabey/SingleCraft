@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
+import { useCooldown } from "@/components/ui/use-cooldown";
 
 const POLL_MS = 1500;
 const MAX_POLLS = 20;
@@ -24,8 +25,10 @@ export function AngleButton({
   );
   const [angle, setAngle] = useState<string | null>(null);
   const url = `/api/radar/${storyId}/angle?niche=${nicheId}`;
+  const { cooling, start: startCooldown } = useCooldown(4000);
 
   async function request() {
+    startCooldown();
     setState("loading");
     try {
       const res = await fetch(url, { method: "POST" });
@@ -66,7 +69,7 @@ export function AngleButton({
         size="sm"
         variant="outline"
         onClick={request}
-        disabled={state === "loading"}
+        disabled={state === "loading" || cooling}
       >
         {state === "loading" ? t("loading") : t("cta")}
       </Button>

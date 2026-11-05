@@ -151,7 +151,8 @@
     "errors": {
       "limit": "You reached today's brief limit.",
       "notFound": "This story is not available.",
-      "generic": "Something went wrong. Please try again."
+      "generic": "Something went wrong. Please try again.",
+      "busy": "The AI models are busy right now. Try again in about {seconds} s."
     },
     "controls": {
       "title": "Settings",

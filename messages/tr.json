@@ -151,7 +151,8 @@
     "errors": {
       "limit": "Günlük brief limitine ulaştın.",
       "notFound": "Bu story kullanılamıyor.",
-      "generic": "Bir şeyler ters gitti. Tekrar dene."
+      "generic": "Bir şeyler ters gitti. Tekrar dene.",
+      "busy": "Yapay zekâ modelleri şu an meşgul. Yaklaşık {seconds} sn sonra tekrar dene."
     },
     "controls": {
       "title": "Ayarlar",

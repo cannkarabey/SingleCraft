@@ -82,7 +82,7 @@ export const studioGenerate = inngest.createFunction(
           sources: ctx.sources,
           ai_disclosure: aiDisclosure(ctx.language),
         }),
-        model: getLanguageModel("studio").id,
+        model: short.modelId,
         tokensIn: short.tokensIn + long.tokensIn,
         tokensOut: short.tokensOut + long.tokensOut,
       }),

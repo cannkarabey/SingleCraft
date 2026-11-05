@@ -5,6 +5,7 @@ import { useTranslations } from "next-intl";
 import { useRouter } from "next/navigation";
 import { useState, useTransition } from "react";
 import { Button } from "@/components/ui/button";
+import { useCooldown } from "@/components/ui/use-cooldown";
 import type { ControlsInput } from "@/lib/studio/controls";
 import { ControlFields } from "./ControlFields";
 
@@ -22,8 +23,11 @@ export function NewBriefForm({
     null,
   );
   const [pending, startTransition] = useTransition();
+  // Minimum gap between generations (also a guard against double clicks).
+  const { cooling, start: startCooldown } = useCooldown(4000);
 
-  const submit = () =>
+  const submit = () => {
+    startCooldown();
     startTransition(async () => {
       setError(null);
       try {
@@ -48,6 +52,7 @@ export function NewBriefForm({
         setError("generic");
       }
     });
+  };
 
   return (
     <form
@@ -68,7 +73,7 @@ export function NewBriefForm({
           )}
         </p>
       )}
-      <Button type="submit" disabled={pending}>
+      <Button type="submit" disabled={pending || cooling}>
         {pending ? t("generating") : t("generate")}
       </Button>
     </form>

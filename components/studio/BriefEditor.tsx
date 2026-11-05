@@ -233,7 +233,13 @@ export function BriefEditor({ initial }: { initial: BriefDetail }) {
           {(brief.status === "failed" || error) && (
             <div className="space-y-1">
               {brief.status === "failed" && (
-                <p className="text-danger text-sm">{t("status.failed")}</p>
+                <p className="text-danger text-sm">
+                  {brief.error?.startsWith("models_busy:")
+                    ? t("errors.busy", {
+                        seconds: Number(brief.error.split(":")[1]) || 60,
+                      })
+                    : t("status.failed")}
+                </p>
               )}
               {error && (
                 <p role="alert" className="text-danger text-sm">
