@@ -62,6 +62,8 @@ export async function clusterItems(deps: {
   db: Db;
   embed: EmbedFn;
   now: Date;
+  /** Cap per run (default MAX_ITEMS_PER_RUN); lets small free-tier quotas be respected. */
+  maxItems?: number;
 }): Promise<ClusterResult> {
   const result: ClusterResult = {
     embedded: 0,
@@ -77,7 +79,7 @@ export async function clusterItems(deps: {
       .eq("filter_status", "accepted")
       .is("story_sources", null)
       .order("id", { ascending: false })
-      .limit(MAX_ITEMS_PER_RUN),
+      .limit(deps.maxItems ?? MAX_ITEMS_PER_RUN),
   );
 
   if (items.length > 0) {
