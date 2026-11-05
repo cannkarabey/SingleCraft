@@ -363,7 +363,8 @@
       "sent": "Kayıt linkini e-postana gönderdik.",
       "switch": "Zaten hesabın var mı?",
       "switchCta": "Giriş yap"
-    }
+    },
+    "localMail": "Yerel geliştirmede e-posta gerçek kutuna değil, buradaki test posta kutusuna düşer:"
   },
   "onboarding": {
     "title": "Nişini kur",

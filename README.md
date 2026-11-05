@@ -22,6 +22,12 @@ npm run dev                       # http://localhost:3000
 npm run inngest                   # Inngest dev server → http://localhost:8288
 ```
 
+## Sign-in emails
+
+Sign-in and sign-up links are emailed by Supabase Auth. Locally they land in **Mailpit**
+(http://127.0.0.1:54324), not in a real inbox. For real delivery enable `[auth.email.smtp]`
+in `supabase/config.toml` (a Gmail app password works, free) and restart `supabase start`.
+
 ## Database
 
 ```bash

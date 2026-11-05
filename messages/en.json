@@ -363,7 +363,8 @@
       "sent": "We sent the sign-up link to your email.",
       "switch": "Already have an account?",
       "switchCta": "Sign in"
-    }
+    },
+    "localMail": "In local development the email lands in this test mailbox, not your real inbox:"
   },
   "onboarding": {
     "title": "Set up your niche",

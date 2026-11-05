@@ -236,15 +236,19 @@ otp_length = 6
 # Number of seconds before the email OTP expires (defaults to 1 hour).
 otp_expiry = 3600
 
-# Use a production-ready SMTP server
+# Real emails (sign-in links to a real inbox). Locally, auth mail goes to Mailpit instead
+# (http://127.0.0.1:54324). To send for real, uncomment, put the secrets in supabase/.env
+# and restart `supabase start`. Gmail needs an app password (Google account > Security >
+# 2-Step Verification > App passwords); about 500 mails a day. On a hosted Supabase project
+# set the same values under Authentication > SMTP Settings.
 # [auth.email.smtp]
 # enabled = true
-# host = "smtp.sendgrid.net"
+# host = "smtp.gmail.com"
 # port = 587
-# user = "apikey"
-# pass = "env(SENDGRID_API_KEY)"
-# admin_email = "admin@email.com"
-# sender_name = "Admin"
+# user = "env(SMTP_USER)"
+# pass = "env(SMTP_PASS)"
+# admin_email = "env(SMTP_USER)"
+# sender_name = "SignalCraft"
 
 # Uncomment to customize email template
 # [auth.email.template.invite]

@@ -12,6 +12,11 @@ function enabledProviders(): ("google" | "github")[] {
     .filter((p): p is "google" | "github" => p === "google" || p === "github");
 }
 
+/** Local Supabase delivers auth mail to Mailpit, not to a real inbox. */
+const localMailbox = /^https?:\/\/(127\.0\.0\.1|localhost)[:/]/.test(
+  process.env.NEXT_PUBLIC_SUPABASE_URL ?? "",
+);
+
 const one = (v: string | string[] | undefined) => (Array.isArray(v) ? v[0] : v);
 
 /** Shared by /login and /signup: magic-link form, optional OAuth buttons, link to the other page. */
@@ -54,6 +59,20 @@ export async function AuthForm({
           className="border-signal/40 bg-signal/10 rounded-md border p-3 text-[13px]"
         >
           {t(`${p}sent` as "sent")}
+          {localMailbox && (
+            <>
+              {" "}
+              {t("localMail")}{" "}
+              <a
+                href="http://127.0.0.1:54324"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                Mailpit
+              </a>
+            </>
+          )}
         </p>
       )}
       {error && (
