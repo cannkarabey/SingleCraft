@@ -51,14 +51,14 @@ export function ModuleCard({
       href={href}
       onPointerMove={move}
       onPointerLeave={leave}
-      className="group surface-gradient bg-surface-1 relative block [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] rounded-xl border p-3 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-white/20 hover:shadow-[0_24px_80px_-24px_rgba(255,255,255,0.196)]"
+      className="group bg-surface-1 relative block [transform:perspective(900px)_rotateX(var(--rx,0deg))_rotateY(var(--ry,0deg))] rounded-xl border p-3 transition-[transform,border-color,box-shadow] duration-300 ease-out hover:border-white/20 hover:shadow-[0_24px_80px_-24px_rgba(94,106,210,0.7)]"
     >
       <span
         aria-hidden
         className="pointer-events-none absolute inset-0 rounded-xl opacity-0 transition-opacity duration-300 group-hover:opacity-100"
         style={{
           background:
-            "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(255,255,255,0.072), transparent 60%)",
+            "radial-gradient(420px circle at var(--mx,50%) var(--my,50%), rgba(139,148,236,0.16), transparent 60%)",
         }}
       />
       <div className="bg-canvas relative mb-5 aspect-[4/3] overflow-hidden rounded-lg border">

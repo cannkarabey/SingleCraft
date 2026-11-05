@@ -8,18 +8,18 @@
    Tailwind owns the --color-* namespace (it would redefine --color-accent/--color-border).
    Dark only. --sc-accent is the "high signal" green; --sc-brand is the indigo for focus/selection. */
 :root {
-  --sc-canvas: #000000;
-  --sc-surface-1: #0b0b0c;
-  --sc-surface-2: #141415;
-  --sc-surface-3: #1e1e20;
-  --sc-border: rgba(255, 255, 255, 0.13);
-  --sc-border-strong: rgba(255, 255, 255, 0.24);
+  --sc-canvas: #08090a;
+  --sc-surface-1: #0f1011;
+  --sc-surface-2: #141516;
+  --sc-surface-3: #1c1d1f;
+  --sc-border: rgba(255, 255, 255, 0.08);
+  --sc-border-strong: rgba(255, 255, 255, 0.14);
   --sc-text-primary: #ffffff;
-  --sc-text-secondary: #d4d6da;
-  --sc-text-tertiary: #a4a8af;
-  --sc-brand: #ffffff;
-  /* Accent is white: the site is black and white; green/yellow/red stay as signal colours. */
-  --sc-brand-text: #ffffff;
+  --sc-text-secondary: #b7bcc6;
+  --sc-text-tertiary: #8e94a0;
+  --sc-brand: #5e6ad2;
+  /* Indigo for small text on dark surfaces (the base brand colour is ~3.9:1 there). */
+  --sc-brand-text: #8b94ec;
   --sc-accent: #4cb782;
   --sc-warning: #f2c94c;
   --sc-danger: #eb5757;
@@ -42,7 +42,7 @@
   --accent-foreground: var(--sc-text-primary);
   --destructive: var(--sc-danger);
   --border: var(--sc-border);
-  --input: rgba(255, 255, 255, 0.2);
+  --input: rgba(255, 255, 255, 0.12);
   --ring: var(--sc-brand);
   --radius: 0.5rem;
   color-scheme: dark;
@@ -99,13 +99,6 @@
   }
   body {
     @apply bg-background text-foreground;
-    /* Black with a soft grey-white light from the top; sections add their own glows. */
-    background-image: radial-gradient(
-      ellipse 90% 520px at 50% -80px,
-      rgba(255, 255, 255, 0.16),
-      transparent 70%
-    );
-    background-repeat: no-repeat;
     font-size: 14px;
     line-height: 1.55;
     -webkit-font-smoothing: antialiased;
@@ -172,10 +165,10 @@
 }
 @keyframes pulse-ring {
   0% {
-    box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.154);
+    box-shadow: 0 0 0 0 rgba(94, 106, 210, 0.55);
   }
   100% {
-    box-shadow: 0 0 0 14px rgba(255, 255, 255, 0);
+    box-shadow: 0 0 0 14px rgba(94, 106, 210, 0);
   }
 }
 @keyframes rise {
@@ -219,7 +212,7 @@
     animation: pulse-ring 1.8s ease-out infinite;
   }
   .text-shimmer {
-    background: linear-gradient(100deg, #ffffff 20%, #9da1a8 40%, #ffffff 60%);
+    background: linear-gradient(100deg, #f7f8f8 20%, #8b94ec 40%, #f7f8f8 60%);
     background-size: 200% auto;
     -webkit-background-clip: text;
     background-clip: text;
@@ -232,18 +225,6 @@
       transparent,
       #000 12%,
       #000 88%,
-      transparent
-    );
-  }
-}
-
-@layer utilities {
-  /* Card face: black fading from a grey-white sheen at the top. */
-  .surface-gradient {
-    background-image: linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.09),
-      rgba(255, 255, 255, 0.02) 60%,
       transparent
     );
   }

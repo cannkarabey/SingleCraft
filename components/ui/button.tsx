@@ -11,7 +11,7 @@ const buttonVariants = cva(
         default:
           "bg-primary text-primary-foreground hover:bg-primary/90 hover:shadow-[0_0_28px_-6px_rgba(247,248,248,0.55)]",
         brand:
-          "bg-[linear-gradient(180deg,#ffffff,#d6d8db)] text-[#08090a] shadow-[inset_0_1px_0_rgba(255,255,255,0.7),0_8px_28px_-10px_rgba(255,255,255,0.35)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.8),0_12px_36px_-8px_rgba(255,255,255,0.55)] hover:brightness-105",
+          "bg-[linear-gradient(180deg,#6e7ae0,#5e6ad2)] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.22),0_8px_24px_-10px_rgba(94,106,210,0.9)] hover:-translate-y-px hover:shadow-[inset_0_1px_0_rgba(255,255,255,0.3),0_12px_32px_-8px_rgba(94,106,210,1)] hover:brightness-110",
         outline:
           "border-border-strong bg-transparent text-foreground hover:border-white/25 hover:bg-surface-2 aria-expanded:bg-surface-2",
         secondary:
