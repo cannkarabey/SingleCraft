@@ -8,8 +8,8 @@ import {
   recordPipelineRun,
 } from "@/lib/pipeline/store";
 
-// Caps one run's backlog; the rest stays pending and rides the next 15-minute run.
-const MAX_PENDING_PER_RUN = 300;
+// Caps one run's backlog; the rest stays pending and rides the next hourly run.
+const MAX_PENDING_PER_RUN = 500;
 
 // One cron for all sources; each source's own fetch_interval_min decides whether it is
 // due, and each due source is its own step so a retry only re-fetches that source.
@@ -17,7 +17,7 @@ export const fetchSources = inngest.createFunction(
   {
     id: "fetch-sources",
     triggers: [
-      { cron: "*/15 * * * *" },
+      { cron: "0 * * * *" },
       { event: adminRunEvent("fetch-sources") },
     ],
     concurrency: 1,

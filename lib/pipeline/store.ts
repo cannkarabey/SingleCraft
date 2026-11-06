@@ -232,7 +232,7 @@ export async function recordPipelineRun(
   );
 }
 
-/** Ids of every item still waiting for dedupe/filter (recovery after an interrupted run). */
+/** Ids of items still waiting for dedupe/filter, newest first (recovery after an interrupted run). */
 export async function allPendingItemIds(
   db: Db,
   limit = Infinity,
@@ -242,7 +242,7 @@ export async function allPendingItemIds(
       .from("raw_items")
       .select("id")
       .eq("filter_status", "pending")
-      .order("id")
+      .order("id", { ascending: false })
       .range(from, to),
   );
   return rows.slice(0, limit).map((row) => row.id);
