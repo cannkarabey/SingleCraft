@@ -233,7 +233,10 @@ export async function recordPipelineRun(
 }
 
 /** Ids of every item still waiting for dedupe/filter (recovery after an interrupted run). */
-export async function allPendingItemIds(db: Db): Promise<number[]> {
+export async function allPendingItemIds(
+  db: Db,
+  limit = Infinity,
+): Promise<number[]> {
   const rows = await allPages((from, to) =>
     db
       .from("raw_items")
@@ -242,5 +245,5 @@ export async function allPendingItemIds(db: Db): Promise<number[]> {
       .order("id")
       .range(from, to),
   );
-  return rows.map((row) => row.id);
+  return rows.slice(0, limit).map((row) => row.id);
 }

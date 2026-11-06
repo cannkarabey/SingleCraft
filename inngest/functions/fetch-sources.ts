@@ -8,6 +8,9 @@ import {
   recordPipelineRun,
 } from "@/lib/pipeline/store";
 
+// Caps one run's backlog; the rest stays pending and rides the next 15-minute run.
+const MAX_PENDING_PER_RUN = 300;
+
 // One cron for all sources; each source's own fetch_interval_min decides whether it is
 // due, and each due source is its own step so a retry only re-fetches that source.
 export const fetchSources = inngest.createFunction(
@@ -42,7 +45,7 @@ export const fetchSources = inngest.createFunction(
     // reports no new ids, and an earlier failed run may have left items behind.
     // processItems skips anything no longer pending, so re-sending is harmless.
     const pending = await step.run("pending-items", () =>
-      allPendingItemIds(pipelineDeps().db),
+      allPendingItemIds(pipelineDeps().db, MAX_PENDING_PER_RUN),
     );
     if (pending.length > 0) {
       await step.sendEvent("items-fetched", {
